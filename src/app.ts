@@ -12,7 +12,8 @@ app.get('/', (req: Request, res: Response) => {
 
 app.get('/products', (req: Request, res: Response) => {
     if (req.query.title) {
-        let searchString = req.query.title.toString()
+        let searchString = String(req.query.title)
+
         res.send(products.filter( p => p.title.indexOf(searchString) > -1))
     }
     res.send(products)
@@ -20,7 +21,7 @@ app.get('/products', (req: Request, res: Response) => {
 
 app.get('/addresses', (req: Request, res: Response) => {
     if (req.query.title) {
-        let searchString = req.query.title.toString()
+        let searchString = String(req.query.title)
         res.send(products.filter( p => p.title.indexOf(searchString) > -1))
     }
     res.send(addresses)
@@ -29,6 +30,17 @@ app.get('/addresses', (req: Request, res: Response) => {
 app.get('/addresses/:id', (req: Request, res: Response) => {
     let address = addresses.find( p => p.id === +req.params.id)
     if (address) {
+        res.send(address)
+    } else {
+        res.send(404)
+    }
+
+})
+
+app.put('/addresses/:id', (req: Request, res: Response) => {
+    let address = addresses.find( p => p.id === +req.params.id)
+    if (address) {
+        address.value = req.body.title
         res.send(address)
     } else {
         res.send(404)
@@ -60,3 +72,4 @@ app.post('/addresses', (req: Request, res: Response) => {
     res.status(201).send(newAddr)
 
 })
+

@@ -14,14 +14,14 @@ exports.app.get('/', (req, res) => {
 });
 exports.app.get('/products', (req, res) => {
     if (req.query.title) {
-        let searchString = req.query.title.toString();
+        let searchString = String(req.query.title);
         res.send(products.filter(p => p.title.indexOf(searchString) > -1));
     }
     res.send(products);
 });
 exports.app.get('/addresses', (req, res) => {
     if (req.query.title) {
-        let searchString = req.query.title.toString();
+        let searchString = String(req.query.title);
         res.send(products.filter(p => p.title.indexOf(searchString) > -1));
     }
     res.send(addresses);
@@ -29,6 +29,16 @@ exports.app.get('/addresses', (req, res) => {
 exports.app.get('/addresses/:id', (req, res) => {
     let address = addresses.find(p => p.id === +req.params.id);
     if (address) {
+        res.send(address);
+    }
+    else {
+        res.send(404);
+    }
+});
+exports.app.put('/addresses/:id', (req, res) => {
+    let address = addresses.find(p => p.id === +req.params.id);
+    if (address) {
+        address.value = req.body.title;
         res.send(address);
     }
     else {
