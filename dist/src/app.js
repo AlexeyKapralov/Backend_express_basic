@@ -5,8 +5,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.app = void 0;
 const express_1 = __importDefault(require("express"));
+const cors_1 = __importDefault(require("cors"));
+const settings_1 = require("./settings");
 exports.app = (0, express_1.default)();
 exports.app.use(express_1.default.json());
+exports.app.use((0, cors_1.default)());
 // const products = [{title: 'tomato'}, {title: 'orange'}]
 // const addresses = [{id: 1, value: 'abasdasd'}, {id: 2, value: 'rewq'}]
 const videos = [
@@ -108,10 +111,10 @@ function validateVideoData(req, res, next) {
 exports.app.get('/', (req, res) => {
     res.status(200).json({ version: '1.0' });
 });
-exports.app.get('/hometask_01/api/videos', (req, res) => {
+exports.app.get(settings_1.SETTINGS.PATH.VIDEOS, (req, res) => {
     res.status(200).send(videos);
 });
-exports.app.post('/hometask_01/api/videos', validateVideoData, (req, res) => {
+exports.app.post(`${settings_1.SETTINGS.PATH.VIDEOS}/:id`, validateVideoData, (req, res) => {
     const maxId = videos.reduce((max, video) => (video.id > max ? video.id : max), -Infinity);
     const myDate = new Date().toISOString();
     const newVideo = {
@@ -127,7 +130,7 @@ exports.app.post('/hometask_01/api/videos', validateVideoData, (req, res) => {
     videos.push(newVideo);
     res.status(200).send(newVideo);
 });
-exports.app.get('/hometask_01/api/videos/:id', (req, res) => {
+exports.app.get(`${settings_1.SETTINGS.PATH.VIDEOS}/:id`, (req, res) => {
     let video = videos.find(p => p.id === +req.params.id);
     if (video) {
         res.status(200).send(video);
@@ -136,7 +139,7 @@ exports.app.get('/hometask_01/api/videos/:id', (req, res) => {
         res.status(404).json({ error: `If video for passed id doesn't exist` });
     }
 });
-exports.app.put('/hometask_01/api/videos/:id', validateVideoData, (req, res) => {
+exports.app.put(`${settings_1.SETTINGS.PATH.VIDEOS}/:id`, validateVideoData, (req, res) => {
     let video = videos.find(p => p.id === +req.params.id);
     let curDate = new Date().toISOString();
     if (video) {
@@ -163,7 +166,7 @@ exports.app.put('/hometask_01/api/videos/:id', validateVideoData, (req, res) => 
         });
     }
 });
-exports.app.delete('/hometask_01/api/videos/:id', (req, res) => {
+exports.app.delete(`${settings_1.SETTINGS.PATH.VIDEOS}/:id`, (req, res) => {
     for (let i = 0; i < videos.length; i++) {
         if (videos[i].id === +req.params.id) {
             videos.splice(i, 1);
@@ -173,7 +176,7 @@ exports.app.delete('/hometask_01/api/videos/:id', (req, res) => {
     }
     res.send(404);
 });
-exports.app.delete('/hometask_01/api/testing/all-data', (req, res) => {
+exports.app.delete(settings_1.SETTINGS.PATH.DEL_ALL, (req, res) => {
     videos.splice(0, videos.length);
     res.send(204);
 });

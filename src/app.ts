@@ -1,5 +1,6 @@
 import express, {Request, Response} from 'express'
 import cors from 'cors'
+import {SETTINGS} from "./settings";
 
 export const app = express()
 app.use(express.json())
@@ -141,11 +142,11 @@ app.get('/', (req: Request, res: Response) => {
     res.status(200).json({version: '1.0'})
 })
 
-app.get('/hometask_01/api/videos', (req: Request, res: Response) => {
+app.get(SETTINGS.PATH.VIDEOS, (req: Request, res: Response) => {
     res.status(200).send(videos)
 })
 
-app.post('/hometask_01/api/videos', validateVideoData, (req: Request, res: Response) => {
+app.post(`${SETTINGS.PATH.VIDEOS}/:id`, validateVideoData, (req: Request, res: Response) => {
 
     const maxId = videos.reduce((max, video) => (video.id > max ? video.id : max), -Infinity)
     const myDate = new Date().toISOString()
@@ -167,7 +168,7 @@ app.post('/hometask_01/api/videos', validateVideoData, (req: Request, res: Respo
     res.status(200).send(newVideo)
 })
 
-app.get('/hometask_01/api/videos/:id', (req: Request, res: Response) => {
+app.get(`${SETTINGS.PATH.VIDEOS}/:id`, (req: Request, res: Response) => {
     let video = videos.find(p => p.id === +req.params.id)
     if (video) {
         res.status(200).send(video)
@@ -176,7 +177,7 @@ app.get('/hometask_01/api/videos/:id', (req: Request, res: Response) => {
     }
 })
 
-app.put('/hometask_01/api/videos/:id', validateVideoData, (req: Request, res: Response) => {
+app.put(`${SETTINGS.PATH.VIDEOS}/:id`, validateVideoData, (req: Request, res: Response) => {
     let video = videos.find(p => p.id === +req.params.id)
     let curDate = new Date().toISOString()
     if (video) {
@@ -206,7 +207,7 @@ app.put('/hometask_01/api/videos/:id', validateVideoData, (req: Request, res: Re
 
 })
 
-app.delete('/hometask_01/api/videos/:id', (req: Request, res: Response) => {
+app.delete(`${SETTINGS.PATH.VIDEOS}/:id`, (req: Request, res: Response) => {
 
     for (let i = 0; i < videos.length; i++) {
         if (videos[i].id === +req.params.id) {
@@ -220,7 +221,7 @@ app.delete('/hometask_01/api/videos/:id', (req: Request, res: Response) => {
 
 })
 
-app.delete('/hometask_01/api/testing/all-data', (req: Request, res: Response) => {
+app.delete(SETTINGS.PATH.DEL_ALL, (req: Request, res: Response) => {
     videos.splice(0, videos.length);
     res.send(204)
 })
