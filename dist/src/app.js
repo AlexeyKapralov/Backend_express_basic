@@ -112,12 +112,16 @@ exports.app.post(`${settings_1.SETTINGS.PATH.VIDEOS}`, validateVideoData, (req, 
     if (req.body.canBeDownloaded) {
         canBeDownloaded = req.body.canBeDownloaded;
     }
+    let minAgeRestriction = null;
+    if (req.body.minAgeRestriction) {
+        minAgeRestriction = req.body.minAgeRestriction;
+    }
     const newVideo = {
         id: maxId + 1,
         title: req.body.title,
         author: req.body.author,
         canBeDownloaded: canBeDownloaded,
-        minAgeRestriction: null,
+        minAgeRestriction: minAgeRestriction,
         createdAt: myDate,
         publicationDate: nextDate,
         availableResolutions: req.body.availableResolutions
@@ -136,20 +140,22 @@ exports.app.get(`${settings_1.SETTINGS.PATH.VIDEOS}/:id`, (req, res) => {
 });
 exports.app.put(`${settings_1.SETTINGS.PATH.VIDEOS}/:id`, validateVideoData, (req, res) => {
     let video = videos.find(p => p.id === +req.params.id);
-    let curDate = new Date().toISOString();
-    let nextDate = new Date(new Date().setDate(new Date().getDate() + 1)).toISOString();
     if (video) {
         video.title = req.body.title;
         video.author = req.body.author;
         video.availableResolutions = req.body.availableResolutions;
         video.canBeDownloaded = req.body.canBeDownloaded;
-        video.minAgeRestriction = req.body.minAgeRestriction;
-        video.createdAt = curDate;
+        if (req.body.minAgeRestriction) {
+            video.minAgeRestriction = req.body.minAgeRestriction;
+        }
+        else
+            video.minAgeRestriction = null;
+        video.createdAt = new Date().toISOString();
         if (req.body.publicationDate) {
             video.publicationDate = req.body.publicationDate;
         }
         else {
-            video.publicationDate = nextDate;
+            video.publicationDate = new Date(new Date().setDate(new Date().getDate() + 1)).toISOString();
         }
         res.send(204);
     }
