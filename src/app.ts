@@ -1,7 +1,6 @@
 import express, {Request, Response} from 'express'
 import cors from 'cors'
 import {SETTINGS} from "./settings";
-import {type} from "os";
 
 export const app = express()
 app.use(express.json())
@@ -97,7 +96,7 @@ function validateVideoData(req: any, res: any, next: any) {
             )
         }
 
-        if (minAgeRestriction.length > 20) {
+        if (minAgeRestriction.length > 18) {
             errorsMessages.push(
                 {
                     message: "incorrect values",
@@ -189,7 +188,7 @@ app.put(`${SETTINGS.PATH.VIDEOS}/:id`, validateVideoData, (req: Request, res: Re
         video.author = req.body.author
         video.availableResolutions = req.body.availableResolutions
         video.canBeDownloaded = req.body.canBeDownloaded
-        video.minAgeRestriction = req.body.publicationDate
+        video.minAgeRestriction = req.body.minAgeRestriction
         video.createdAt = curDate
 
         if (req.body.publicationDate) {

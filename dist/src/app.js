@@ -69,7 +69,7 @@ function validateVideoData(req, res, next) {
                 field: "minAgeRestriction"
             });
         }
-        if (minAgeRestriction.length > 20) {
+        if (minAgeRestriction.length > 18) {
             errorsMessages.push({
                 message: "incorrect values",
                 field: "minAgeRestriction"
@@ -143,7 +143,7 @@ exports.app.put(`${settings_1.SETTINGS.PATH.VIDEOS}/:id`, validateVideoData, (re
         video.author = req.body.author;
         video.availableResolutions = req.body.availableResolutions;
         video.canBeDownloaded = req.body.canBeDownloaded;
-        video.minAgeRestriction = req.body.publicationDate;
+        video.minAgeRestriction = req.body.minAgeRestriction;
         video.createdAt = curDate;
         if (req.body.publicationDate) {
             video.publicationDate = req.body.publicationDate;
