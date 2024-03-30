@@ -132,8 +132,6 @@ function validateVideoData(req: any, res: any, next: any) {
     if (publicationDate) {
 
     }
-
-
     // Если все данные прошли валидацию, продолжаем обработку запроса
     next();
 }
@@ -150,6 +148,7 @@ app.post(`${SETTINGS.PATH.VIDEOS}`, validateVideoData, (req: Request, res: Respo
 
     const maxId = videos.reduce((max, video) => (video.id > max ? video.id : max), -Infinity)
     const myDate = new Date().toISOString()
+    const nextDate = new Date(new Date().setDate(new Date().getDate() + 1)).toISOString()
 
     const newVideo =
         {
@@ -159,7 +158,7 @@ app.post(`${SETTINGS.PATH.VIDEOS}`, validateVideoData, (req: Request, res: Respo
             canBeDownloaded: true,
             minAgeRestriction: null,
             createdAt: myDate,
-            publicationDate: myDate,
+            publicationDate: nextDate,
             availableResolutions: req.body.availableResolutions
         }
 
@@ -180,17 +179,19 @@ app.get(`${SETTINGS.PATH.VIDEOS}/:id`, (req: Request, res: Response) => {
 app.put(`${SETTINGS.PATH.VIDEOS}/:id`, validateVideoData, (req: Request, res: Response) => {
     let video = videos.find(p => p.id === +req.params.id)
     let curDate = new Date().toISOString()
+    let nextDate = new Date(new Date().setDate(new Date().getDate() + 1)).toISOString()
     if (video) {
         video.title = req.body.title
         video.author = req.body.author
         video.availableResolutions = req.body.availableResolutions
         video.canBeDownloaded = req.body.canBeDownloaded
         video.minAgeRestriction = req.body.publicationDate
+        video.createdAt = curDate
 
         if (req.body.publicationDate) {
             video.publicationDate = req.body.publicationDate
         } else {
-            video.publicationDate = curDate
+            video.publicationDate = nextDate
         }
         res.send(video)
     } else {
