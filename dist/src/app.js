@@ -99,21 +99,25 @@ exports.app.get(settings_1.SETTINGS.PATH.VIDEOS, (req, res) => {
     res.status(200).send(videos);
 });
 exports.app.post(`${settings_1.SETTINGS.PATH.VIDEOS}`, validateVideoData, (req, res) => {
-    const maxId = videos.reduce((max, video) => (video.id > max ? video.id : max), -Infinity);
+    const maxId = videos.reduce((max, video) => (video.id > max ? video.id : max), -1);
     const myDate = new Date().toISOString();
     const nextDate = new Date(new Date().setDate(new Date().getDate() + 1)).toISOString();
+    let canBeDownloaded = false;
+    if (req.body.canBeDownloaded) {
+        canBeDownloaded = req.body.canBeDownloaded;
+    }
     const newVideo = {
         id: maxId + 1,
         title: req.body.title,
         author: req.body.author,
-        canBeDownloaded: true,
+        canBeDownloaded: canBeDownloaded,
         minAgeRestriction: null,
         createdAt: myDate,
         publicationDate: nextDate,
         availableResolutions: req.body.availableResolutions
     };
     videos.push(newVideo);
-    res.status(200).send(newVideo);
+    res.status(201).send(newVideo);
 });
 exports.app.get(`${settings_1.SETTINGS.PATH.VIDEOS}/:id`, (req, res) => {
     let video = videos.find(p => p.id === +req.params.id);

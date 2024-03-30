@@ -138,16 +138,20 @@ app.get(SETTINGS.PATH.VIDEOS, (req: Request, res: Response) => {
 
 app.post(`${SETTINGS.PATH.VIDEOS}`, validateVideoData, (req: Request, res: Response) => {
 
-    const maxId = videos.reduce((max, video) => (video.id > max ? video.id : max), -Infinity)
+    const maxId = videos.reduce((max, video) => (video.id > max ? video.id : max), -1)
     const myDate = new Date().toISOString()
     const nextDate = new Date(new Date().setDate(new Date().getDate() + 1)).toISOString()
+    let canBeDownloaded = false
+    if (req.body.canBeDownloaded) {
+        canBeDownloaded = req.body.canBeDownloaded
+    }
 
     const newVideo =
         {
             id: maxId + 1,
             title: req.body.title,
             author: req.body.author,
-            canBeDownloaded: true,
+            canBeDownloaded: canBeDownloaded,
             minAgeRestriction: null,
             createdAt: myDate,
             publicationDate: nextDate,
@@ -156,7 +160,7 @@ app.post(`${SETTINGS.PATH.VIDEOS}`, validateVideoData, (req: Request, res: Respo
 
     videos.push(newVideo)
 
-    res.status(200).send(newVideo)
+    res.status(201).send(newVideo)
 })
 
 app.get(`${SETTINGS.PATH.VIDEOS}/:id`, (req: Request, res: Response) => {
