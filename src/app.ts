@@ -96,7 +96,7 @@ function validateVideoData(req: any, res: any, next: any) {
             )
         }
 
-        if (minAgeRestriction.length > 18) {
+        if (minAgeRestriction > 18) {
             errorsMessages.push(
                 {
                     message: "incorrect values",
