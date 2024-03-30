@@ -39,7 +39,7 @@ const videos = [
 ]
 
 const resolutionsEnum = ['P144', 'P240', 'P360', 'P480', 'P720', 'P1080', 'P1440', 'P2160']
-const errorsMessages = []
+
 
 // Тип данных видео
 type VideoData = {
@@ -66,61 +66,71 @@ function validateVideoData(req: any, res: any, next: any) {
     const {title, author, availableResolutions, minAgeRestriction, publicationDate} = req.body;
 
     if (!title || title.length > 40) {
-        errorsMessages.push(
+        return res.status(400).json(
             {
-                message: "the inputModel has incorrect values or undefined",
-                field: "title"
-            }
-        )
+                errorsMessages: [
+                    {
+                        message: "the inputModel has incorrect values or undefined",
+                        field: "title"
+                    }
+                ]
+            })
     }
 
     if (!author || author.length > 20) {
-        errorsMessages.push(
+        return res.status(400).json(
             {
-                message: "the inputModel has incorrect values or undefined",
-                field: "author"
-            }
-        )
+                errorsMessages: [
+                    {
+                        message: "the inputModel has incorrect values or undefined",
+                        field: "author"
+                    }
+                ]
+            })
     }
 
     if (minAgeRestriction) {
         if (!Number.isInteger(minAgeRestriction)) {
-            errorsMessages.push(
+            return res.status(400).json(
                 {
-                    message: "incorrect type",
-                    field: "minAgeRestriction"
-                }
-            )
+                    errorsMessages: [
+                        {
+                            message: "incorrect type",
+                            field: "minAgeRestriction"
+                        }
+                    ]
+                })
         }
 
         if (minAgeRestriction.length > 20) {
-            errorsMessages.push(
+            return res.status(400).json(
                 {
-                    message: "incorrect values",
-                    field: "minAgeRestriction"
-                }
-            )
+                    errorsMessages: [
+                        {
+                            message: "incorrect values",
+                            field: "minAgeRestriction"
+                        }
+                    ]
+                })
         }
     }
 
     if (availableResolutions) {
         if (!isValidResolution(availableResolutions)) {
-            errorsMessages.push(
-                {
-                    message: "the inputModel has incorrect values",
-                    field: "availableResolutions"
-                }
-            )
+            return res.status(400).json({
+                errorsMessages: [
+                    {
+                        message: "the inputModel has incorrect values",
+                        field: "availableResolutions"
+                    }
+                ]
+            })
         }
     }
 
 
     if (publicationDate) {
 
-    }
-
-    if (errorsMessages.length === 0) {
-        return res.status(404).json({errorsMessages})
     }
     // Если все данные прошли валидацию, продолжаем обработку запроса
     next();
@@ -162,7 +172,7 @@ app.get(`${SETTINGS.PATH.VIDEOS}/:id`, (req: Request, res: Response) => {
     if (video) {
         res.status(200).send(video)
     } else {
-        res.send(404)
+        res.status(404)
     }
 })
 
@@ -185,8 +195,15 @@ app.put(`${SETTINGS.PATH.VIDEOS}/:id`, validateVideoData, (req: Request, res: Re
         }
         res.send(video)
     } else {
-        errorsMessages.push({message: "Video is not found"})
-        res.status(404).json({errorsMessages})
+        res.status(404).json(
+            {
+                errorsMessages: [
+                    {
+                        message: "Video is not found"
+                    }
+                ]
+            }
+        )
     }
 
 })
@@ -209,3 +226,67 @@ app.delete(SETTINGS.PATH.DEL_ALL, (req: Request, res: Response) => {
     videos.splice(0, videos.length);
     res.send(204)
 })
+
+
+// app.get('/products', (req: Request, res: Response) => {
+//     if (req.query.title) {
+//         let searchString = String(req.query.title)
+//
+//         res.send(products.filter(p => p.title.indexOf(searchString) > -1))
+//     }
+//     res.send(products)
+// })
+
+// app.get('/addresses', (req: Request, res: Response) => {
+//     if (req.query.title) {
+//         let searchString = String(req.query.title)
+//         res.send(products.filter(p => p.title.indexOf(searchString) > -1))
+//     }
+//     res.send(addresses)
+// })
+
+// app.get('/addresses/:id', (req: Request, res: Response) => {
+//     let address = addresses.find(p => p.id === +req.params.id)
+//     if (address) {
+//         res.send(address)
+//     } else {
+//         res.send(404)
+//     }
+//
+// })
+
+// app.put('/addresses/:id', (req: Request, res: Response) => {
+//     let address = addresses.find(p => p.id === +req.params.id)
+//     if (address) {
+//         address.value = req.body.title
+//         res.send(address)
+//     } else {
+//         res.send(404)
+//     }
+//
+// })
+
+// app.delete('/addresses/:id', (req: Request, res: Response) => {
+//
+//     for (let i = 0; i < addresses.length; i++) {
+//         if (addresses[i].id === +req.params.id) {
+//             addresses.splice(i, 1)
+//             res.send(204)
+//             return
+//         }
+//     }
+//
+//     res.send(404)
+//
+// })
+
+// app.post('/addresses', (req: Request, res: Response) => {
+//     const newAddr = {
+//         id: +(new Date()),
+//         value: req.body.title
+//     }
+//     addresses.push(newAddr)
+//
+//     res.status(201).send(newAddr)
+//
+// })
