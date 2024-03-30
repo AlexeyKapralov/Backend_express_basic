@@ -83,7 +83,7 @@ function validateVideoData(req: any, res: any, next: any) {
                 errorsMessages: [
                     {
                         message: "the inputModel has incorrect values or undefined",
-                        field: "length"
+                        field: "author"
                     }
                 ]
             })
@@ -172,7 +172,7 @@ app.get(`${SETTINGS.PATH.VIDEOS}/:id`, (req: Request, res: Response) => {
     if (video) {
         res.status(200).send(video)
     } else {
-        res.status(404).json({error: `If video for passed id doesn't exist`})
+        res.status(404)
     }
 })
 
