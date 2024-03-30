@@ -114,7 +114,7 @@ exports.app.get('/', (req, res) => {
 exports.app.get(settings_1.SETTINGS.PATH.VIDEOS, (req, res) => {
     res.status(200).send(videos);
 });
-exports.app.post(`${settings_1.SETTINGS.PATH.VIDEOS}/:id`, validateVideoData, (req, res) => {
+exports.app.post(`${settings_1.SETTINGS.PATH.VIDEOS}`, validateVideoData, (req, res) => {
     const maxId = videos.reduce((max, video) => (video.id > max ? video.id : max), -Infinity);
     const myDate = new Date().toISOString();
     const newVideo = {

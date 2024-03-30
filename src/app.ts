@@ -146,7 +146,7 @@ app.get(SETTINGS.PATH.VIDEOS, (req: Request, res: Response) => {
     res.status(200).send(videos)
 })
 
-app.post(`${SETTINGS.PATH.VIDEOS}/:id`, validateVideoData, (req: Request, res: Response) => {
+app.post(`${SETTINGS.PATH.VIDEOS}`, validateVideoData, (req: Request, res: Response) => {
 
     const maxId = videos.reduce((max, video) => (video.id > max ? video.id : max), -Infinity)
     const myDate = new Date().toISOString()
