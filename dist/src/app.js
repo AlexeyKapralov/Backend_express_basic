@@ -49,58 +49,39 @@ function isValidResolution(resolution) {
 }
 function validateVideoData(req, res, next) {
     const { title, author, availableResolutions, minAgeRestriction, publicationDate } = req.body;
+    const errorsMessages = [];
     if (!title || title.length > 40) {
-        return res.status(400).json({
-            errorsMessages: [
-                {
-                    message: "the inputModel has incorrect values or undefined",
-                    field: "title"
-                }
-            ]
-        });
+        return res.status(400).json(errorsMessages.push({
+            message: "the inputModel has incorrect values or undefined",
+            field: "title"
+        }));
     }
     if (!author || author.length > 20) {
-        return res.status(400).json({
-            errorsMessages: [
-                {
-                    message: "the inputModel has incorrect values or undefined",
-                    field: "author"
-                }
-            ]
-        });
+        return res.status(400).json(errorsMessages.push({
+            message: "the inputModel has incorrect values or undefined",
+            field: "author"
+        }));
     }
     if (minAgeRestriction) {
         if (!Number.isInteger(minAgeRestriction)) {
-            return res.status(400).json({
-                errorsMessages: [
-                    {
-                        message: "incorrect type",
-                        field: "minAgeRestriction"
-                    }
-                ]
-            });
+            return res.status(400).json(errorsMessages.push({
+                message: "incorrect type",
+                field: "minAgeRestriction"
+            }));
         }
         if (minAgeRestriction.length > 20) {
-            return res.status(400).json({
-                errorsMessages: [
-                    {
-                        message: "incorrect values",
-                        field: "minAgeRestriction"
-                    }
-                ]
-            });
+            return res.status(400).json(errorsMessages.push({
+                message: "incorrect values",
+                field: "minAgeRestriction"
+            }));
         }
     }
     if (availableResolutions) {
         if (!isValidResolution(availableResolutions)) {
-            return res.status(400).json({
-                errorsMessages: [
-                    {
-                        message: "the inputModel has incorrect values",
-                        field: "availableResolutions"
-                    }
-                ]
-            });
+            return res.status(400).json(errorsMessages.push({
+                message: "the inputModel has incorrect values",
+                field: "availableResolutions"
+            }));
         }
     }
     if (publicationDate) {
@@ -137,7 +118,7 @@ exports.app.get(`${settings_1.SETTINGS.PATH.VIDEOS}/:id`, (req, res) => {
         res.status(200).send(video);
     }
     else {
-        res.status(404);
+        res.send(404);
     }
 });
 exports.app.put(`${settings_1.SETTINGS.PATH.VIDEOS}/:id`, validateVideoData, (req, res) => {
