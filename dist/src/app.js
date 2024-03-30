@@ -48,7 +48,7 @@ function isValidResolution(resolution) {
     return true;
 }
 function validateVideoData(req, res, next) {
-    const { title, author, availableResolutions, minAgeRestriction, publicationDate } = req.body;
+    const { title, author, availableResolutions, minAgeRestriction, publicationDate, canBeDownloaded } = req.body;
     const errorsMessages = [];
     if (!title || title.length > 40) {
         errorsMessages.push({
@@ -84,7 +84,13 @@ function validateVideoData(req, res, next) {
             });
         }
     }
-    if (publicationDate) {
+    if (canBeDownloaded) {
+        if (typeof canBeDownloaded !== 'boolean') {
+            errorsMessages.push({
+                message: "the inputModel has incorrect values",
+                field: "canBeDownloaded"
+            });
+        }
     }
     if (errorsMessages.length !== 0) {
         return res.status(400).json({ errorsMessages });
@@ -145,7 +151,7 @@ exports.app.put(`${settings_1.SETTINGS.PATH.VIDEOS}/:id`, validateVideoData, (re
         else {
             video.publicationDate = nextDate;
         }
-        res.send(video);
+        res.send(204);
     }
     else {
         res.status(404).json({

@@ -1,6 +1,7 @@
 import express, {Request, Response} from 'express'
 import cors from 'cors'
 import {SETTINGS} from "./settings";
+import {type} from "os";
 
 export const app = express()
 app.use(express.json())
@@ -63,7 +64,7 @@ function isValidResolution(resolution: string[]) {
 }
 
 function validateVideoData(req: any, res: any, next: any) {
-    const {title, author, availableResolutions, minAgeRestriction, publicationDate} = req.body;
+    const {title, author, availableResolutions, minAgeRestriction, publicationDate, canBeDownloaded} = req.body;
     const errorsMessages = []
 
     if (!title || title.length > 40) {
@@ -118,8 +119,15 @@ function validateVideoData(req: any, res: any, next: any) {
     }
 
 
-    if (publicationDate) {
-
+    if (canBeDownloaded) {
+        if (typeof canBeDownloaded !== 'boolean'){
+            errorsMessages.push(
+                {
+                    message: "the inputModel has incorrect values",
+                    field: "canBeDownloaded"
+                }
+            )
+        }
     }
     if (errorsMessages.length !== 0) {
         return res.status(400).json({errorsMessages})
@@ -189,7 +197,7 @@ app.put(`${SETTINGS.PATH.VIDEOS}/:id`, validateVideoData, (req: Request, res: Re
         } else {
             video.publicationDate = nextDate
         }
-        res.send(video)
+        res.send(204)
     } else {
         res.status(404).json(
             {
