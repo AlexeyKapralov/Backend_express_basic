@@ -92,6 +92,14 @@ function validateVideoData(req, res, next) {
             });
         }
     }
+    if (publicationDate) {
+        if (!/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(publicationDate)) {
+            errorsMessages.push({
+                message: "the inputModel has incorrect values",
+                field: "publicationDate"
+            });
+        }
+    }
     if (errorsMessages.length !== 0) {
         return res.status(400).json({ errorsMessages });
     }
@@ -183,60 +191,3 @@ exports.app.delete(settings_1.SETTINGS.PATH.DEL_ALL, (req, res) => {
     videos.splice(0, videos.length);
     res.send(204);
 });
-// app.get('/products', (req: Request, res: Response) => {
-//     if (req.query.title) {
-//         let searchString = String(req.query.title)
-//
-//         res.send(products.filter(p => p.title.indexOf(searchString) > -1))
-//     }
-//     res.send(products)
-// })
-// app.get('/addresses', (req: Request, res: Response) => {
-//     if (req.query.title) {
-//         let searchString = String(req.query.title)
-//         res.send(products.filter(p => p.title.indexOf(searchString) > -1))
-//     }
-//     res.send(addresses)
-// })
-// app.get('/addresses/:id', (req: Request, res: Response) => {
-//     let address = addresses.find(p => p.id === +req.params.id)
-//     if (address) {
-//         res.send(address)
-//     } else {
-//         res.send(404)
-//     }
-//
-// })
-// app.put('/addresses/:id', (req: Request, res: Response) => {
-//     let address = addresses.find(p => p.id === +req.params.id)
-//     if (address) {
-//         address.value = req.body.title
-//         res.send(address)
-//     } else {
-//         res.send(404)
-//     }
-//
-// })
-// app.delete('/addresses/:id', (req: Request, res: Response) => {
-//
-//     for (let i = 0; i < addresses.length; i++) {
-//         if (addresses[i].id === +req.params.id) {
-//             addresses.splice(i, 1)
-//             res.send(204)
-//             return
-//         }
-//     }
-//
-//     res.send(404)
-//
-// })
-// app.post('/addresses', (req: Request, res: Response) => {
-//     const newAddr = {
-//         id: +(new Date()),
-//         value: req.body.title
-//     }
-//     addresses.push(newAddr)
-//
-//     res.status(201).send(newAddr)
-//
-// })
