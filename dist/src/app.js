@@ -158,7 +158,6 @@ exports.app.put(`${settings_1.SETTINGS.PATH.VIDEOS}/:id`, validateVideoData, (re
         }
         else
             video.minAgeRestriction = null;
-        video.createdAt = new Date().toISOString();
         if (req.body.publicationDate) {
             video.publicationDate = req.body.publicationDate;
         }

@@ -206,8 +206,6 @@ app.put(`${SETTINGS.PATH.VIDEOS}/:id`, validateVideoData, (req: Request, res: Re
             video.minAgeRestriction = req.body.minAgeRestriction
         } else video.minAgeRestriction = null
 
-        video.createdAt = new Date().toISOString()
-
         if (req.body.publicationDate) {
             video.publicationDate = req.body.publicationDate
         } else {
