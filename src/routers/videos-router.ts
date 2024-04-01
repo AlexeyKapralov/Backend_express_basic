@@ -1,5 +1,4 @@
 import {Request, Response, Router} from "express";
-import {app} from "../app";
 
 export const videosRouter = Router({})
 
@@ -126,11 +125,11 @@ function validateVideoData(req: any, res: any, next: any) {
     next();
 }
 
-app.get('/', (req: Request, res: Response) => {
+videosRouter.get('/', (req: Request, res: Response) => {
     res.status(200).send(videos)
 })
 
-app.post('/', validateVideoData, (req: Request, res: Response) => {
+videosRouter.post('/', validateVideoData, (req: Request, res: Response) => {
 
     const maxId = videos.reduce((max, video) => (video.id > max ? video.id : max), -1)
     const myDate = new Date().toISOString()
@@ -161,7 +160,7 @@ app.post('/', validateVideoData, (req: Request, res: Response) => {
     res.status(201).send(newVideo)
 })
 
-app.get(`/:id`, (req: Request, res: Response) => {
+videosRouter.get(`/:id`, (req: Request, res: Response) => {
     let video = videos.find(p => p.id === +req.params.id)
     if (video) {
         res.status(200).send(video)
@@ -170,7 +169,7 @@ app.get(`/:id`, (req: Request, res: Response) => {
     }
 })
 
-app.put(`/:id`, validateVideoData, (req: Request, res: Response) => {
+videosRouter.put(`/:id`, validateVideoData, (req: Request, res: Response) => {
     let video = videos.find(p => p.id === +req.params.id)
     if (video) {
         video.title = req.body.title
@@ -201,7 +200,7 @@ app.put(`/:id`, validateVideoData, (req: Request, res: Response) => {
 
 })
 
-app.delete(`/:id`, (req: Request, res: Response) => {
+videosRouter.delete(`/:id`, (req: Request, res: Response) => {
 
     for (let i = 0; i < videos.length; i++) {
         if (videos[i].id === +req.params.id) {
