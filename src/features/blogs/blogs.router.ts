@@ -11,19 +11,22 @@ import {authMiddleware} from "../../middlewares/auth-middleware";
 //validation
 //escape для защиты от XSS
 const nameValidation = body('name')
-    .isLength({max: 15}).withMessage('max length 15 symbols')
+    .trim()
+    .isLength({min: 1, max: 15}).withMessage('max length 15 symbols')
     .escape()
 const descriptionValidation = body('description')
-    .isLength({max: 500})
+    .trim()
+    .isLength({min: 1, max: 500})
     .escape()
 const webSiteUrlValidation = body('websiteUrl')
+    .trim()
     .isURL()
-    .isLength({max: 100})
+    // body('websiteUrl').matches('`^https://([a-zA-Z0-9_-]+\\.)+[a-zA-Z0-9_-]+(\\/[a-zA-Z0-9_-]+)*\\/?$\n').withMessage('should
+    // be URL template').escape()
+    .isLength({min: 1, max: 100})
     .withMessage('should be URL template')
 // .escape()
-// const webSiteUrlValidation =
-// body('websiteUrl').matches('`^https://([a-zA-Z0-9_-]+\\.)+[a-zA-Z0-9_-]+(\\/[a-zA-Z0-9_-]+)*\\/?$\n').withMessage('should
-// be URL template').escape()
+
 
 //router
 export const getBlogsRouter = () => {
@@ -53,6 +56,7 @@ export const getBlogsRouter = () => {
         descriptionValidation,
         webSiteUrlValidation,
         inputValidationMiddleware,
+
         (req: Request<{}, {}, BlogInputModel, {}>, res: Response<BlogViewModel[] | BlogViewModel | { errors: ValidationError[] }>) => {
             const createdBlog = blogsRepository.createBlog(req.body.name, req.body.description, req.body.websiteUrl)
             if (createdBlog) {

@@ -19,7 +19,7 @@ export const inputValidationMiddleware = (req: Request, res: Response, next: Nex
     const errors = myValidationResult(req)
     if (!errors.isEmpty()) {
         //only first error option returns only one error for each field
-        res.status(HTTP_STATUSES.BAD_REQUEST_400).json({errors: errors.array({onlyFirstError: true})})
+        res.status(HTTP_STATUSES.BAD_REQUEST_400).json({errorsMessages: errors.array({onlyFirstError: true})})
     } else {
         next()
     }

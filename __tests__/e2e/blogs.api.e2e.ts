@@ -1,9 +1,9 @@
 import {app} from "../../src/app";
 import {SETTINGS} from "../../src/settings";
 import {HTTP_STATUSES} from "../../src/utils/utils";
+import {BlogType} from "../../src/db/db";
 import {blogsTestManager} from "../utils/blogsTestManager";
 import {BlogViewModel} from "../../src/features/blogs/models/BlogViewModel";
-import {BlogType} from "../../src/db/db";
 
 const request = require('supertest');
 

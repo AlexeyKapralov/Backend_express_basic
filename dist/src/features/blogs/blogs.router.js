@@ -10,19 +10,21 @@ const auth_middleware_1 = require("../../middlewares/auth-middleware");
 //validation
 //escape для защиты от XSS
 const nameValidation = (0, express_validator_1.body)('name')
-    .isLength({ max: 15 }).withMessage('max length 15 symbols')
+    .trim()
+    .isLength({ min: 1, max: 15 }).withMessage('max length 15 symbols')
     .escape();
 const descriptionValidation = (0, express_validator_1.body)('description')
-    .isLength({ max: 500 })
+    .trim()
+    .isLength({ min: 1, max: 500 })
     .escape();
 const webSiteUrlValidation = (0, express_validator_1.body)('websiteUrl')
+    .trim()
     .isURL()
-    .isLength({ max: 100 })
+    // body('websiteUrl').matches('`^https://([a-zA-Z0-9_-]+\\.)+[a-zA-Z0-9_-]+(\\/[a-zA-Z0-9_-]+)*\\/?$\n').withMessage('should
+    // be URL template').escape()
+    .isLength({ min: 1, max: 100 })
     .withMessage('should be URL template');
 // .escape()
-// const webSiteUrlValidation =
-// body('websiteUrl').matches('`^https://([a-zA-Z0-9_-]+\\.)+[a-zA-Z0-9_-]+(\\/[a-zA-Z0-9_-]+)*\\/?$\n').withMessage('should
-// be URL template').escape()
 //router
 const getBlogsRouter = () => {
     const blogsRouter = (0, express_1.Router)({});
