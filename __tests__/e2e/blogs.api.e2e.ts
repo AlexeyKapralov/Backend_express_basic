@@ -62,6 +62,7 @@ describe('', () => {
             .expect(HTTP_STATUSES.NOT_FOUND_404)
     });
 
+    let updatedBlogGlobal: BlogType
     it('should update blog with correct data', async () => {
 
         const BlogForUpdate = {
@@ -70,12 +71,19 @@ describe('', () => {
             websiteUrl: "https://newSite.com"
         }
 
-        const {response} = await blogsTestManager.updateBlog(createdBlogGlobal.id, BlogForUpdate, SETTINGS.ADMIN_AUTH, HTTP_STATUSES.NO_CONTENT_204)
+        const {updatedBlog} = await blogsTestManager.updateBlog(createdBlogGlobal.id, BlogForUpdate, SETTINGS.ADMIN_AUTH, HTTP_STATUSES.NO_CONTENT_204)
 
-        return expect(response.status).toBe(HTTP_STATUSES.NO_CONTENT_204)
+        if (updatedBlog) {
+            updatedBlogGlobal = updatedBlog
+        }
+
+        await request(app)
+            .get(`${SETTINGS.PATH.BLOGS}`)
+            .expect(HTTP_STATUSES.OK_200)
+            .expect([updatedBlogGlobal])
     });
 
-    let updatedBlogGlobal: BlogType
+
     it(`shouldn't update blog with incorrect data`, async () => {
 
         const BlogForUpdate = {
@@ -85,13 +93,28 @@ describe('', () => {
         }
 
         const {
-            response,
             updatedBlog
         } = await blogsTestManager.updateBlog(createdBlogGlobal.id, BlogForUpdate, SETTINGS.ADMIN_AUTH, HTTP_STATUSES.BAD_REQUEST_400)
 
-        updatedBlogGlobal = updatedBlog
+        if (updatedBlog) {
+            updatedBlogGlobal = updatedBlog
+        }
 
-        return expect(response.status).toBe(HTTP_STATUSES.BAD_REQUEST_400)
+        await request(app)
+            .get(`${SETTINGS.PATH.BLOGS}`)
+            .expect(HTTP_STATUSES.OK_200)
+            .expect([updatedBlogGlobal])
+    });
+
+    it(`shouldn't delete blog with unknown id `, async () => {
+
+        await blogsTestManager
+            .deleteBlog('xzcaqwe', SETTINGS.ADMIN_AUTH, HTTP_STATUSES.NOT_FOUND_404)
+
+        await request(app)
+            .get(`${SETTINGS.PATH.BLOGS}`)
+            .expect(HTTP_STATUSES.OK_200)
+            .expect([updatedBlogGlobal])
     });
 
     it('should delete blog', async () => {

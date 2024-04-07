@@ -52,8 +52,16 @@ export const blogsRepository = {
     },
 
     deleteBlog(id: string) {
-        db.blogs = db.blogs.filter(c => c.id !== id)
-        return true
+
+        const foundedBlog = db.blogs.find(i => i.id === id)
+
+        if (foundedBlog) {
+            db.blogs = db.blogs.filter(c => c.id !== id)
+            return true
+        } else {
+            return false
+        }
+
     }
 
 }

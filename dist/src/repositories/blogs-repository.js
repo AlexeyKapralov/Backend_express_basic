@@ -44,7 +44,13 @@ exports.blogsRepository = {
         }
     },
     deleteBlog(id) {
-        db_1.db.blogs = db_1.db.blogs.filter(c => c.id !== id);
-        return true;
+        const foundedBlog = db_1.db.blogs.find(i => i.id === id);
+        if (foundedBlog) {
+            db_1.db.blogs = db_1.db.blogs.filter(c => c.id !== id);
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 };

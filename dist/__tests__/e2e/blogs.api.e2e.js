@@ -56,25 +56,44 @@ describe('', () => {
             .get(`${settings_1.SETTINGS.PATH.BLOGS}/adzxafqwr`)
             .expect(utils_1.HTTP_STATUSES.NOT_FOUND_404);
     }));
+    let updatedBlogGlobal;
     it('should update blog with correct data', () => __awaiter(void 0, void 0, void 0, function* () {
         const BlogForUpdate = {
             name: "new Name",
             description: "new Description",
             websiteUrl: "https://newSite.com"
         };
-        const { response } = yield blogsTestManager_1.blogsTestManager.updateBlog(createdBlogGlobal.id, BlogForUpdate, settings_1.SETTINGS.ADMIN_AUTH, utils_1.HTTP_STATUSES.NO_CONTENT_204);
-        return expect(response.status).toBe(utils_1.HTTP_STATUSES.NO_CONTENT_204);
+        const { updatedBlog } = yield blogsTestManager_1.blogsTestManager.updateBlog(createdBlogGlobal.id, BlogForUpdate, settings_1.SETTINGS.ADMIN_AUTH, utils_1.HTTP_STATUSES.NO_CONTENT_204);
+        if (updatedBlog) {
+            updatedBlogGlobal = updatedBlog;
+        }
+        yield request(app_1.app)
+            .get(`${settings_1.SETTINGS.PATH.BLOGS}`)
+            .expect(utils_1.HTTP_STATUSES.OK_200)
+            .expect([updatedBlogGlobal]);
     }));
-    let updatedBlogGlobal;
     it(`shouldn't update blog with incorrect data`, () => __awaiter(void 0, void 0, void 0, function* () {
         const BlogForUpdate = {
             name: "new Nameasdasdadsad",
             description: "new Description",
             websiteUrl: "https://newSiteasdadasdascom"
         };
-        const { response, updatedBlog } = yield blogsTestManager_1.blogsTestManager.updateBlog(createdBlogGlobal.id, BlogForUpdate, settings_1.SETTINGS.ADMIN_AUTH, utils_1.HTTP_STATUSES.BAD_REQUEST_400);
-        updatedBlogGlobal = updatedBlog;
-        return expect(response.status).toBe(utils_1.HTTP_STATUSES.BAD_REQUEST_400);
+        const { updatedBlog } = yield blogsTestManager_1.blogsTestManager.updateBlog(createdBlogGlobal.id, BlogForUpdate, settings_1.SETTINGS.ADMIN_AUTH, utils_1.HTTP_STATUSES.BAD_REQUEST_400);
+        if (updatedBlog) {
+            updatedBlogGlobal = updatedBlog;
+        }
+        yield request(app_1.app)
+            .get(`${settings_1.SETTINGS.PATH.BLOGS}`)
+            .expect(utils_1.HTTP_STATUSES.OK_200)
+            .expect([updatedBlogGlobal]);
+    }));
+    it(`shouldn't delete blog with unknown id `, () => __awaiter(void 0, void 0, void 0, function* () {
+        yield blogsTestManager_1.blogsTestManager
+            .deleteBlog('xzcaqwe', settings_1.SETTINGS.ADMIN_AUTH, utils_1.HTTP_STATUSES.NOT_FOUND_404);
+        yield request(app_1.app)
+            .get(`${settings_1.SETTINGS.PATH.BLOGS}`)
+            .expect(utils_1.HTTP_STATUSES.OK_200)
+            .expect([updatedBlogGlobal]);
     }));
     it('should delete blog', () => __awaiter(void 0, void 0, void 0, function* () {
         yield blogsTestManager_1.blogsTestManager

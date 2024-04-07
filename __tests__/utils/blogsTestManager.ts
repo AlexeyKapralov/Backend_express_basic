@@ -41,9 +41,10 @@ export const blogsTestManager = {
 
         const updatedBlog: BlogType = {
             id: id,
-            websiteUrl: data.websiteUrl,
+            name: data.name,
             description: data.description,
-            name: data.name
+            websiteUrl: data.websiteUrl
+
         }
 
         const response = await request(app)
@@ -52,7 +53,11 @@ export const blogsTestManager = {
             .send(data)
             .expect(expectedStatus)
 
-        return {response, updatedBlog}
+        if (response.status === HTTP_STATUSES.NO_CONTENT_204) {
+            return {response, updatedBlog}
+        } else {
+            return {response}
+        }
     },
 
     async deleteBlog(id: string, admin_auth: string, expectedStatus: HttpStatusType) {
