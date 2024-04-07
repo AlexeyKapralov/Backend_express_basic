@@ -1,4 +1,4 @@
-import express, {json} from "express";
+import express from "express";
 import {SETTINGS} from "./settings";
 import {getBlogsRouter} from "./features/blogs/blogs.router";
 import {getTestRouter} from "./features/test/test.router";

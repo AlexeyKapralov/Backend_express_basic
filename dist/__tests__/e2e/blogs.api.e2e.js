@@ -12,13 +12,74 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const app_1 = require("../../src/app");
 const settings_1 = require("../../src/settings");
 const utils_1 = require("../../src/utils/utils");
+const blogsTestManager_1 = require("../utils/blogsTestManager");
 const request = require('supertest');
 describe('', () => {
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
-        yield request(app_1.app).delete(`${settings_1.SETTINGS.PATH.TESTS}/data`);
+        yield request(app_1.app).delete(`${settings_1.SETTINGS.PATH.TESTS}`);
     }));
     it('should get blogs', () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield request(app_1.app)
+        yield request(app_1.app)
+            .get(`${settings_1.SETTINGS.PATH.BLOGS}`)
+            .expect(utils_1.HTTP_STATUSES.OK_200)
+            .expect([]);
+    }));
+    let createdBlogGlobal;
+    it('should create blog', () => __awaiter(void 0, void 0, void 0, function* () {
+        const data = {
+            name: "123",
+            description: "string",
+            websiteUrl: "https://google.com"
+        };
+        const { createdBlog } = yield blogsTestManager_1.blogsTestManager.createBlog(data, settings_1.SETTINGS.ADMIN_AUTH);
+        createdBlogGlobal = createdBlog;
+        yield request(app_1.app)
+            .get(settings_1.SETTINGS.PATH.BLOGS)
+            .expect(utils_1.HTTP_STATUSES.OK_200, [createdBlogGlobal]);
+    }));
+    it(`shouldn't create blog with incorrect data`, () => __awaiter(void 0, void 0, void 0, function* () {
+        const data = {
+            name: "strinasdasdasdasdasdasdasdadsadasdasdasdg",
+            description: "asd",
+            websiteUrl: "https://google.comdasdasd"
+        };
+        const { response } = yield blogsTestManager_1.blogsTestManager.createBlog(data, settings_1.SETTINGS.ADMIN_AUTH, utils_1.HTTP_STATUSES.BAD_REQUEST_400);
+        return expect(response.status).toBe(utils_1.HTTP_STATUSES.BAD_REQUEST_400);
+    }));
+    it('should find blog by id', () => __awaiter(void 0, void 0, void 0, function* () {
+        yield request(app_1.app)
+            .get(`${settings_1.SETTINGS.PATH.BLOGS}/${createdBlogGlobal.id}`)
+            .expect(utils_1.HTTP_STATUSES.OK_200, createdBlogGlobal);
+    }));
+    it(`shouldn't find blog by id`, () => __awaiter(void 0, void 0, void 0, function* () {
+        yield request(app_1.app)
+            .get(`${settings_1.SETTINGS.PATH.BLOGS}/adzxafqwr`)
+            .expect(utils_1.HTTP_STATUSES.NOT_FOUND_404);
+    }));
+    it('should update blog with correct data', () => __awaiter(void 0, void 0, void 0, function* () {
+        const BlogForUpdate = {
+            name: "new Name",
+            description: "new Description",
+            websiteUrl: "https://newSite.com"
+        };
+        const { response } = yield blogsTestManager_1.blogsTestManager.updateBlog(createdBlogGlobal.id, BlogForUpdate, settings_1.SETTINGS.ADMIN_AUTH, utils_1.HTTP_STATUSES.NO_CONTENT_204);
+        return expect(response.status).toBe(utils_1.HTTP_STATUSES.NO_CONTENT_204);
+    }));
+    let updatedBlogGlobal;
+    it(`shouldn't update blog with incorrect data`, () => __awaiter(void 0, void 0, void 0, function* () {
+        const BlogForUpdate = {
+            name: "new Nameasdasdadsad",
+            description: "new Description",
+            websiteUrl: "https://newSiteasdadasdascom"
+        };
+        const { response, updatedBlog } = yield blogsTestManager_1.blogsTestManager.updateBlog(createdBlogGlobal.id, BlogForUpdate, settings_1.SETTINGS.ADMIN_AUTH, utils_1.HTTP_STATUSES.BAD_REQUEST_400);
+        updatedBlogGlobal = updatedBlog;
+        return expect(response.status).toBe(utils_1.HTTP_STATUSES.BAD_REQUEST_400);
+    }));
+    it('should delete blog', () => __awaiter(void 0, void 0, void 0, function* () {
+        yield blogsTestManager_1.blogsTestManager
+            .deleteBlog(updatedBlogGlobal.id, settings_1.SETTINGS.ADMIN_AUTH, utils_1.HTTP_STATUSES.NO_CONTENT_204);
+        yield request(app_1.app)
             .get(`${settings_1.SETTINGS.PATH.BLOGS}`)
             .expect(utils_1.HTTP_STATUSES.OK_200)
             .expect([]);

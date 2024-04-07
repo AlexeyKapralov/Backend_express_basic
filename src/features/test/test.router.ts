@@ -5,7 +5,7 @@ import {HTTP_STATUSES} from "../../utils/utils";
 export const getTestRouter = (db: dbType) => {
     const testRouter = Router({})
 
-    testRouter.delete('/data', (req: Request, res: Response) => {
+    testRouter.delete('/', (req: Request, res: Response) => {
         db.blogs = []
         res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
     })

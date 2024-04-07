@@ -7,6 +7,7 @@ exports.SETTINGS = {
     PORT: process.env.PORT || 3002,
     PATH: {
         BLOGS: '/blogs',
-        TESTS: '/_tests_'
-    }
+        TESTS: '/testing/all-data'
+    },
+    ADMIN_AUTH: process.env.ADMIN_AUTH || ''
 };
