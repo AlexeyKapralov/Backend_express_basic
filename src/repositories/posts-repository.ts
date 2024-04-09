@@ -19,6 +19,7 @@ export const postsRepository = {
         const foundedBlog = blogsRepository.getBlogById(data.blogId)
 
         if (foundedBlog) {
+            //здесь деструктуризация лучше
             const newPost: PostViewModel = {
                 id: String(+new Date()),
                 title: data.title,
@@ -27,7 +28,9 @@ export const postsRepository = {
                 content: data.content,
                 blogName: foundedBlog.name
             }
-            posts.push(newPost)
+            // posts.push(newPost)
+            db.posts = [...posts, newPost]
+
             return newPost
         } else {
             return undefined

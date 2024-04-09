@@ -45,86 +45,82 @@ const blogIdValidation = body('blogId')
     .escape()
 
 
-export const getPostsRouter = () => {
-    const courseRouter = Router({})
+export const postsRouter = Router({})
 
-    courseRouter.get('/',
+postsRouter.get('/',
 
-        (req: Request<{}, {}, {}, PostInputModel>, res: Response<PostViewModel[]>) => {
-            const foundPosts = postsRepository.getPosts(req.query.title || undefined)
-            if (foundPosts) {
-                res.status(HTTP_STATUSES.OK_200).json(foundPosts.map(getPostViewModel))
-            }
+    (req: Request<{}, {}, {}, PostInputModel>, res: Response<PostViewModel[]>) => {
+        const foundPosts = postsRepository.getPosts(req.query.title || undefined)
+        if (foundPosts) {
+            res.status(HTTP_STATUSES.OK_200).json(foundPosts.map(getPostViewModel))
         }
-    )
+    }
+)
 
-    courseRouter.post('/',
+postsRouter.post('/',
 
-        authMiddleware,
-        titleValidation,
-        shortDescriptionValidation,
-        contentValidation,
-        blogIdValidation,
-        inputValidationMiddleware,
+    authMiddleware,
+    titleValidation,
+    shortDescriptionValidation,
+    contentValidation,
+    blogIdValidation,
+    inputValidationMiddleware,
 
-        (req: Request<{}, {}, PostInputModel>, res: Response<PostViewModel>) => {
-            const createdPost: PostViewModel | undefined = postsRepository.createPost(req.body)
+    (req: Request<{}, {}, PostInputModel>, res: Response<PostViewModel>) => {
+        const createdPost: PostViewModel | undefined = postsRepository.createPost(req.body)
 
-            if (createdPost) {
-                res.status(HTTP_STATUSES.CREATED_201).json(createdPost)
-            } else res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
+        if (createdPost) {
+            res.status(HTTP_STATUSES.CREATED_201).json(createdPost)
+        } else res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
 
+    }
+)
+
+postsRouter.put('/:id',
+
+    authMiddleware,
+    titleValidation,
+    shortDescriptionValidation,
+    contentValidation,
+    blogIdValidation,
+    inputValidationMiddleware,
+
+    (req: Request<{ id: string }>, res: Response) => {
+        const isUpdated = postsRepository.updatePost(req.params.id, req.body)
+        if (isUpdated) {
+            res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
+        } else {
+            res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
         }
-    )
+    }
+)
 
-    courseRouter.put('/:id',
+postsRouter.get('/:id',
 
-        authMiddleware,
-        titleValidation,
-        shortDescriptionValidation,
-        contentValidation,
-        blogIdValidation,
-        inputValidationMiddleware,
+    (req: Request<{ id: string }>, res: Response) => {
+        const foundedPost = postsRepository.getPostById(req.params.id)
 
-        (req: Request<{ id: string }>, res: Response) => {
-            const isUpdated = postsRepository.updatePost(req.params.id, req.body)
-            if (isUpdated) {
-                res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
-            } else {
-                res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
-            }
+        if (foundedPost) {
+            res.status(HTTP_STATUSES.OK_200).send(
+                foundedPost
+            )
+        } else {
+            res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
         }
-    )
+    }
+)
 
-    courseRouter.get('/:id',
+postsRouter.delete('/:id',
 
-        (req: Request<{ id: string }>, res: Response) => {
-            const foundedPost = postsRepository.getPostById(req.params.id)
+    authMiddleware,
 
-            if (foundedPost) {
-                res.status(HTTP_STATUSES.OK_200).send(
-                    foundedPost
-                )
-            } else {
-                res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
-            }
+    (req: Request<{ id: string }>, res: Response) => {
+        const isDel = postsRepository.deletePost(req.params.id)
+
+        if (isDel) {
+            res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
+        } else {
+            res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
         }
-    )
-
-    courseRouter.delete('/:id',
-
-        authMiddleware,
-
-        (req: Request<{ id: string }>, res: Response) => {
-            const isDel = postsRepository.deletePost(req.params.id)
-
-            if (isDel) {
-                res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
-            } else {
-                res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
-            }
-        }
-    )
-
-    return courseRouter
-}
+    }
+)

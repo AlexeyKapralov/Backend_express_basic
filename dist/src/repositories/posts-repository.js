@@ -15,6 +15,7 @@ exports.postsRepository = {
         const posts = db_1.db.posts;
         const foundedBlog = blogs_repository_1.blogsRepository.getBlogById(data.blogId);
         if (foundedBlog) {
+            //здесь деструктуризация лучше
             const newPost = {
                 id: String(+new Date()),
                 title: data.title,
@@ -23,7 +24,8 @@ exports.postsRepository = {
                 content: data.content,
                 blogName: foundedBlog.name
             };
-            posts.push(newPost);
+            // posts.push(newPost)
+            db_1.db.posts = [...posts, newPost];
             return newPost;
         }
         else {

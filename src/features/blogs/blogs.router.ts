@@ -29,91 +29,91 @@ const webSiteUrlValidation = body('websiteUrl')
 
 
 //router
-export const getBlogsRouter = () => {
-    const blogsRouter = Router({})
+// export const getBlogsRouter = () => {
+export const blogsRouter = Router({})
 
-    const getBlogViewModel = (dbBlog: BlogType) => {
-        return {
-            id: dbBlog.id,
-            name: dbBlog.name,
-            description: dbBlog.description,
-            websiteUrl: dbBlog.websiteUrl
+const getBlogViewModel = (dbBlog: BlogType) => {
+    return {
+        id: dbBlog.id,
+        name: dbBlog.name,
+        description: dbBlog.description,
+        websiteUrl: dbBlog.websiteUrl
+    }
+}
+
+//get blogs
+blogsRouter.get('/',
+    (req: Request<{}, {}, {}, { name: string }>, res: Response<BlogViewModel[] | BlogViewModel>) => {
+        const foundedBlogs = blogsRepository.getBlogs(req.query.name)
+        res.status(HTTP_STATUSES.OK_200).json(foundedBlogs.map(getBlogViewModel))
+    })
+
+// create post
+blogsRouter.post('/',
+
+    authMiddleware,
+    nameValidation,
+    descriptionValidation,
+    webSiteUrlValidation,
+    inputValidationMiddleware,
+
+    (req: Request<{}, {}, BlogInputModel, {}>, res: Response<BlogViewModel[] | BlogViewModel | { errors: ValidationError[] }>) => {
+        const createdBlog = blogsRepository.createBlog(req.body.name, req.body.description, req.body.websiteUrl)
+        if (createdBlog) {
+            res.status(HTTP_STATUSES.CREATED_201).json(createdBlog)
+        } else {
+            res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400)
+        }
+    })
+
+//get blog by ID
+blogsRouter.get('/:id',
+    // idValidation,
+    // inputValidationMiddleware,
+    (req: Request<{ id: string }>, res: Response<BlogViewModel>) => {
+        const foundedBlog = blogsRepository.getBlogById(req.params.id)
+
+        if (foundedBlog) {
+            res.status(HTTP_STATUSES.OK_200).json(getBlogViewModel(foundedBlog))
+            return
+        }
+        res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
+    })
+
+//update blogs
+blogsRouter.put('/:id',
+
+    authMiddleware,
+    nameValidation,
+    descriptionValidation,
+    webSiteUrlValidation,
+    inputValidationMiddleware,
+
+    (req: Request<{ id: string }, {}, BlogInputModel>, res: Response) => {
+        const isUpdated = blogsRepository.updateBlog(req.params.id, req.body)
+        if (isUpdated) {
+            res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
+        } else {
+            res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
         }
     }
+)
 
-    //get blogs
-    blogsRouter.get('/',
-        (req: Request<{}, {}, {}, { name: string }>, res: Response<BlogViewModel[] | BlogViewModel>) => {
-            const foundedBlogs = blogsRepository.getBlogs(req.query.name)
-            res.status(HTTP_STATUSES.OK_200).json(foundedBlogs.map(getBlogViewModel))
-        })
+//delete blog
+blogsRouter.delete('/:id',
 
-    // create post
-    blogsRouter.post('/',
+    authMiddleware,
+    (req: Request<{ id: string }>, res: Response) => {
+        const isDeleted = blogsRepository.deleteBlog(req.params.id)
 
-        authMiddleware,
-        nameValidation,
-        descriptionValidation,
-        webSiteUrlValidation,
-        inputValidationMiddleware,
-
-        (req: Request<{}, {}, BlogInputModel, {}>, res: Response<BlogViewModel[] | BlogViewModel | { errors: ValidationError[] }>) => {
-            const createdBlog = blogsRepository.createBlog(req.body.name, req.body.description, req.body.websiteUrl)
-            if (createdBlog) {
-                res.status(HTTP_STATUSES.CREATED_201).json(createdBlog)
-            } else {
-                res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400)
-            }
-        })
-
-    //get blog by ID
-    blogsRouter.get('/:id',
-        // idValidation,
-        // inputValidationMiddleware,
-        (req: Request<{ id: string }>, res: Response<BlogViewModel>) => {
-            const foundedBlog = blogsRepository.getBlogById(req.params.id)
-
-            if (foundedBlog) {
-                res.status(HTTP_STATUSES.OK_200).json(getBlogViewModel(foundedBlog))
-                return
-            }
+        if (isDeleted) {
+            res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
+        } else {
             res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
-        })
-
-    //update blogs
-    blogsRouter.put('/:id',
-
-        authMiddleware,
-        nameValidation,
-        descriptionValidation,
-        webSiteUrlValidation,
-        inputValidationMiddleware,
-
-        (req: Request<{ id: string }, {}, BlogInputModel>, res: Response) => {
-            const isUpdated = blogsRepository.updateBlog(req.params.id, req.body)
-            if (isUpdated) {
-                res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
-            } else {
-                res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
-            }
         }
-    )
-
-    //delete blog
-    blogsRouter.delete('/:id',
-
-        authMiddleware,
-        (req: Request<{ id: string }>, res: Response) => {
-            const isDeleted = blogsRepository.deleteBlog(req.params.id)
-
-            if (isDeleted) {
-                res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
-            } else {
-                res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
-            }
-        }
-    )
+    }
+)
 
 
-    return blogsRouter
-}
+//     return blogsRouter
+// }

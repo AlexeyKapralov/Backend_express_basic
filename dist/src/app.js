@@ -13,6 +13,6 @@ const posts_router_1 = require("./features/posts/posts.router");
 exports.app = (0, express_1.default)();
 const jsonBodyMiddleware = express_1.default.json();
 exports.app.use(jsonBodyMiddleware);
-exports.app.use(settings_1.SETTINGS.PATH.BLOGS, (0, blogs_router_1.getBlogsRouter)());
+exports.app.use(settings_1.SETTINGS.PATH.BLOGS, blogs_router_1.blogsRouter);
 exports.app.use(settings_1.SETTINGS.PATH.POSTS, (0, posts_router_1.getPostsRouter)());
 exports.app.use(settings_1.SETTINGS.PATH.TESTS, (0, test_router_1.getTestRouter)(db_1.db));

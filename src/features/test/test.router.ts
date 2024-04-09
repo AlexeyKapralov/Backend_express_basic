@@ -1,15 +1,11 @@
 import {Request, Response, Router} from "express";
-import {dbType} from "../../db/db";
 import {HTTP_STATUSES} from "../../utils/utils";
+import {db} from "../../db/db";
 
-export const getTestRouter = (db: dbType) => {
-    const testRouter = Router({})
+export const testRouter = Router({})
 
-    testRouter.delete('/', (req: Request, res: Response) => {
-        db.blogs = []
-        db.posts = []
-        res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
-    })
-
-    return testRouter
-}
+testRouter.delete('/', (req: Request, res: Response) => {
+    db.blogs = []
+    db.posts = []
+    res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
+})

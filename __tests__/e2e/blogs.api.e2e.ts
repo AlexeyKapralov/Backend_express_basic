@@ -4,8 +4,7 @@ import {HTTP_STATUSES} from "../../src/utils/utils";
 import {BlogType} from "../../src/db/db";
 import {blogsTestManager} from "../utils/blogsTestManager";
 import {BlogViewModel} from "../../src/features/blogs/models/BlogViewModel";
-
-const request = require('supertest');
+import {agent as request} from "supertest";
 
 describe('', () => {
     beforeAll(async () => {
@@ -32,6 +31,7 @@ describe('', () => {
 
         createdBlogGlobal = createdBlog
 
+        //или прямо из бд
         await request(app)
             .get(SETTINGS.PATH.BLOGS)
             .expect(HTTP_STATUSES.OK_200, [createdBlogGlobal])

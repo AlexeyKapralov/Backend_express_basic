@@ -13,13 +13,13 @@ const app_1 = require("../../src/app");
 const settings_1 = require("../../src/settings");
 const utils_1 = require("../../src/utils/utils");
 const blogsTestManager_1 = require("../utils/blogsTestManager");
-const request = require('supertest');
+const supertest_1 = require("supertest");
 describe('', () => {
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
-        yield request(app_1.app).delete(`${settings_1.SETTINGS.PATH.TESTS}`);
+        yield (0, supertest_1.agent)(app_1.app).delete(`${settings_1.SETTINGS.PATH.TESTS}`);
     }));
     it('should get blogs', () => __awaiter(void 0, void 0, void 0, function* () {
-        yield request(app_1.app)
+        yield (0, supertest_1.agent)(app_1.app)
             .get(`${settings_1.SETTINGS.PATH.BLOGS}`)
             .expect(utils_1.HTTP_STATUSES.OK_200)
             .expect([]);
@@ -33,7 +33,8 @@ describe('', () => {
         };
         const { createdBlog } = yield blogsTestManager_1.blogsTestManager.createBlog(data, settings_1.SETTINGS.ADMIN_AUTH);
         createdBlogGlobal = createdBlog;
-        yield request(app_1.app)
+        //или прямо из бд
+        yield (0, supertest_1.agent)(app_1.app)
             .get(settings_1.SETTINGS.PATH.BLOGS)
             .expect(utils_1.HTTP_STATUSES.OK_200, [createdBlogGlobal]);
     }));
@@ -47,12 +48,12 @@ describe('', () => {
         return expect(response.status).toBe(utils_1.HTTP_STATUSES.BAD_REQUEST_400);
     }));
     it('should find blog by id', () => __awaiter(void 0, void 0, void 0, function* () {
-        yield request(app_1.app)
+        yield (0, supertest_1.agent)(app_1.app)
             .get(`${settings_1.SETTINGS.PATH.BLOGS}/${createdBlogGlobal.id}`)
             .expect(utils_1.HTTP_STATUSES.OK_200, createdBlogGlobal);
     }));
     it(`shouldn't find blog by id`, () => __awaiter(void 0, void 0, void 0, function* () {
-        yield request(app_1.app)
+        yield (0, supertest_1.agent)(app_1.app)
             .get(`${settings_1.SETTINGS.PATH.BLOGS}/adzxafqwr`)
             .expect(utils_1.HTTP_STATUSES.NOT_FOUND_404);
     }));
@@ -67,7 +68,7 @@ describe('', () => {
         if (updatedBlog) {
             updatedBlogGlobal = updatedBlog;
         }
-        yield request(app_1.app)
+        yield (0, supertest_1.agent)(app_1.app)
             .get(`${settings_1.SETTINGS.PATH.BLOGS}`)
             .expect(utils_1.HTTP_STATUSES.OK_200)
             .expect([updatedBlogGlobal]);
@@ -82,7 +83,7 @@ describe('', () => {
         if (updatedBlog) {
             updatedBlogGlobal = updatedBlog;
         }
-        yield request(app_1.app)
+        yield (0, supertest_1.agent)(app_1.app)
             .get(`${settings_1.SETTINGS.PATH.BLOGS}`)
             .expect(utils_1.HTTP_STATUSES.OK_200)
             .expect([updatedBlogGlobal]);
@@ -90,7 +91,7 @@ describe('', () => {
     it(`shouldn't delete blog with unknown id `, () => __awaiter(void 0, void 0, void 0, function* () {
         yield blogsTestManager_1.blogsTestManager
             .deleteBlog('xzcaqwe', settings_1.SETTINGS.ADMIN_AUTH, utils_1.HTTP_STATUSES.NOT_FOUND_404);
-        yield request(app_1.app)
+        yield (0, supertest_1.agent)(app_1.app)
             .get(`${settings_1.SETTINGS.PATH.BLOGS}`)
             .expect(utils_1.HTTP_STATUSES.OK_200)
             .expect([updatedBlogGlobal]);
@@ -98,7 +99,7 @@ describe('', () => {
     it('should delete blog', () => __awaiter(void 0, void 0, void 0, function* () {
         yield blogsTestManager_1.blogsTestManager
             .deleteBlog(updatedBlogGlobal.id, settings_1.SETTINGS.ADMIN_AUTH, utils_1.HTTP_STATUSES.NO_CONTENT_204);
-        yield request(app_1.app)
+        yield (0, supertest_1.agent)(app_1.app)
             .get(`${settings_1.SETTINGS.PATH.BLOGS}`)
             .expect(utils_1.HTTP_STATUSES.OK_200)
             .expect([]);

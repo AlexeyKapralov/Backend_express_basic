@@ -6,8 +6,7 @@ import {BlogType} from "../../src/db/db";
 import {PostInputModel} from "../../src/features/posts/models/PostInputModel";
 import {blogsTestManager} from "../utils/blogsTestManager";
 import {postsTestManager} from "../utils/postsTestManager";
-
-const request = require('supertest');
+import {agent as request} from 'supertest'
 
 describe('', () => {
     beforeAll(async () => {

@@ -14,13 +14,13 @@ const settings_1 = require("../../src/settings");
 const utils_1 = require("../../src/utils/utils");
 const blogsTestManager_1 = require("../utils/blogsTestManager");
 const postsTestManager_1 = require("../utils/postsTestManager");
-const request = require('supertest');
+const supertest_1 = require("supertest");
 describe('', () => {
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
-        yield request(app_1.app).delete(`${settings_1.SETTINGS.PATH.TESTS}`);
+        yield (0, supertest_1.agent)(app_1.app).delete(`${settings_1.SETTINGS.PATH.TESTS}`);
     }));
     it('should get posts', () => __awaiter(void 0, void 0, void 0, function* () {
-        yield request(app_1.app)
+        yield (0, supertest_1.agent)(app_1.app)
             .get(`${settings_1.SETTINGS.PATH.POSTS}`)
             .expect(utils_1.HTTP_STATUSES.OK_200)
             .expect([]);
@@ -52,7 +52,7 @@ describe('', () => {
                 }
             ]
         });
-        yield request(app_1.app)
+        yield (0, supertest_1.agent)(app_1.app)
             .get(settings_1.SETTINGS.PATH.POSTS)
             .expect(utils_1.HTTP_STATUSES.OK_200, []);
     }));
@@ -99,7 +99,7 @@ describe('', () => {
         else {
             expect(createdPost).toEqual(undefined);
         }
-        yield request(app_1.app)
+        yield (0, supertest_1.agent)(app_1.app)
             .get(settings_1.SETTINGS.PATH.POSTS)
             .expect(utils_1.HTTP_STATUSES.OK_200, [createdPostGlobal]);
     }));
