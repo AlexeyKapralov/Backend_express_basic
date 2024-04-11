@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getPostsRouter = void 0;
+exports.postsRouter = void 0;
 const express_1 = require("express");
 const posts_repository_1 = require("../../repositories/posts-repository");
 const express_validator_1 = require("express-validator");
@@ -49,49 +49,45 @@ const blogIdValidation = (0, express_validator_1.body)('blogId')
     .trim()
     .isLength({ min: 1, max: 1000 })
     .escape();
-const getPostsRouter = () => {
-    const courseRouter = (0, express_1.Router)({});
-    courseRouter.get('/', (req, res) => {
-        const foundPosts = posts_repository_1.postsRepository.getPosts(req.query.title || undefined);
-        if (foundPosts) {
-            res.status(utils_1.HTTP_STATUSES.OK_200).json(foundPosts.map(getPostViewModel));
-        }
-    });
-    courseRouter.post('/', auth_middleware_1.authMiddleware, titleValidation, shortDescriptionValidation, contentValidation, blogIdValidation, inputValidationMiddleware_1.inputValidationMiddleware, (req, res) => {
-        const createdPost = posts_repository_1.postsRepository.createPost(req.body);
-        if (createdPost) {
-            res.status(utils_1.HTTP_STATUSES.CREATED_201).json(createdPost);
-        }
-        else
-            res.sendStatus(utils_1.HTTP_STATUSES.NOT_FOUND_404);
-    });
-    courseRouter.put('/:id', auth_middleware_1.authMiddleware, titleValidation, shortDescriptionValidation, contentValidation, blogIdValidation, inputValidationMiddleware_1.inputValidationMiddleware, (req, res) => {
-        const isUpdated = posts_repository_1.postsRepository.updatePost(req.params.id, req.body);
-        if (isUpdated) {
-            res.sendStatus(utils_1.HTTP_STATUSES.NO_CONTENT_204);
-        }
-        else {
-            res.sendStatus(utils_1.HTTP_STATUSES.NOT_FOUND_404);
-        }
-    });
-    courseRouter.get('/:id', (req, res) => {
-        const foundedPost = posts_repository_1.postsRepository.getPostById(req.params.id);
-        if (foundedPost) {
-            res.status(utils_1.HTTP_STATUSES.OK_200).send(foundedPost);
-        }
-        else {
-            res.sendStatus(utils_1.HTTP_STATUSES.NOT_FOUND_404);
-        }
-    });
-    courseRouter.delete('/:id', auth_middleware_1.authMiddleware, (req, res) => {
-        const isDel = posts_repository_1.postsRepository.deletePost(req.params.id);
-        if (isDel) {
-            res.sendStatus(utils_1.HTTP_STATUSES.NO_CONTENT_204);
-        }
-        else {
-            res.sendStatus(utils_1.HTTP_STATUSES.NOT_FOUND_404);
-        }
-    });
-    return courseRouter;
-};
-exports.getPostsRouter = getPostsRouter;
+exports.postsRouter = (0, express_1.Router)({});
+exports.postsRouter.get('/', (req, res) => {
+    const foundPosts = posts_repository_1.postsRepository.getPosts(req.query.title || undefined);
+    if (foundPosts) {
+        res.status(utils_1.HTTP_STATUSES.OK_200).json(foundPosts.map(getPostViewModel));
+    }
+});
+exports.postsRouter.post('/', auth_middleware_1.authMiddleware, titleValidation, shortDescriptionValidation, contentValidation, blogIdValidation, inputValidationMiddleware_1.inputValidationMiddleware, (req, res) => {
+    const createdPost = posts_repository_1.postsRepository.createPost(req.body);
+    if (createdPost) {
+        res.status(utils_1.HTTP_STATUSES.CREATED_201).json(createdPost);
+    }
+    else
+        res.sendStatus(utils_1.HTTP_STATUSES.NOT_FOUND_404);
+});
+exports.postsRouter.put('/:id', auth_middleware_1.authMiddleware, titleValidation, shortDescriptionValidation, contentValidation, blogIdValidation, inputValidationMiddleware_1.inputValidationMiddleware, (req, res) => {
+    const isUpdated = posts_repository_1.postsRepository.updatePost(req.params.id, req.body);
+    if (isUpdated) {
+        res.sendStatus(utils_1.HTTP_STATUSES.NO_CONTENT_204);
+    }
+    else {
+        res.sendStatus(utils_1.HTTP_STATUSES.NOT_FOUND_404);
+    }
+});
+exports.postsRouter.get('/:id', (req, res) => {
+    const foundedPost = posts_repository_1.postsRepository.getPostById(req.params.id);
+    if (foundedPost) {
+        res.status(utils_1.HTTP_STATUSES.OK_200).send(foundedPost);
+    }
+    else {
+        res.sendStatus(utils_1.HTTP_STATUSES.NOT_FOUND_404);
+    }
+});
+exports.postsRouter.delete('/:id', auth_middleware_1.authMiddleware, (req, res) => {
+    const isDel = posts_repository_1.postsRepository.deletePost(req.params.id);
+    if (isDel) {
+        res.sendStatus(utils_1.HTTP_STATUSES.NO_CONTENT_204);
+    }
+    else {
+        res.sendStatus(utils_1.HTTP_STATUSES.NOT_FOUND_404);
+    }
+});

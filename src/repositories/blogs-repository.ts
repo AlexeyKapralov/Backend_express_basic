@@ -1,14 +1,18 @@
-import {BlogType, db} from "../db/db";
+import {blogsCollection, BlogType, db} from "../db/db";
 import {BlogInputModel} from "../features/blogs/models/BlogInputModel";
 
 export const blogsRepository = {
-    getBlogs(name: string | null | undefined) {
-        let foundBlogs = db.blogs
-
+    async getBlogs(name: string | null | undefined): Promise<BlogType[]> {
+        // let foundBlogs = db.blogs
+        // if (name) {
+        //     foundBlogs = foundBlogs.filter(c => c.name.indexOf(name) > -1)
+        // }
+        // return foundBlogs
         if (name) {
-            foundBlogs = foundBlogs.filter(c => c.name.indexOf(name) > -1)
+            return await blogsCollection.find({name: {$regex: name}}).toArray()
+        } else {
+            return await blogsCollection.find({}).toArray()
         }
-        return foundBlogs
     },
 
     getBlogById(id: string) {
@@ -24,7 +28,7 @@ export const blogsRepository = {
 
     },
 
-    createBlog(name: string, description: string, websiteUrl: string) {
+    async createBlog(name: string, description: string, websiteUrl: string): Promise<BlogType> {
 
         const newBlog: BlogType = {
             id: String(+(new Date())),
@@ -33,8 +37,7 @@ export const blogsRepository = {
             websiteUrl,
         }
 
-        //push in db
-        db.blogs.push(newBlog)
+        await blogsCollection.insertOne(newBlog)
         return newBlog
     },
 

@@ -43,8 +43,8 @@ const getBlogViewModel = (dbBlog: BlogType) => {
 
 //get blogs
 blogsRouter.get('/',
-    (req: Request<{}, {}, {}, { name: string }>, res: Response<BlogViewModel[] | BlogViewModel>) => {
-        const foundedBlogs = blogsRepository.getBlogs(req.query.name)
+    async (req: Request<{}, {}, {}, { name: string }>, res: Response<BlogViewModel[] | BlogViewModel>) => {
+        const foundedBlogs = await blogsRepository.getBlogs(req.query.name)
         res.status(HTTP_STATUSES.OK_200).json(foundedBlogs.map(getBlogViewModel))
     })
 
@@ -57,8 +57,8 @@ blogsRouter.post('/',
     webSiteUrlValidation,
     inputValidationMiddleware,
 
-    (req: Request<{}, {}, BlogInputModel, {}>, res: Response<BlogViewModel[] | BlogViewModel | { errors: ValidationError[] }>) => {
-        const createdBlog = blogsRepository.createBlog(req.body.name, req.body.description, req.body.websiteUrl)
+    async (req: Request<{}, {}, BlogInputModel, {}>, res: Response<BlogViewModel[] | BlogViewModel | { errors: ValidationError[] }>) => {
+        const createdBlog = await blogsRepository.createBlog(req.body.name, req.body.description, req.body.websiteUrl)
         if (createdBlog) {
             res.status(HTTP_STATUSES.CREATED_201).json(createdBlog)
         } else {
@@ -70,8 +70,8 @@ blogsRouter.post('/',
 blogsRouter.get('/:id',
     // idValidation,
     // inputValidationMiddleware,
-    (req: Request<{ id: string }>, res: Response<BlogViewModel>) => {
-        const foundedBlog = blogsRepository.getBlogById(req.params.id)
+    async (req: Request<{ id: string }>, res: Response<BlogViewModel>) => {
+        const foundedBlog = await blogsRepository.getBlogById(req.params.id)
 
         if (foundedBlog) {
             res.status(HTTP_STATUSES.OK_200).json(getBlogViewModel(foundedBlog))
@@ -89,8 +89,8 @@ blogsRouter.put('/:id',
     webSiteUrlValidation,
     inputValidationMiddleware,
 
-    (req: Request<{ id: string }, {}, BlogInputModel>, res: Response) => {
-        const isUpdated = blogsRepository.updateBlog(req.params.id, req.body)
+    async (req: Request<{ id: string }, {}, BlogInputModel>, res: Response) => {
+        const isUpdated = await blogsRepository.updateBlog(req.params.id, req.body)
         if (isUpdated) {
             res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
         } else {
@@ -103,8 +103,8 @@ blogsRouter.put('/:id',
 blogsRouter.delete('/:id',
 
     authMiddleware,
-    (req: Request<{ id: string }>, res: Response) => {
-        const isDeleted = blogsRepository.deleteBlog(req.params.id)
+    async (req: Request<{ id: string }>, res: Response) => {
+        const isDeleted = await blogsRepository.deleteBlog(req.params.id)
 
         if (isDeleted) {
             res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
