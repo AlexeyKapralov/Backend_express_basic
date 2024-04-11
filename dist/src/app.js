@@ -5,10 +5,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.app = void 0;
 const express_1 = __importDefault(require("express"));
-const http_status_codes_1 = require("http-status-codes");
+const blogs_router_1 = require("./features/blogs/blogs.router");
+const settings_1 = require("./settings");
 exports.app = (0, express_1.default)();
 const jsonMiddleware = express_1.default.json();
 exports.app.use(jsonMiddleware);
-exports.app.get('/', (res, req) => {
-    req.status(http_status_codes_1.StatusCodes.OK).json({ version: '1' });
-});
+exports.app.get('/', (req, res) => (res.send('All is running')));
+exports.app.use(settings_1.SETTINGS.PATH.BLOGS, blogs_router_1.blogsRouter);

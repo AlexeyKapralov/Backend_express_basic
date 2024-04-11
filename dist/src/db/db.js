@@ -9,13 +9,26 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const app_1 = require("./app");
-const settings_1 = require("./settings");
-const db_1 = require("./db/db");
-const startApp = () => __awaiter(void 0, void 0, void 0, function* () {
-    yield (0, db_1.runDb)();
-    app_1.app.listen(settings_1.SETTINGS.PORT, () => {
-        console.log(`...server started on http://localhost:${settings_1.SETTINGS.PORT}`);
+exports.runDb = exports.blogsCollection = void 0;
+const mongodb_1 = require("mongodb");
+const settings_1 = require("../settings");
+const mongo_url = settings_1.SETTINGS.MONGO_URL;
+console.log(mongo_url);
+if (!mongo_url) {
+    throw new Error('!!! Url did not found');
+}
+const client = new mongodb_1.MongoClient(mongo_url);
+const db = client.db();
+exports.blogsCollection = db.collection('blogs');
+function runDb() {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            yield client.connect();
+            console.log('Connected successfully to mongo server');
+        }
+        catch (_a) {
+            console.log('!!! Cannot connect to db');
+        }
     });
-});
-startApp();
+}
+exports.runDb = runDb;

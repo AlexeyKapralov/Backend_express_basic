@@ -5,4 +5,8 @@ const dotenv_1 = require("dotenv");
 (0, dotenv_1.config)();
 exports.SETTINGS = {
     PORT: process.env.PORT || 5000,
+    MONGO_URL: process.env.MONGO_URL,
+    PATH: {
+        BLOGS: '/blogs'
+    }
 };
