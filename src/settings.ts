@@ -10,4 +10,5 @@ export const SETTINGS = {
         POSTS: '/posts'
     },
     ADMIN_AUTH: process.env.ADMIN_AUTH || ''
+
 }
