@@ -26,6 +26,13 @@ export const blogsRepository = {
 
     },
 
+    async getBlogsById(id: string): Promise<BlogType> {
+
+        return await blogsCollection.findOne({id: id}) as BlogType
+
+    },
+
+
     async createBlog(data: BlogInputModelType): Promise<BlogViewModelType> {
 
         const newBlog: BlogType = {
@@ -33,12 +40,44 @@ export const blogsRepository = {
             name: data.name,
             description: data.description,
             websiteUrl: data.websiteUrl,
-            createdAt: new Date().toISOString() ,
+            createdAt: new Date().toISOString(),
             isMembership: false
         }
 
 
         await blogsCollection.insertOne(newBlog)
-        return newBlog
+
+        return {
+            id: newBlog.id,
+            name: newBlog.name,
+            description: newBlog.description,
+            websiteUrl: newBlog.websiteUrl,
+            createdAt: newBlog.createdAt,
+            isMembership: newBlog.isMembership
+        };
+
+    },
+
+    async updateBlog(data: BlogInputModelType, id: string): Promise<boolean> {
+
+        const foundBlog = await blogsCollection.findOne({id: id})
+
+        const isUpdated = await blogsCollection.updateOne(
+            {id: id},
+            {
+                $set:
+                    {
+                        name: data.name || foundBlog?.name,
+                        description: data.description || foundBlog?.description,
+                        websiteUrl: data.websiteUrl || foundBlog?.websiteUrl
+                    }
+            })
+
+        return isUpdated.matchedCount !== 0;
+    },
+
+    async deleteBlog(id: string): Promise<boolean> {
+        const result = await blogsCollection.deleteOne({id: id})
+        return !!result
     }
 }

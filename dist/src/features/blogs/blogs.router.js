@@ -15,20 +15,24 @@ const blogs_repository_1 = require("../../repositories/blogs.repository");
 const http_status_codes_1 = require("http-status-codes");
 const express_validator_1 = require("express-validator");
 const inputValidationMiddleware_1 = require("../../middlewares/inputValidationMiddleware");
+const auth_middleware_1 = require("../../middlewares/auth.middleware");
 const nameValidation = (0, express_validator_1.body)('name')
     // name: string,maxlength 15
+    .optional()
     .isLength({ min: 1, max: 15 })
     .customSanitizer(value => {
     return value.toString();
 });
 const descriptionValidation = (0, express_validator_1.body)('description')
     // description: string,
+    .optional()
     .isLength({ min: 1, max: 500 })
     .customSanitizer(value => {
     return value.toString();
 });
 const websiteUrlValidation = (0, express_validator_1.body)('websiteUrl')
     // websiteUrl: string, pattern for url
+    .optional()
     .isLength({ min: 1, max: 100 })
     .customSanitizer(value => {
     return value.toString();
@@ -55,12 +59,41 @@ exports.blogsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, fun
         res.send(result);
     }
 }));
-exports.blogsRouter.post('/', nameValidation, descriptionValidation, websiteUrlValidation, inputValidationMiddleware_1.inputValidationMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.blogsRouter.post('/', auth_middleware_1.authMiddleware, nameValidation, descriptionValidation, websiteUrlValidation, inputValidationMiddleware_1.inputValidationMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield blogs_repository_1.blogsRepository.createBlog(req.body);
     if (result) {
-        res.status(http_status_codes_1.StatusCodes.CREATED).send(result);
+        res.status(http_status_codes_1.StatusCodes.CREATED).json(result);
     }
     else {
         res.sendStatus(http_status_codes_1.StatusCodes.BAD_REQUEST);
     }
+}));
+exports.blogsRouter.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield blogs_repository_1.blogsRepository.getBlogsById(req.params.id);
+    if (result) {
+        res
+            .status(http_status_codes_1.StatusCodes.OK)
+            .json(result);
+    }
+    else {
+        res
+            .status(http_status_codes_1.StatusCodes.NOT_FOUND)
+            .json();
+    }
+}));
+exports.blogsRouter.put('/:id', auth_middleware_1.authMiddleware, nameValidation, descriptionValidation, websiteUrlValidation, inputValidationMiddleware_1.inputValidationMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield blogs_repository_1.blogsRepository.updateBlog(req.body, req.params.id);
+    if (!result) {
+        res
+            .status(http_status_codes_1.StatusCodes.NOT_FOUND)
+            .json();
+    }
+    else {
+        res
+            .status(http_status_codes_1.StatusCodes.OK)
+            .json();
+    }
+}));
+exports.blogsRouter.delete('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    yield blogs_repository_1.blogsRepository.deleteBlog(req.params.id);
 }));

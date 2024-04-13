@@ -35,6 +35,11 @@ exports.blogsRepository = {
             }
         });
     },
+    getBlogsById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield db_1.blogsCollection.findOne({ id: id });
+        });
+    },
     createBlog(data) {
         return __awaiter(this, void 0, void 0, function* () {
             const newBlog = {
@@ -46,7 +51,33 @@ exports.blogsRepository = {
                 isMembership: false
             };
             yield db_1.blogsCollection.insertOne(newBlog);
-            return newBlog;
+            return {
+                id: newBlog.id,
+                name: newBlog.name,
+                description: newBlog.description,
+                websiteUrl: newBlog.websiteUrl,
+                createdAt: newBlog.createdAt,
+                isMembership: newBlog.isMembership
+            };
+        });
+    },
+    updateBlog(data, id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const foundBlog = yield db_1.blogsCollection.findOne({ id: id });
+            const isUpdated = yield db_1.blogsCollection.updateOne({ id: id }, {
+                $set: {
+                    name: data.name || (foundBlog === null || foundBlog === void 0 ? void 0 : foundBlog.name),
+                    description: data.description || (foundBlog === null || foundBlog === void 0 ? void 0 : foundBlog.description),
+                    websiteUrl: data.websiteUrl || (foundBlog === null || foundBlog === void 0 ? void 0 : foundBlog.websiteUrl)
+                }
+            });
+            return isUpdated.matchedCount !== 0;
+        });
+    },
+    deleteBlog(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = yield db_1.blogsCollection.deleteOne({ id: id });
+            return !!result;
         });
     }
 };

@@ -8,5 +8,6 @@ export const SETTINGS = {
     PATH: {
         BLOGS: '/blogs',
         TEST_DELETE: '/testing/all-data'
-    }
+    },
+    ADMIN_AUTH: process.env.ADMIN_AUTH || '',
 }
