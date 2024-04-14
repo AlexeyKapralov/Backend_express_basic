@@ -8,7 +8,8 @@ exports.SETTINGS = {
     MONGO_URL: process.env.MONGO_URL,
     PATH: {
         BLOGS: '/blogs',
+        POSTS: '/posts',
         TEST_DELETE: '/testing/all-data'
     },
-    ADMIN_AUTH: process.env.ADMIN_AUTH || '',
+    ADMIN_AUTH: process.env.ADMIN_AUTH || ''
 };

@@ -12,11 +12,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.blogsRepository = void 0;
 const db_1 = require("../db/db");
 const mongodb_1 = require("mongodb");
+const getBlogViewModel = (dbBlog) => {
+    return {
+        id: dbBlog.id,
+        name: dbBlog.name,
+        description: dbBlog.description,
+        websiteUrl: dbBlog.websiteUrl,
+        createdAt: dbBlog.createdAt,
+        isMembership: dbBlog.isMembership
+    };
+};
 exports.blogsRepository = {
     getBlogs(query) {
         return __awaiter(this, void 0, void 0, function* () {
             if (query) {
-                return yield db_1.blogsCollection
+                return (yield db_1.blogsCollection
                     .find({
                     name: { $regex: query.name || '' },
                     description: { $regex: query.description || '' },
@@ -24,20 +34,28 @@ exports.blogsRepository = {
                 })
                     .project({
                     _id: 0
-                }).toArray();
+                })
+                    .toArray());
             }
             else {
-                return yield db_1.blogsCollection.find({})
+                return (yield db_1.blogsCollection
+                    .find({})
                     .project({
                     _id: 0
                 })
-                    .toArray();
+                    .toArray());
             }
         });
     },
     getBlogsById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield db_1.blogsCollection.findOne({ id: id });
+            const result = (yield db_1.blogsCollection.findOne({ id: id }));
+            if (result) {
+                return getBlogViewModel(result);
+            }
+            else {
+                return false;
+            }
         });
     },
     createBlog(data) {
@@ -51,14 +69,7 @@ exports.blogsRepository = {
                 isMembership: false
             };
             yield db_1.blogsCollection.insertOne(newBlog);
-            return {
-                id: newBlog.id,
-                name: newBlog.name,
-                description: newBlog.description,
-                websiteUrl: newBlog.websiteUrl,
-                createdAt: newBlog.createdAt,
-                isMembership: newBlog.isMembership
-            };
+            return getBlogViewModel(newBlog);
         });
     },
     updateBlog(data, id) {
@@ -77,7 +88,12 @@ exports.blogsRepository = {
     deleteBlog(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield db_1.blogsCollection.deleteOne({ id: id });
-            return !!result;
+            if (result.deletedCount !== 0) {
+                return true;
+            }
+            else {
+                return false;
+            }
         });
     }
 };
