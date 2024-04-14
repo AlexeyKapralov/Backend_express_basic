@@ -50,7 +50,7 @@ const blogIdValidation = (0, express_validator_1.body)('blogId')
     .trim()
     .isLength({ min: 1, max: 1000 })
     .custom((value) => __awaiter(void 0, void 0, void 0, function* () {
-    const foundBlog = yield db_1.blogsCollection.findOne({ id: value });
+    const foundBlog = yield db_1.blogsCollection.findOne({ _id: value });
     if (!foundBlog) {
         throw new Error('Unknown blogId');
     }

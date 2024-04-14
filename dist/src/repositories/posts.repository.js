@@ -14,7 +14,7 @@ const db_1 = require("../db/db");
 const mongodb_1 = require("mongodb");
 const getPostViewModel = (dbPost) => {
     return {
-        id: dbPost.id,
+        id: dbPost._id,
         title: dbPost.title,
         shortDescription: dbPost.shortDescription,
         content: dbPost.content,
@@ -27,31 +27,27 @@ exports.postsRepository = {
     getPosts(query) {
         return __awaiter(this, void 0, void 0, function* () {
             if (query) {
-                return (yield db_1.postsCollection
+                const result = yield db_1.postsCollection
                     .find({
                     title: { $regex: query.title || '' },
                     shortDescription: { $regex: query.shortDescription || '' },
                     content: { $regex: query.content || '' },
                     blogId: { $regex: query.blogId || '' }
                 })
-                    .project({
-                    _id: 0
-                })
-                    .toArray());
+                    .toArray();
+                return result.map((i) => getPostViewModel(i));
             }
             else {
-                return (yield db_1.postsCollection
+                const result = yield db_1.postsCollection
                     .find({})
-                    .project({
-                    _id: 0
-                })
-                    .toArray());
+                    .toArray();
+                return result.map((i) => getPostViewModel(i));
             }
         });
     },
     getPostById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = (yield db_1.postsCollection.findOne({ id: id }));
+            const result = (yield db_1.postsCollection.findOne({ _id: id }));
             if (result) {
                 return getPostViewModel(result);
             }
@@ -62,15 +58,14 @@ exports.postsRepository = {
     },
     createPost(data) {
         return __awaiter(this, void 0, void 0, function* () {
-            const foundBlog = yield db_1.blogsCollection.findOne({ id: data.blogId });
+            const foundBlog = yield db_1.blogsCollection.findOne({ _id: data.blogId });
             const newPost = {
-                id: String(new mongodb_1.ObjectId()),
+                _id: String(new mongodb_1.ObjectId()),
                 title: data.title,
                 shortDescription: data.shortDescription,
                 content: data.content,
                 createdAt: new Date().toISOString(),
                 blogId: data.blogId,
-                // blogName: 'temp'
                 blogName: (foundBlog === null || foundBlog === void 0 ? void 0 : foundBlog.name) || 'unknown name'
             };
             yield db_1.postsCollection.insertOne(newPost);
@@ -79,8 +74,8 @@ exports.postsRepository = {
     },
     updatePost(data, id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const foundBlog = yield db_1.blogsCollection.findOne({ id: data.blogId });
-            const isUpdated = yield db_1.postsCollection.updateOne({ id: id }, {
+            const foundBlog = yield db_1.blogsCollection.findOne({ _id: data.blogId });
+            const isUpdated = yield db_1.postsCollection.updateOne({ _id: id }, {
                 $set: {
                     title: data.title,
                     shortDescription: data.shortDescription,
@@ -94,7 +89,7 @@ exports.postsRepository = {
     },
     deletePost(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield db_1.postsCollection.deleteOne({ id: id });
+            const result = yield db_1.postsCollection.deleteOne({ _id: id });
             if (result.deletedCount > 0) {
                 return true;
             }

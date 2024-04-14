@@ -42,7 +42,7 @@ blogsRouter.get(
 	'/',
 	async (
 		req: Request<{}, {}, {}, BlogInputModelType>,
-		res: Response<BlogViewModelType[] | BlogInputModelType>
+		res: Response<BlogViewModelType[]>
 	) => {
 		if (req.query.websiteUrl || req.query.name || req.query.description) {
 			const result = await blogsRepository.getBlogs(req.query)

@@ -14,7 +14,7 @@ const db_1 = require("../db/db");
 const mongodb_1 = require("mongodb");
 const getBlogViewModel = (dbBlog) => {
     return {
-        id: dbBlog.id,
+        id: dbBlog._id,
         name: dbBlog.name,
         description: dbBlog.description,
         websiteUrl: dbBlog.websiteUrl,
@@ -26,30 +26,29 @@ exports.blogsRepository = {
     getBlogs(query) {
         return __awaiter(this, void 0, void 0, function* () {
             if (query) {
-                return (yield db_1.blogsCollection
+                const result = yield db_1.blogsCollection
                     .find({
                     name: { $regex: query.name || '' },
                     description: { $regex: query.description || '' },
                     websiteUrl: { $regex: query.websiteUrl || '' }
                 })
-                    .project({
-                    _id: 0
-                })
-                    .toArray());
+                    // .project({
+                    // 	_id: 0
+                    // })
+                    .toArray();
+                return result.map((i) => getBlogViewModel(i));
             }
             else {
-                return (yield db_1.blogsCollection
+                const result = yield db_1.blogsCollection
                     .find({})
-                    .project({
-                    _id: 0
-                })
-                    .toArray());
+                    .toArray();
+                return result.map((i) => getBlogViewModel(i));
             }
         });
     },
     getBlogsById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = (yield db_1.blogsCollection.findOne({ id: id }));
+            const result = (yield db_1.blogsCollection.findOne({ _id: id }));
             if (result) {
                 return getBlogViewModel(result);
             }
@@ -61,7 +60,7 @@ exports.blogsRepository = {
     createBlog(data) {
         return __awaiter(this, void 0, void 0, function* () {
             const newBlog = {
-                id: String(new mongodb_1.ObjectId()),
+                _id: String(new mongodb_1.ObjectId()),
                 name: data.name,
                 description: data.description,
                 websiteUrl: data.websiteUrl,
@@ -74,8 +73,8 @@ exports.blogsRepository = {
     },
     updateBlog(data, id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const foundBlog = yield db_1.blogsCollection.findOne({ id: id });
-            const isUpdated = yield db_1.blogsCollection.updateOne({ id: id }, {
+            const foundBlog = yield db_1.blogsCollection.findOne({ _id: id });
+            const isUpdated = yield db_1.blogsCollection.updateOne({ _id: id }, {
                 $set: {
                     name: data.name || (foundBlog === null || foundBlog === void 0 ? void 0 : foundBlog.name),
                     description: data.description || (foundBlog === null || foundBlog === void 0 ? void 0 : foundBlog.description),
@@ -87,7 +86,7 @@ exports.blogsRepository = {
     },
     deleteBlog(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield db_1.blogsCollection.deleteOne({ id: id });
+            const result = yield db_1.blogsCollection.deleteOne({ _id: id });
             if (result.deletedCount !== 0) {
                 return true;
             }

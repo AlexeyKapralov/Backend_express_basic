@@ -1,90 +1,90 @@
-import { blogsCollection, BlogType } from '../db/db'
-import { BlogInputModelType } from '../features/blogs/models/blogInputModelType'
-import { BlogViewModelType } from '../features/blogs/models/blogViewModelType'
-import { ObjectId } from 'mongodb'
+import {blogsCollection, BlogType} from '../db/db'
+import {BlogInputModelType} from '../features/blogs/models/blogInputModelType'
+import {BlogViewModelType} from '../features/blogs/models/blogViewModelType'
+import {ObjectId} from 'mongodb'
 
 const getBlogViewModel = (dbBlog: BlogType): BlogViewModelType => {
-	return {
-		id: dbBlog.id,
-		name: dbBlog.name,
-		description: dbBlog.description,
-		websiteUrl: dbBlog.websiteUrl,
-		createdAt: dbBlog.createdAt,
-		isMembership: dbBlog.isMembership
-	}
+    return {
+        id: dbBlog._id,
+        name: dbBlog.name,
+        description: dbBlog.description,
+        websiteUrl: dbBlog.websiteUrl,
+        createdAt: dbBlog.createdAt,
+        isMembership: dbBlog.isMembership
+    }
 }
 
 export const blogsRepository = {
-	async getBlogs(query?: BlogInputModelType): Promise<BlogViewModelType[]> {
-		if (query) {
-			return (await blogsCollection
-				.find({
-					name: { $regex: query.name || '' },
-					description: { $regex: query.description || '' },
-					websiteUrl: { $regex: query.websiteUrl || '' }
-				})
-				.project({
-					_id: 0
-				})
-				.toArray()) as BlogType[]
-		} else {
-			return (await blogsCollection
-				.find({})
-				.project({
-					_id: 0
-				})
-				.toArray()) as BlogType[]
-		}
-	},
+    async getBlogs(query?: BlogInputModelType): Promise<BlogViewModelType[]> {
+        if (query) {
+            const result: BlogType[] = await blogsCollection
+                .find({
+                    name: {$regex: query.name || ''},
+                    description: {$regex: query.description || ''},
+                    websiteUrl: {$regex: query.websiteUrl || ''}
+                })
+                // .project({
+                // 	_id: 0
+                // })
+                .toArray()
+            return result.map((i: BlogType) => getBlogViewModel(i))
+        } else {
+            const result: BlogType[] = await blogsCollection
+                .find({})
+                .toArray()
+            return result.map((i: BlogType) => getBlogViewModel(i))
+        }
 
-	async getBlogsById(id: string): Promise<BlogViewModelType | false> {
-		const result = (await blogsCollection.findOne({ id: id })) as BlogType
+    },
 
-		if (result) {
-			return getBlogViewModel(result)
-		} else {
-			return false
-		}
-	},
+    async getBlogsById(id: string): Promise<BlogViewModelType | false> {
+        const result = (await blogsCollection.findOne({_id: id})) as BlogType
 
-	async createBlog(data: BlogInputModelType): Promise<BlogViewModelType> {
-		const newBlog: BlogType = {
-			id: String(new ObjectId()),
-			name: data.name,
-			description: data.description,
-			websiteUrl: data.websiteUrl,
-			createdAt: new Date().toISOString(),
-			isMembership: false
-		}
+        if (result) {
+            return getBlogViewModel(result)
+        } else {
+            return false
+        }
+    },
 
-		await blogsCollection.insertOne(newBlog)
+    async createBlog(data: BlogInputModelType): Promise<BlogViewModelType> {
+        const newBlog: BlogType = {
+            _id: String(new ObjectId()),
+            name: data.name,
+            description: data.description,
+            websiteUrl: data.websiteUrl,
+            createdAt: new Date().toISOString(),
+            isMembership: false
+        }
 
-		return getBlogViewModel(newBlog)
-	},
+        await blogsCollection.insertOne(newBlog)
 
-	async updateBlog(data: BlogInputModelType, id: string): Promise<boolean> {
-		const foundBlog = await blogsCollection.findOne({ id: id })
+        return getBlogViewModel(newBlog)
+    },
 
-		const isUpdated = await blogsCollection.updateOne(
-			{ id: id },
-			{
-				$set: {
-					name: data.name || foundBlog?.name,
-					description: data.description || foundBlog?.description,
-					websiteUrl: data.websiteUrl || foundBlog?.websiteUrl
-				}
-			}
-		)
+    async updateBlog(data: BlogInputModelType, id: string): Promise<boolean> {
+        const foundBlog = await blogsCollection.findOne({_id: id})
 
-		return isUpdated.matchedCount !== 0
-	},
+        const isUpdated = await blogsCollection.updateOne(
+            {_id: id},
+            {
+                $set: {
+                    name: data.name || foundBlog?.name,
+                    description: data.description || foundBlog?.description,
+                    websiteUrl: data.websiteUrl || foundBlog?.websiteUrl
+                }
+            }
+        )
 
-	async deleteBlog(id: string): Promise<boolean> {
-		const result = await blogsCollection.deleteOne({ id: id })
-		if (result.deletedCount !== 0) {
-			return true
-		} else {
-			return false
-		}
-	}
+        return isUpdated.matchedCount !== 0
+    },
+
+    async deleteBlog(id: string): Promise<boolean> {
+        const result = await blogsCollection.deleteOne({_id: id})
+        if (result.deletedCount !== 0) {
+            return true
+        } else {
+            return false
+        }
+    }
 }
