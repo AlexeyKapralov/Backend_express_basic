@@ -31,11 +31,11 @@ const shortDescriptionValidation = body('shortDescription')
 const contentValidation = body('content')
     // name: string,maxlength 15
     // .optional()
-    .trim()
+    .trim() // превращает в строку
     .isLength({min: 1, max: 1000})
     .exists()
 // .customSanitizer(value => {
-// 	return value.toString()
+//     return value.toString()
 // })
 
 const blogIdValidation = body('blogId')

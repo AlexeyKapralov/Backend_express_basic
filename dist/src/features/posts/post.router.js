@@ -38,11 +38,11 @@ const shortDescriptionValidation = (0, express_validator_1.body)('shortDescripti
 const contentValidation = (0, express_validator_1.body)('content')
     // name: string,maxlength 15
     // .optional()
-    .trim()
+    .trim() // превращает в строку
     .isLength({ min: 1, max: 1000 })
     .exists();
 // .customSanitizer(value => {
-// 	return value.toString()
+//     return value.toString()
 // })
 const blogIdValidation = (0, express_validator_1.body)('blogId')
     // name: string,maxlength 15

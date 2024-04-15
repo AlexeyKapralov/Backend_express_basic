@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "nodemon --inspect dist/src/index.js",
     "watch": "tsc -w",
-    "test": "jest"
+    "test": "jest",
+    "test coverage": "jest -i --coverage"
   },
   "dependencies": {
     "@types/jest": "^29.5.12",

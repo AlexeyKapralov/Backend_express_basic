@@ -53,7 +53,7 @@ export const postsRepository = {
             content: data.content,
             createdAt: new Date().toISOString(),
             blogId: data.blogId,
-            blogName: foundBlog?.name || 'unknown name'
+            blogName: foundBlog!.name //! означает что точно не undefined
         }
 
         await postsCollection.insertOne(newPost)
@@ -70,7 +70,7 @@ export const postsRepository = {
                     shortDescription: data.shortDescription,
                     content: data.content,
                     blogId: data.blogId,
-                    blogName: foundBlog?.name || 'unknown name'
+                    blogName: foundBlog!.name
                 }
             }
         )
@@ -78,10 +78,6 @@ export const postsRepository = {
     },
     async deletePost(id: string): Promise<boolean> {
         const result = await postsCollection.deleteOne({_id: id})
-        if (result.deletedCount > 0) {
-            return true
-        } else {
-            return false
-        }
+        return result.deletedCount > 0;
     }
 }

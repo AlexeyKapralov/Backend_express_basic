@@ -66,7 +66,7 @@ exports.postsRepository = {
                 content: data.content,
                 createdAt: new Date().toISOString(),
                 blogId: data.blogId,
-                blogName: (foundBlog === null || foundBlog === void 0 ? void 0 : foundBlog.name) || 'unknown name'
+                blogName: foundBlog.name //! означает что точно не undefined
             };
             yield db_1.postsCollection.insertOne(newPost);
             return getPostViewModel(newPost);
@@ -81,7 +81,7 @@ exports.postsRepository = {
                     shortDescription: data.shortDescription,
                     content: data.content,
                     blogId: data.blogId,
-                    blogName: (foundBlog === null || foundBlog === void 0 ? void 0 : foundBlog.name) || 'unknown name'
+                    blogName: foundBlog.name
                 }
             });
             return isUpdated.matchedCount !== 0;
@@ -90,12 +90,7 @@ exports.postsRepository = {
     deletePost(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield db_1.postsCollection.deleteOne({ _id: id });
-            if (result.deletedCount > 0) {
-                return true;
-            }
-            else {
-                return false;
-            }
+            return result.deletedCount > 0;
         });
     }
 };
