@@ -81,10 +81,11 @@ export const blogsRepository = {
 
     async deleteBlog(id: string): Promise<boolean> {
         const result = await blogsCollection.deleteOne({_id: id})
-        if (result.deletedCount !== 0) {
-            return true
-        } else {
-            return false
-        }
+        return result.deletedCount !== 0;
+        // if (result.deletedCount !== 0) {
+        //     return true
+        // } else {
+        //     return false
+        // }
     }
 }
