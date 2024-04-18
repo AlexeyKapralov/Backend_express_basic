@@ -1,6 +1,12 @@
 import {app} from "./app";
 import {SETTINGS} from "./setttings";
+import {runDb} from "./db/db";
 
-app.listen(SETTINGS.port, () => {
-    console.log(`Server is running on port http://localhost:${SETTINGS.port}`)
-})
+const startApp = async () => {
+    await runDb()
+    app.listen(SETTINGS.PORT, () => {
+        console.log(`Server is running on port http://localhost:${SETTINGS.PORT}`)
+    })
+}
+
+startApp()

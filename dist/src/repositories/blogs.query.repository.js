@@ -9,13 +9,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const app_1 = require("./app");
-const setttings_1 = require("./setttings");
-const db_1 = require("./db/db");
-const startApp = () => __awaiter(void 0, void 0, void 0, function* () {
-    yield (0, db_1.runDb)();
-    app_1.app.listen(setttings_1.SETTINGS.PORT, () => {
-        console.log(`Server is running on port http://localhost:${setttings_1.SETTINGS.PORT}`);
-    });
-});
-startApp();
+exports.blogsQueryRepository = void 0;
+const db_1 = require("../db/db");
+exports.blogsQueryRepository = {
+    findManyBlogs() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield db_1.blogsCollection.find().toArray();
+        });
+    }
+};

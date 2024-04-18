@@ -9,13 +9,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const app_1 = require("./app");
-const setttings_1 = require("./setttings");
-const db_1 = require("./db/db");
-const startApp = () => __awaiter(void 0, void 0, void 0, function* () {
-    yield (0, db_1.runDb)();
-    app_1.app.listen(setttings_1.SETTINGS.PORT, () => {
-        console.log(`Server is running on port http://localhost:${setttings_1.SETTINGS.PORT}`);
-    });
+exports.getBlogsController = void 0;
+const http_status_codes_1 = require("http-status-codes");
+const blogs_service_1 = require("../../services/blogs.service");
+const utils_1 = require("../../utils");
+const getBlogsController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const blogs = yield blogs_service_1.blogsService.findBlogs();
+    const query = req.query;
+    yield res.status(http_status_codes_1.StatusCodes.OK).json((0, utils_1.getQueryWithDefault)(query));
 });
-startApp();
+exports.getBlogsController = getBlogsController;

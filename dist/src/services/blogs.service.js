@@ -9,13 +9,25 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const app_1 = require("./app");
-const setttings_1 = require("./setttings");
-const db_1 = require("./db/db");
-const startApp = () => __awaiter(void 0, void 0, void 0, function* () {
-    yield (0, db_1.runDb)();
-    app_1.app.listen(setttings_1.SETTINGS.PORT, () => {
-        console.log(`Server is running on port http://localhost:${setttings_1.SETTINGS.PORT}`);
-    });
-});
-startApp();
+exports.blogsService = void 0;
+const blogs_repository_1 = require("../repositories/blogs.repository");
+const getBlogViewModel = (blog) => {
+    return {
+        id: blog._id,
+        name: blog.name,
+        description: blog.description,
+        websiteUrl: blog.websiteUrl,
+        createdAt: blog.createdAt,
+        isMembership: blog.isMembership
+    };
+};
+exports.blogsService = {
+    findBlogs() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = yield blogs_repository_1.blogsRepository.findBlogs();
+            if (result) {
+                return result.map(getBlogViewModel);
+            }
+        });
+    }
+};
