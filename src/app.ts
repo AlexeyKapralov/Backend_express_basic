@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express'
-import { SETTINGS } from './setttings'
+import { SETTINGS } from './settings'
 import { BlogsRouter } from './features/blogs/blogs.router'
 import { StatusCodes } from 'http-status-codes'
 import { testRouter } from './features/tests/tests.router'

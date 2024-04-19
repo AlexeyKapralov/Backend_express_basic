@@ -11,13 +11,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.runDb = exports.postsCollection = exports.blogsCollection = void 0;
 const mongodb_1 = require("mongodb");
-const setttings_1 = require("../setttings");
-const mongo_url = setttings_1.SETTINGS.MONGO_URL;
+const settings_1 = require("../settings");
+const mongo_url = settings_1.SETTINGS.MONGO_URL;
 if (!mongo_url) {
     throw new Error('No mongo_url provided');
 }
 const client = new mongodb_1.MongoClient(mongo_url);
-const db = client.db(setttings_1.SETTINGS.DB_NAME);
+const db = client.db(settings_1.SETTINGS.DB_NAME);
 // export const blogsCollection = db.collection<BlogType>('blogs')
 exports.blogsCollection = db.collection('blogs');
 exports.postsCollection = db.collection('posts');

@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.blogsService = void 0;
 const blogs_repository_1 = require("../repositories/blogs.repository");
+const mongodb_1 = require("mongodb");
 const getBlogViewModel = (blog) => {
     return {
         id: blog._id,
@@ -35,6 +36,20 @@ exports.blogsService = {
                 items: blogs
             };
             return resultView;
+        });
+    },
+    createBlog(body) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const blog = {
+                _id: String(new mongodb_1.ObjectId()),
+                name: body.name,
+                description: body.description,
+                websiteUrl: body.websiteUrl,
+                createdAt: String(new Date().toISOString()),
+                isMembership: true
+            };
+            yield blogs_repository_1.blogsRepository.createBlog(blog);
+            return getBlogViewModel(blog);
         });
     }
 };

@@ -1,7 +1,7 @@
 import { agent as request } from 'supertest'
 import { app } from '../src/app'
 import { StatusCodes } from 'http-status-codes'
-import { SETTINGS } from '../src/setttings'
+import { SETTINGS } from '../src/settings'
 import { blogsCollection } from '../src/db/db'
 import { blogReturn, blogs } from '../src/db/mock'
 
@@ -53,5 +53,18 @@ describe('app', () => {
 				])
 			})
 		}
+	})
+	it('should create blog', async () => {
+		const newBlog = {
+			name: 'a',
+			description: 'string',
+			websiteUrl: 'https://As3fwcNYmnby.ru'
+		}
+
+		const res = await request(app)
+			.post(SETTINGS.PATH.BLOGS)
+			.send(newBlog)
+			.set('Authorization', `Basic ${SETTINGS.ADMIN_AUTH}`)
+			.expect(StatusCodes.CREATED)
 	})
 })

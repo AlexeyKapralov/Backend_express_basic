@@ -28,5 +28,11 @@ exports.blogsRepository = {
         return __awaiter(this, void 0, void 0, function* () {
             return yield db_1.blogsCollection.countDocuments();
         });
+    },
+    createBlog(blog) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = yield db_1.blogsCollection.insertOne(blog);
+            return result.acknowledged ? true : false;
+        });
     }
 };

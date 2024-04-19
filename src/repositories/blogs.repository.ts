@@ -15,5 +15,10 @@ export const blogsRepository = {
 	},
 	async countBlogs(): Promise<number> {
 		return await blogsCollection.countDocuments()
+	},
+	async createBlog(blog: BlogType): Promise<boolean> {
+		const result = await blogsCollection.insertOne(blog)
+
+		return result.acknowledged ? true : false
 	}
 }
