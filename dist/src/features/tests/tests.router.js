@@ -9,24 +9,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.blogsRepository = void 0;
-const db_1 = require("../db/db");
-exports.blogsRepository = {
-    findBlogs(query) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield db_1.blogsCollection
-                .find({
-                name: { $regex: query.searchNameTerm || '' }
-            })
-                .sort(query.sortBy, query.sortDirection)
-                .skip((query.pageNumber - 1) * query.pageSize)
-                .limit(query.pageSize)
-                .toArray();
-        });
-    },
-    countBlogs() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield db_1.blogsCollection.countDocuments();
-        });
-    }
-};
+exports.testRouter = void 0;
+const express_1 = require("express");
+const db_1 = require("../../db/db");
+const http_status_codes_1 = require("http-status-codes");
+exports.testRouter = (0, express_1.Router)({});
+exports.testRouter.delete('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    yield db_1.blogsCollection.deleteMany({});
+    yield db_1.postsCollection.deleteMany({});
+    res.sendStatus(http_status_codes_1.StatusCodes.NO_CONTENT);
+}));

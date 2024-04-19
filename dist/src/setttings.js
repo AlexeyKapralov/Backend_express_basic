@@ -8,6 +8,7 @@ exports.SETTINGS = {
     PATH: {
         ROOT: '/',
         BLOGS: '/blogs',
-        POSTS: '/posts'
+        POSTS: '/posts',
+        TEST_DELETE: '/testing/all-data'
     }
 };

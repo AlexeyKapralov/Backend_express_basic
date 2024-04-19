@@ -22,12 +22,19 @@ const getBlogViewModel = (blog) => {
     };
 };
 exports.blogsService = {
-    findBlogs() {
+    findBlogs(query) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield blogs_repository_1.blogsRepository.findBlogs();
-            if (result) {
-                return result.map(getBlogViewModel);
-            }
+            const countBlogs = yield blogs_repository_1.blogsRepository.countBlogs();
+            const result = yield blogs_repository_1.blogsRepository.findBlogs(query);
+            const blogs = result.map(getBlogViewModel);
+            const resultView = {
+                pagesCount: Math.ceil(countBlogs / query.pageSize),
+                page: query.pageNumber,
+                pageSize: query.pageSize,
+                totalCount: countBlogs,
+                items: blogs
+            };
+            return resultView;
         });
     }
 };
