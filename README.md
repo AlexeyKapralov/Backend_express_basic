@@ -5,4 +5,3 @@
 3.Jest <br>
 4.MongoDb <br>
 5.Basic Authorization <br>
-6.Pagination
