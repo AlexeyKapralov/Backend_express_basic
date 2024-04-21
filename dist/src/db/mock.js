@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.blogReturn = exports.blogs = void 0;
+exports.posts = exports.blogReturn = exports.blogs = void 0;
 const mongodb_1 = require("mongodb");
 exports.blogs = [
     {
@@ -252,3 +252,32 @@ exports.blogReturn = {
         }
     ]
 };
+exports.posts = [
+    {
+        _id: String(new mongodb_1.ObjectId()),
+        title: 'title post1',
+        shortDescription: 'shortDescription post1',
+        content: 'content post1',
+        blogId: '662224e953c844f8b3673719',
+        blogName: 'twentiethString',
+        createdAt: '2024-04-20T08:08:47.272Z'
+    },
+    {
+        _id: String(new mongodb_1.ObjectId()),
+        title: 'title post2',
+        shortDescription: 'shortDescription post2',
+        content: 'content post2',
+        blogId: '662224e953c844f8b3673719',
+        blogName: 'twentiethString',
+        createdAt: '2024-04-21T08:08:47.272Z'
+    },
+    {
+        _id: String(new mongodb_1.ObjectId()),
+        title: 'title post3',
+        shortDescription: 'shortDescription post3',
+        content: 'content post3',
+        blogId: '662224e953c844f8b3673719',
+        blogName: 'twentiethString',
+        createdAt: '2024-04-22T08:08:47.272Z'
+    }
+];

@@ -14,9 +14,10 @@ const http_status_codes_1 = require("http-status-codes");
 const blogs_service_1 = require("../../services/blogs.service");
 const utils_1 = require("../../utils");
 const getBlogsController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const query = (0, utils_1.getQueryWithDefault)(req.query);
+    const query = (0, utils_1.getQueryBlogsWithDefault)(req.query);
     const blogs = yield blogs_service_1.blogsService.findBlogs(query);
-    res.status(http_status_codes_1.StatusCodes.OK).json(blogs);
-    return;
+    return blogs
+        ? res.status(http_status_codes_1.StatusCodes.OK).json(blogs)
+        : res.status(http_status_codes_1.StatusCodes.NOT_FOUND).json();
 });
 exports.getBlogsController = getBlogsController;

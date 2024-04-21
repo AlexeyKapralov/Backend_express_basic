@@ -1,9 +1,8 @@
-import { config } from 'dotenv'
-
-config()
+import dotenv from 'dotenv'
+dotenv.config()
 
 export const SETTINGS = {
-	MONGO_URL: process.env.MONGO_URL || '',
+	MONGO_URL: process.env.MONGO_URL,
 	ADMIN_AUTH: process.env.ADMIN_AUTH || '',
 	DB_NAME: 'social_dev',
 	PORT: 5000,

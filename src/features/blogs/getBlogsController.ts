@@ -6,16 +6,17 @@ import {
 	paginatorBlogViewModelType
 } from './models/blogViewModelType'
 import { blogsService } from '../../services/blogs.service'
-import { getQueryWithDefault, QueryType } from '../../utils'
+import { getQueryBlogsWithDefault, QueryBlogType } from '../../utils'
 
 export const getBlogsController = async (
 	req: Request<{}, {}, {}, { [key: string]: string | undefined }>,
 	res: Response<paginatorBlogViewModelType>
 ) => {
-	const query: QueryType = getQueryWithDefault(req.query)
+	const query: QueryBlogType = getQueryBlogsWithDefault(req.query)
 
 	const blogs = await blogsService.findBlogs(query)
 
-	res.status(StatusCodes.OK).json(blogs)
-	return
+	return blogs
+		? res.status(StatusCodes.OK).json(blogs)
+		: res.status(StatusCodes.NOT_FOUND).json()
 }

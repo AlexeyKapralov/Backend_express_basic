@@ -1,13 +1,34 @@
 import { Router } from 'express'
 import { getBlogsController } from './getBlogsController'
-import { createBlogsController } from './createBlogsController'
+import { createBlogController } from './createBlogController'
 import { body } from 'express-validator'
 import { authMiddleware } from '../../middlewares/authMiddleware'
 import { inputValidationMiddleware } from '../../middlewares/inputValidationMiddleware'
+import { getBlogByIdController } from './getBlogByIdController'
+import { updateBlogController } from './updateBlogController'
+import { deleteBlogByIdController } from './deleteBlogByIdController'
+import { getPostsByBlogIdController } from './getPostsByBlogIdController'
+import { createPostByBlogIdController } from './createPostByBlogIdController'
 
 const nameValidation = body('name')
 	.trim()
 	.isLength({ min: 1, max: 15 })
+	.exists()
+// .customSanitizer(value => {
+// 	return value.toString()
+// })
+
+const titleValidation = body('title')
+	.trim()
+	.isLength({ min: 1, max: 30 })
+	.exists()
+// .customSanitizer(value => {
+// 	return value.toString()
+// })
+
+const contentValidation = body('content')
+	.trim()
+	.isLength({ min: 1, max: 100 })
 	.exists()
 // .customSanitizer(value => {
 // 	return value.toString()
@@ -20,6 +41,15 @@ const descriptionValidation = body('description')
 // .customSanitizer(value => {
 // 	return value.toString()
 // })
+
+const shortDescriptionValidation = body('shortDescription')
+	.trim()
+	.isLength({ min: 1, max: 100 })
+	.exists()
+// .customSanitizer(value => {
+// 	return value.toString()
+// })
+
 const websiteUrlValidation = body('websiteUrl')
 	.isLength({ min: 1, max: 100 })
 	.exists()
@@ -28,11 +58,24 @@ const websiteUrlValidation = body('websiteUrl')
 	// })
 	.isURL()
 
-export const BlogsRouter = Router({})
+export const blogsRouter = Router({})
 
-BlogsRouter.get('/', getBlogsController)
+blogsRouter.get('/', getBlogsController)
+blogsRouter.get('/:id/posts', getPostsByBlogIdController)
 
-BlogsRouter.post(
+blogsRouter.get('/:id', getBlogByIdController)
+
+blogsRouter.post(
+	'/:id/posts',
+	authMiddleware,
+	titleValidation,
+	shortDescriptionValidation,
+	contentValidation,
+	inputValidationMiddleware,
+
+	createPostByBlogIdController
+)
+blogsRouter.post(
 	'/',
 	authMiddleware,
 	nameValidation,
@@ -40,5 +83,21 @@ BlogsRouter.post(
 	websiteUrlValidation,
 	inputValidationMiddleware,
 
-	createBlogsController
+	createBlogController
+)
+blogsRouter.put(
+	'/:id',
+	authMiddleware,
+	nameValidation,
+	descriptionValidation,
+	websiteUrlValidation,
+	inputValidationMiddleware,
+
+	updateBlogController
+)
+blogsRouter.delete(
+	'/:id',
+	authMiddleware,
+
+	deleteBlogByIdController
 )

@@ -1,12 +1,19 @@
 import { blogsRepository } from '../repositories/blogs.repository'
-import { BlogType } from '../db/db'
+import { blogsCollection, BlogType, PostType } from '../db/db'
 import {
 	blogViewModelType,
 	paginatorBlogViewModelType
 } from '../features/blogs/models/blogViewModelType'
-import { QueryType } from '../utils'
+import { QueryBlogType } from '../utils'
 import { blogInputModelType } from '../features/blogs/models/blogInputModelType'
 import { ObjectId } from 'mongodb'
+import { StatusCodes } from 'http-status-codes'
+import { postRepository } from '../repositories/posts.repository'
+import {
+	paginatorPostsViewModelType,
+	postViewModelType
+} from '../features/posts/models/postViewModelType'
+import { BlogPostInputModelType } from '../features/posts/models/postInputModelType'
 
 const getBlogViewModel = (blog: BlogType): blogViewModelType => {
 	return {
@@ -19,19 +26,43 @@ const getBlogViewModel = (blog: BlogType): blogViewModelType => {
 	}
 }
 
+export const getPostViewModel = (post: PostType): postViewModelType => {
+	return {
+		id: post._id,
+		title: post.title,
+		shortDescription: post.shortDescription,
+		content: post.content,
+		blogId: post.blogId,
+		blogName: post.blogName,
+		createdAt: post.createdAt
+	}
+}
+
 export const blogsService = {
-	async findBlogs(query: QueryType): Promise<paginatorBlogViewModelType> {
-		const countBlogs = await blogsRepository.countBlogs()
+	async findBlogs(
+		query: QueryBlogType
+	): Promise<paginatorBlogViewModelType | undefined> {
 		const result = await blogsRepository.findBlogs(query)
-		const blogs = result.map(getBlogViewModel)
-		const resultView = {
-			pagesCount: Math.ceil(countBlogs / query.pageSize),
-			page: query.pageNumber,
-			pageSize: query.pageSize,
-			totalCount: countBlogs,
-			items: blogs
+		const countDocs = await blogsRepository.countBlogs(
+			query.searchNameTerm ? query.searchNameTerm : undefined
+		)
+		if (result.length > 0) {
+			const resultView = {
+				pagesCount: Math.ceil(countDocs / query.pageSize),
+				page: query.pageNumber,
+				pageSize: query.pageSize,
+				totalCount: countDocs,
+				items: result.map(getBlogViewModel)
+			}
+			return resultView
+		} else {
+			return undefined
 		}
-		return resultView as paginatorBlogViewModelType
+	},
+
+	async findBlogById(id: string): Promise<blogViewModelType | null> {
+		const foundBlog = await blogsRepository.findBlogById(id)
+		return foundBlog ? getBlogViewModel(foundBlog) : null
 	},
 
 	async createBlog(body: blogInputModelType): Promise<blogViewModelType> {
@@ -41,10 +72,69 @@ export const blogsService = {
 			description: body.description,
 			websiteUrl: body.websiteUrl,
 			createdAt: String(new Date().toISOString()),
-			isMembership: true
+			isMembership: false
 		}
 		await blogsRepository.createBlog(blog)
 
 		return getBlogViewModel(blog)
+	},
+
+	async updateBlog(id: string, body: blogInputModelType): Promise<StatusCodes> {
+		const isUpdated = await blogsRepository.updateBlog(id, body)
+
+		return isUpdated ? StatusCodes.NO_CONTENT : StatusCodes.NOT_FOUND
+	},
+
+	async deleteBlog(id: string): Promise<StatusCodes> {
+		const isUpdated = await blogsRepository.deleteBlog(id)
+
+		return isUpdated ? StatusCodes.NO_CONTENT : StatusCodes.NOT_FOUND
+	},
+	async findPostsByBlogId(
+		id: string,
+		query: QueryBlogType
+	): Promise<paginatorPostsViewModelType | null> {
+		const result = await postRepository.getPostsByBlogId(id, query)
+
+		if (result.length !== 0) {
+			const countPosts = await postRepository.countPosts(id)
+
+			const posts = result.map(getPostViewModel)
+			const resultView = {
+				pagesCount: Math.ceil(countPosts / query.pageSize),
+				page: query.pageNumber,
+				pageSize: query.pageSize,
+				totalCount: countPosts,
+				items: posts
+			}
+			return resultView as paginatorPostsViewModelType
+		} else {
+			return null
+		}
+	},
+	async createPostForBlog(
+		id: string,
+		body: BlogPostInputModelType
+	): Promise<postViewModelType | undefined> {
+		const blog = await blogsCollection.findOne({
+			_id: id
+		})
+
+		if (blog !== null) {
+			const post: PostType = {
+				_id: String(new ObjectId()),
+				title: body.title,
+				shortDescription: body.shortDescription,
+				content: body.content,
+				blogId: blog!._id,
+				blogName: blog!.name,
+				createdAt: new Date().toISOString()
+			}
+
+			const result = await postRepository.createPostForBlog(post)
+			if (result.acknowledged === true) {
+				return getPostViewModel(post)
+			}
+		} else return undefined
 	}
 }

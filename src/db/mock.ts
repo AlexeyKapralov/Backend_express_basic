@@ -251,3 +251,33 @@ export const blogReturn = {
 		}
 	]
 }
+
+export const posts = [
+	{
+		_id: String(new ObjectId()),
+		title: 'title post1',
+		shortDescription: 'shortDescription post1',
+		content: 'content post1',
+		blogId: '662224e953c844f8b3673719',
+		blogName: 'twentiethString',
+		createdAt: '2024-04-20T08:08:47.272Z'
+	},
+	{
+		_id: String(new ObjectId()),
+		title: 'title post2',
+		shortDescription: 'shortDescription post2',
+		content: 'content post2',
+		blogId: '662224e953c844f8b3673719',
+		blogName: 'twentiethString',
+		createdAt: '2024-04-21T08:08:47.272Z'
+	},
+	{
+		_id: String(new ObjectId()),
+		title: 'title post3',
+		shortDescription: 'shortDescription post3',
+		content: 'content post3',
+		blogId: '662224e953c844f8b3673719',
+		blogName: 'twentiethString',
+		createdAt: '2024-04-22T08:08:47.272Z'
+	}
+]

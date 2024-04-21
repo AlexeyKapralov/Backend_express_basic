@@ -16,7 +16,7 @@ exports.blogsRepository = {
         return __awaiter(this, void 0, void 0, function* () {
             return yield db_1.blogsCollection
                 .find({
-                name: { $regex: query.searchNameTerm || '' }
+                name: { $regex: query.searchNameTerm || '', $options: 'i' }
             })
                 .sort(query.sortBy, query.sortDirection)
                 .skip((query.pageNumber - 1) * query.pageSize)
@@ -24,15 +24,51 @@ exports.blogsRepository = {
                 .toArray();
         });
     },
-    countBlogs() {
+    findBlogById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield db_1.blogsCollection.countDocuments();
+            return yield db_1.blogsCollection.findOne({
+                _id: id
+            });
+        });
+    },
+    countBlogs(filter) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return filter
+                ? yield db_1.blogsCollection.countDocuments({
+                    name: { $regex: filter, $options: 'i' }
+                })
+                : yield db_1.blogsCollection.countDocuments();
         });
     },
     createBlog(blog) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield db_1.blogsCollection.insertOne(blog);
             return result.acknowledged ? true : false;
+        });
+    },
+    updateBlog(id, body) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const foundBlog = (yield db_1.blogsCollection.findOne({ _id: id }));
+            const result = yield db_1.blogsCollection.updateOne({
+                _id: id
+            }, {
+                $set: {
+                    name: body.name ? body.name : foundBlog.name,
+                    description: body.description
+                        ? body.description
+                        : foundBlog.description,
+                    websiteUrl: body.websiteUrl ? body.websiteUrl : foundBlog.websiteUrl
+                }
+            });
+            return result.modifiedCount > 0 ? true : false;
+        });
+    },
+    deleteBlog(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = yield db_1.blogsCollection.deleteOne({
+                _id: id
+            });
+            return result.deletedCount > 0 ? true : false;
         });
     }
 };

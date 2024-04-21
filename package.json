@@ -11,7 +11,6 @@
 	},
 	"dependencies": {
 		"@types/jest": "^29.5.12",
-		"dotenv": "^16.4.5",
 		"express": "^4.19.2",
 		"http-status-codes": "^2.3.0",
 		"jest": "^29.7.0",
@@ -26,6 +25,7 @@
 		"@types/node": "^20.12.7",
 		"@types/nodemon": "^1.19.6",
 		"@types/supertest": "^6.0.2",
+		"dotenv": "^16.4.5",
 		"express-validator": "^7.0.1"
 	}
 }
