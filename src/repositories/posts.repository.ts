@@ -9,14 +9,6 @@ export const postRepository = {
 			? await postsCollection.countDocuments({ blogId: id })
 			: await postsCollection.countDocuments()
 	},
-	async getPostsByBlogId(id: string, query: QueryPostsType) {
-		return await postsCollection
-			.find({ blogId: id })
-			.sort(query.sortBy, query.sortDirection as SortDirection)
-			.skip((query.pageNumber - 1) * query.pageSize)
-			.limit(query.pageSize)
-			.toArray()
-	},
 	async createPostForBlog(post: PostType) {
 		return await postsCollection.insertOne(post)
 	},
@@ -24,14 +16,6 @@ export const postRepository = {
 		return await postsCollection.findOne({
 			_id: id
 		})
-	},
-	async findAllPosts(query: QueryPostsType): Promise<PostType[]> {
-		return await postsCollection
-			.find({})
-			.sort(query.sortBy, query.sortDirection as SortDirection)
-			.skip((query.pageNumber - 1) * query.pageSize)
-			.limit(query.pageSize)
-			.toArray()
 	},
 	async createPost(post: PostType): Promise<boolean> {
 		const result = await postsCollection.insertOne(post)

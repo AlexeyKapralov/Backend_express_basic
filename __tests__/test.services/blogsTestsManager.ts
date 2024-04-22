@@ -10,6 +10,8 @@ import {
 import { blogsCollection, PostType } from '../../src/db/db'
 import { ObjectId } from 'mongodb'
 import { postRepository } from '../../src/repositories/posts.repository'
+import { QueryPostsType } from '../../src/utils'
+import { postQueryRepository } from '../../src/repositories/posts.query.repository'
 
 export const blogsTestsManager = {
 	async getBlogById(blogId: string, status: number) {
@@ -105,7 +107,7 @@ export const blogsTestsManager = {
 			return { blog, res }
 		}
 	},
-	async getPostsByBlogId(id: string) {
-		const posts = await postRepository.getPostsByBlogId(id)
+	async getPostsByBlogId(id: string, query: QueryPostsType) {
+		const posts = await postQueryRepository.getPostsByBlogId(id, query)
 	}
 }

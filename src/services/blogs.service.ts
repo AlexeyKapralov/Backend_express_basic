@@ -14,6 +14,8 @@ import {
 	postViewModelType
 } from '../features/posts/models/postViewModelType'
 import { BlogPostInputModelType } from '../features/posts/models/postInputModelType'
+import { blogsQueryRepository } from '../repositories/blogs.query.repository'
+import { postQueryRepository } from '../repositories/posts.query.repository'
 
 const getBlogViewModel = (blog: BlogType): blogViewModelType => {
 	return {
@@ -42,7 +44,7 @@ export const blogsService = {
 	async findBlogs(
 		query: QueryBlogType
 	): Promise<paginatorBlogViewModelType | undefined> {
-		const result = await blogsRepository.findBlogs(query)
+		const result = await blogsQueryRepository.findBlogs(query)
 		const countDocs = await blogsRepository.countBlogs(
 			query.searchNameTerm ? query.searchNameTerm : undefined
 		)
@@ -94,7 +96,7 @@ export const blogsService = {
 		id: string,
 		query: QueryBlogType
 	): Promise<paginatorPostsViewModelType | null> {
-		const result = await postRepository.getPostsByBlogId(id, query)
+		const result = await postQueryRepository.getPostsByBlogId(id, query)
 
 		if (result.length !== 0) {
 			const countPosts = await postRepository.countPosts(id)

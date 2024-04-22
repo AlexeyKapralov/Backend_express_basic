@@ -12,18 +12,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.blogsRepository = void 0;
 const db_1 = require("../db/db");
 exports.blogsRepository = {
-    findBlogs(query) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield db_1.blogsCollection
-                .find({
-                name: { $regex: query.searchNameTerm || '', $options: 'i' }
-            })
-                .sort(query.sortBy, query.sortDirection)
-                .skip((query.pageNumber - 1) * query.pageSize)
-                .limit(query.pageSize)
-                .toArray();
-        });
-    },
     findBlogById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield db_1.blogsCollection.findOne({

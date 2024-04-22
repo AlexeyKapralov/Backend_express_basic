@@ -14,10 +14,11 @@ const mongodb_1 = require("mongodb");
 const posts_repository_1 = require("../repositories/posts.repository");
 const blogs_service_1 = require("./blogs.service");
 const blogs_repository_1 = require("../repositories/blogs.repository");
+const posts_query_repository_1 = require("../repositories/posts.query.repository");
 exports.postsService = {
     getAllPosts(query) {
         return __awaiter(this, void 0, void 0, function* () {
-            const res = yield posts_repository_1.postRepository.findAllPosts(query);
+            const res = yield posts_query_repository_1.postQueryRepository.findAllPosts(query);
             const countPosts = yield posts_repository_1.postRepository.countPosts();
             if (res.length !== 0) {
                 return {

@@ -19,6 +19,16 @@ exports.postRepository = {
                 : yield db_1.postsCollection.countDocuments();
         });
     },
+    getPostsByBlogId(id, query) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield db_1.postsCollection
+                .find({ blogId: id })
+                .sort(query.sortBy, query.sortDirection)
+                .skip((query.pageNumber - 1) * query.pageSize)
+                .limit(query.pageSize)
+                .toArray();
+        });
+    },
     createPostForBlog(post) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield db_1.postsCollection.insertOne(post);
@@ -29,6 +39,16 @@ exports.postRepository = {
             return yield db_1.postsCollection.findOne({
                 _id: id
             });
+        });
+    },
+    findAllPosts(query) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield db_1.postsCollection
+                .find({})
+                .sort(query.sortBy, query.sortDirection)
+                .skip((query.pageNumber - 1) * query.pageSize)
+                .limit(query.pageSize)
+                .toArray();
         });
     },
     createPost(post) {

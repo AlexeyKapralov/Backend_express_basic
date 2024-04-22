@@ -15,6 +15,8 @@ const db_1 = require("../db/db");
 const mongodb_1 = require("mongodb");
 const http_status_codes_1 = require("http-status-codes");
 const posts_repository_1 = require("../repositories/posts.repository");
+const blogs_query_repository_1 = require("../repositories/blogs.query.repository");
+const posts_query_repository_1 = require("../repositories/posts.query.repository");
 const getBlogViewModel = (blog) => {
     return {
         id: blog._id,
@@ -40,7 +42,7 @@ exports.getPostViewModel = getPostViewModel;
 exports.blogsService = {
     findBlogs(query) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield blogs_repository_1.blogsRepository.findBlogs(query);
+            const result = yield blogs_query_repository_1.blogsQueryRepository.findBlogs(query);
             const countDocs = yield blogs_repository_1.blogsRepository.countBlogs(query.searchNameTerm ? query.searchNameTerm : undefined);
             if (result.length > 0) {
                 const resultView = {
@@ -91,7 +93,7 @@ exports.blogsService = {
     },
     findPostsByBlogId(id, query) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield posts_repository_1.postRepository.getPostsByBlogId(id, query);
+            const result = yield posts_query_repository_1.postQueryRepository.getPostsByBlogId(id, query);
             if (result.length !== 0) {
                 const countPosts = yield posts_repository_1.postRepository.countPosts(id);
                 const posts = result.map(exports.getPostViewModel);

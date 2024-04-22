@@ -15,7 +15,7 @@ const settings_1 = require("../../src/settings");
 const supertest_1 = require("supertest");
 const app_1 = require("../../src/app");
 const db_1 = require("../../src/db/db");
-const posts_repository_1 = require("../../src/repositories/posts.repository");
+const posts_query_repository_1 = require("../../src/repositories/posts.query.repository");
 exports.blogsTestsManager = {
     getBlogById(blogId, status) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -91,9 +91,9 @@ exports.blogsTestsManager = {
             }
         });
     },
-    getPostsByBlogId(id) {
+    getPostsByBlogId(id, query) {
         return __awaiter(this, void 0, void 0, function* () {
-            const posts = yield posts_repository_1.postRepository.getPostsByBlogId(id);
+            const posts = yield posts_query_repository_1.postQueryRepository.getPostsByBlogId(id, query);
         });
     }
 };

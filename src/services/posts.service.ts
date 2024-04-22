@@ -10,12 +10,13 @@ import { QueryPostsType } from '../utils'
 import { getPostViewModel } from './blogs.service'
 import { blogsRepository } from '../repositories/blogs.repository'
 import { blogInputModelType } from '../features/blogs/models/blogInputModelType'
+import { postQueryRepository } from '../repositories/posts.query.repository'
 
 export const postsService = {
 	async getAllPosts(
 		query: QueryPostsType
 	): Promise<paginatorPostsViewModelType | undefined> {
-		const res = await postRepository.findAllPosts(query)
+		const res = await postQueryRepository.findAllPosts(query)
 
 		const countPosts = await postRepository.countPosts()
 

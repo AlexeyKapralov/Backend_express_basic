@@ -9,15 +9,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.blogsQueryRepository = void 0;
+exports.postQueryRepository = void 0;
 const db_1 = require("../db/db");
-exports.blogsQueryRepository = {
-    findBlogs(query) {
+exports.postQueryRepository = {
+    getPostsByBlogId(id, query) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield db_1.blogsCollection
-                .find({
-                name: { $regex: query.searchNameTerm || '', $options: 'i' }
-            })
+            return yield db_1.postsCollection
+                .find({ blogId: id })
+                .sort(query.sortBy, query.sortDirection)
+                .skip((query.pageNumber - 1) * query.pageSize)
+                .limit(query.pageSize)
+                .toArray();
+        });
+    },
+    findAllPosts(query) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield db_1.postsCollection
+                .find({})
                 .sort(query.sortBy, query.sortDirection)
                 .skip((query.pageNumber - 1) * query.pageSize)
                 .limit(query.pageSize)
