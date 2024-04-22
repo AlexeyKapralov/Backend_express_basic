@@ -33,10 +33,10 @@ describe('app', () => {
                 .get(settings_1.SETTINGS.PATH.BLOGS)
                 .expect(http_status_codes_1.StatusCodes.OK);
             expect(res.body).toEqual({
-                pagesCount: 1,
+                pagesCount: 2,
                 page: 1,
                 pageSize: 10,
-                totalCount: 10,
+                totalCount: 20,
                 items: expect.arrayContaining([
                     expect.objectContaining({
                         id: expect.any(String),
@@ -58,10 +58,10 @@ describe('app', () => {
         })
             .expect(http_status_codes_1.StatusCodes.OK);
         expect(res.body).toEqual({
-            pagesCount: 1,
+            pagesCount: 2,
             page: 2,
             pageSize: 10,
-            totalCount: 10,
+            totalCount: 20,
             items: expect.arrayContaining([
                 expect.objectContaining({
                     id: expect.any(String),

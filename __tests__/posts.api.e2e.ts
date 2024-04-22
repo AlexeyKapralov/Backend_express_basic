@@ -98,7 +98,7 @@ describe('tests for posts blog', () => {
 		await postsTestsManager.createPost(
 			body,
 			SETTINGS.ADMIN_AUTH,
-			StatusCodes.NOT_FOUND
+			StatusCodes.BAD_REQUEST
 		)
 	})
 	it("shouldn't create post with no auth", async () => {

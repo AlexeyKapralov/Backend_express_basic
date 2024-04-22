@@ -18,20 +18,7 @@ const posts_query_repository_1 = require("../repositories/posts.query.repository
 exports.postsService = {
     getAllPosts(query) {
         return __awaiter(this, void 0, void 0, function* () {
-            const res = yield posts_query_repository_1.postQueryRepository.findAllPosts(query);
-            const countPosts = yield posts_repository_1.postRepository.countPosts();
-            if (res.length !== 0) {
-                return {
-                    pagesCount: Math.ceil(countPosts / query.pageSize),
-                    page: query.pageNumber,
-                    pageSize: query.pageSize,
-                    totalCount: countPosts,
-                    items: res.map(blogs_service_1.getPostViewModel)
-                };
-            }
-            else {
-                return undefined;
-            }
+            return yield posts_query_repository_1.postQueryRepository.findAllPosts(query);
         });
     },
     getPostById(id) {

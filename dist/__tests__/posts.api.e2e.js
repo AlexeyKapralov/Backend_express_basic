@@ -90,7 +90,7 @@ describe('tests for posts blog', () => {
             blogId: 'aa',
             shortDescription: 'a-a'
         };
-        yield postsTestsManager_1.postsTestsManager.createPost(body, settings_1.SETTINGS.ADMIN_AUTH, http_status_codes_1.StatusCodes.NOT_FOUND);
+        yield postsTestsManager_1.postsTestsManager.createPost(body, settings_1.SETTINGS.ADMIN_AUTH, http_status_codes_1.StatusCodes.BAD_REQUEST);
     }));
     it("shouldn't create post with no auth", () => __awaiter(void 0, void 0, void 0, function* () {
         const blog = {

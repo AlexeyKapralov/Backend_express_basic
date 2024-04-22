@@ -16,21 +16,7 @@ export const postsService = {
 	async getAllPosts(
 		query: QueryPostsType
 	): Promise<paginatorPostsViewModelType | undefined> {
-		const res = await postQueryRepository.findAllPosts(query)
-
-		const countPosts = await postRepository.countPosts()
-
-		if (res.length !== 0) {
-			return {
-				pagesCount: Math.ceil(countPosts / query.pageSize),
-				page: query.pageNumber,
-				pageSize: query.pageSize,
-				totalCount: countPosts,
-				items: res.map(getPostViewModel)
-			}
-		} else {
-			return undefined
-		}
+		return await postQueryRepository.findAllPosts(query)
 	},
 	async getPostById(id: string): Promise<postViewModelType | undefined> {
 		const res = await postRepository.findPostById(id)

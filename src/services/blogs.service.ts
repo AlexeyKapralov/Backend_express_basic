@@ -17,7 +17,7 @@ import { BlogPostInputModelType } from '../features/posts/models/postInputModelT
 import { blogsQueryRepository } from '../repositories/blogs.query.repository'
 import { postQueryRepository } from '../repositories/posts.query.repository'
 
-const getBlogViewModel = (blog: BlogType): blogViewModelType => {
+export const getBlogViewModel = (blog: BlogType): blogViewModelType => {
 	return {
 		id: blog._id,
 		name: blog.name,
@@ -44,22 +44,7 @@ export const blogsService = {
 	async findBlogs(
 		query: QueryBlogType
 	): Promise<paginatorBlogViewModelType | undefined> {
-		const result = await blogsQueryRepository.findBlogs(query)
-		const countDocs = await blogsRepository.countBlogs(
-			query.searchNameTerm ? query.searchNameTerm : undefined
-		)
-		if (result.length > 0) {
-			const resultView = {
-				pagesCount: Math.ceil(countDocs / query.pageSize),
-				page: query.pageNumber,
-				pageSize: query.pageSize,
-				totalCount: countDocs,
-				items: result.map(getBlogViewModel)
-			}
-			return resultView
-		} else {
-			return undefined
-		}
+		return await blogsQueryRepository.findBlogs(query)
 	},
 
 	async findBlogById(id: string): Promise<blogViewModelType | null> {
@@ -96,23 +81,7 @@ export const blogsService = {
 		id: string,
 		query: QueryBlogType
 	): Promise<paginatorPostsViewModelType | null> {
-		const result = await postQueryRepository.getPostsByBlogId(id, query)
-
-		if (result.length !== 0) {
-			const countPosts = await postRepository.countPosts(id)
-
-			const posts = result.map(getPostViewModel)
-			const resultView = {
-				pagesCount: Math.ceil(countPosts / query.pageSize),
-				page: query.pageNumber,
-				pageSize: query.pageSize,
-				totalCount: countPosts,
-				items: posts
-			}
-			return resultView as paginatorPostsViewModelType
-		} else {
-			return null
-		}
+		return await postQueryRepository.getPostsByBlogId(id, query)
 	},
 	async createPostForBlog(
 		id: string,

@@ -11,25 +11,55 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.postQueryRepository = void 0;
 const db_1 = require("../db/db");
+const posts_repository_1 = require("./posts.repository");
+const blogs_service_1 = require("../services/blogs.service");
 exports.postQueryRepository = {
     getPostsByBlogId(id, query) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield db_1.postsCollection
+            const result = yield db_1.postsCollection
                 .find({ blogId: id })
                 .sort(query.sortBy, query.sortDirection)
                 .skip((query.pageNumber - 1) * query.pageSize)
                 .limit(query.pageSize)
                 .toArray();
+            if (result.length !== 0) {
+                const countPosts = yield posts_repository_1.postRepository.countPosts(id);
+                const posts = result.map(blogs_service_1.getPostViewModel);
+                const resultView = {
+                    pagesCount: Math.ceil(countPosts / query.pageSize),
+                    page: query.pageNumber,
+                    pageSize: query.pageSize,
+                    totalCount: countPosts,
+                    items: posts
+                };
+                return resultView;
+            }
+            else {
+                return null;
+            }
         });
     },
     findAllPosts(query) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield db_1.postsCollection
+            const res = yield db_1.postsCollection
                 .find({})
                 .sort(query.sortBy, query.sortDirection)
                 .skip((query.pageNumber - 1) * query.pageSize)
                 .limit(query.pageSize)
                 .toArray();
+            const countPosts = yield posts_repository_1.postRepository.countPosts();
+            if (res.length !== 0) {
+                return {
+                    pagesCount: Math.ceil(countPosts / query.pageSize),
+                    page: query.pageNumber,
+                    pageSize: query.pageSize,
+                    totalCount: countPosts,
+                    items: res.map(blogs_service_1.getPostViewModel)
+                };
+            }
+            else {
+                return undefined;
+            }
         });
     }
 };

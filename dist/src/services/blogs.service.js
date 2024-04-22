@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.blogsService = exports.getPostViewModel = void 0;
+exports.blogsService = exports.getPostViewModel = exports.getBlogViewModel = void 0;
 const blogs_repository_1 = require("../repositories/blogs.repository");
 const db_1 = require("../db/db");
 const mongodb_1 = require("mongodb");
@@ -27,6 +27,7 @@ const getBlogViewModel = (blog) => {
         isMembership: blog.isMembership
     };
 };
+exports.getBlogViewModel = getBlogViewModel;
 const getPostViewModel = (post) => {
     return {
         id: post._id,
@@ -42,27 +43,13 @@ exports.getPostViewModel = getPostViewModel;
 exports.blogsService = {
     findBlogs(query) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield blogs_query_repository_1.blogsQueryRepository.findBlogs(query);
-            const countDocs = yield blogs_repository_1.blogsRepository.countBlogs(query.searchNameTerm ? query.searchNameTerm : undefined);
-            if (result.length > 0) {
-                const resultView = {
-                    pagesCount: Math.ceil(countDocs / query.pageSize),
-                    page: query.pageNumber,
-                    pageSize: query.pageSize,
-                    totalCount: countDocs,
-                    items: result.map(getBlogViewModel)
-                };
-                return resultView;
-            }
-            else {
-                return undefined;
-            }
+            return yield blogs_query_repository_1.blogsQueryRepository.findBlogs(query);
         });
     },
     findBlogById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const foundBlog = yield blogs_repository_1.blogsRepository.findBlogById(id);
-            return foundBlog ? getBlogViewModel(foundBlog) : null;
+            return foundBlog ? (0, exports.getBlogViewModel)(foundBlog) : null;
         });
     },
     createBlog(body) {
@@ -76,7 +63,7 @@ exports.blogsService = {
                 isMembership: false
             };
             yield blogs_repository_1.blogsRepository.createBlog(blog);
-            return getBlogViewModel(blog);
+            return (0, exports.getBlogViewModel)(blog);
         });
     },
     updateBlog(id, body) {
@@ -93,22 +80,7 @@ exports.blogsService = {
     },
     findPostsByBlogId(id, query) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield posts_query_repository_1.postQueryRepository.getPostsByBlogId(id, query);
-            if (result.length !== 0) {
-                const countPosts = yield posts_repository_1.postRepository.countPosts(id);
-                const posts = result.map(exports.getPostViewModel);
-                const resultView = {
-                    pagesCount: Math.ceil(countPosts / query.pageSize),
-                    page: query.pageNumber,
-                    pageSize: query.pageSize,
-                    totalCount: countPosts,
-                    items: posts
-                };
-                return resultView;
-            }
-            else {
-                return null;
-            }
+            return yield posts_query_repository_1.postQueryRepository.getPostsByBlogId(id, query);
         });
     },
     createPostForBlog(id, body) {

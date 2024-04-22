@@ -11,10 +11,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.blogsQueryRepository = void 0;
 const db_1 = require("../db/db");
+const blogs_repository_1 = require("./blogs.repository");
+const blogs_service_1 = require("../services/blogs.service");
 exports.blogsQueryRepository = {
     findBlogs(query) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield db_1.blogsCollection
+            const result = yield db_1.blogsCollection
                 .find({
                 name: { $regex: query.searchNameTerm || '', $options: 'i' }
             })
@@ -22,6 +24,20 @@ exports.blogsQueryRepository = {
                 .skip((query.pageNumber - 1) * query.pageSize)
                 .limit(query.pageSize)
                 .toArray();
+            const countDocs = yield blogs_repository_1.blogsRepository.countBlogs(query.searchNameTerm ? query.searchNameTerm : undefined);
+            if (result.length > 0) {
+                const resultView = {
+                    pagesCount: Math.ceil(countDocs / query.pageSize),
+                    page: query.pageNumber,
+                    pageSize: query.pageSize,
+                    totalCount: countDocs,
+                    items: result.map(blogs_service_1.getBlogViewModel)
+                };
+                return resultView;
+            }
+            else {
+                return undefined;
+            }
         });
     }
 };
