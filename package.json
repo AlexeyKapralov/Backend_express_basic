@@ -1,0 +1,32 @@
+{
+	"name": "5_password_hash_and_login",
+	"version": "1.0.0",
+	"main": "index.js",
+	"repository": "git@github.com:AlexeyKapralov/Backend_repositories.git",
+	"author": "Alexey Kapralov",
+	"license": "MIT",
+	"scripts": {
+		"dev": "nodemon --inspect dist/index.js",
+		"watch": "tsc -w",
+		"test": "jest",
+		"test coverage": "jest --coverage"
+	},
+	"dependencies": {
+		"@types/jest": "^29.5.12",
+		"express": "^4.19.2",
+		"express-validator": "^7.0.1",
+		"mongodb": "^6.5.0",
+		"nodemon": "^3.1.0",
+		"ts-jest": "^29.1.2"
+	},
+	"devDependencies": {
+		"@types/express": "^4.17.21",
+		"@types/node": "^20.12.7",
+		"@types/nodemon": "^1.19.6",
+		"@types/supertest": "^6.0.2",
+		"jest": "^29.7.0",
+		"supertest": "^6.3.4",
+		"ts-node": "^10.9.2",
+		"typescript": "^5.4.5"
+	}
+}
