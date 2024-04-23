@@ -1,7 +1,7 @@
-1.Express
-2.Express Validator
-2.Typescript
-3.Jest
-4.MongoDb
-5.Basic Authorization
-6.Bcrypt
+1.Express <br>
+2.Express Validator <br>
+2.Typescript <br>
+3.Jest <br>
+4.MongoDb <br>
+5.Basic Authorization <br>
+6.Bcrypt <br>
