@@ -1,8 +1,10 @@
 import { agent } from 'supertest'
-import { app } from '../src'
+import { app } from '../src/app'
 
-describe('test', () => {
+describe('user tests', () => {
 	it('test', () => {
-		agent(app).get('/').expect('Hello World!')
+		agent(app).get('/').expect('All is running!')
 	})
+
+	afterAll(done => done())
 })

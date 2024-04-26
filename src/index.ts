@@ -1,12 +1,11 @@
-import { runDb } from './db/db'
-
-const express = require('express')
-export const app = express()
+import { db } from './db/db'
+import { SETTINGS } from './common/config/settings'
+import { app } from './app'
 
 async function runApp() {
-	await runDb()
-	app.listen(5000, () => {
-		console.log('Example app listening on port http://localhost:5000!')
+	await db.run(SETTINGS.MONGO_URL)
+	app.listen(SETTINGS.PORT, () => {
+		console.log('Example app listening on port http://localhost:5000')
 	})
 }
 

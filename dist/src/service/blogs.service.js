@@ -9,16 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.app = void 0;
-const db_1 = require("./db/db");
-const express = require('express');
-exports.app = express();
-function runApp() {
-    return __awaiter(this, void 0, void 0, function* () {
-        yield (0, db_1.runDb)();
-        exports.app.listen(5000, () => {
-            console.log('Example app listening on port http://localhost:5000!');
-        });
-    });
-}
-runApp();
+exports.blogsService = void 0;
+exports.blogsService = {
+    createBlog(body) {
+        return __awaiter(this, void 0, void 0, function* () { });
+    }
+};

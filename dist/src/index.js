@@ -9,28 +9,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.runDb = exports.postsCollection = exports.blogsCollection = void 0;
-const mongodb_1 = require("mongodb");
-const settings_1 = require("../settings");
-const url = settings_1.SETTINGS.MONGO_URL;
-if (!url) {
-    throw new Error('!!!Url database is not defined!!!');
-}
-const client = new mongodb_1.MongoClient(url);
-const dbName = 'social_dev';
-const db = client.db(dbName);
-exports.blogsCollection = db.collection('blogs');
-exports.postsCollection = db.collection('posts');
-function runDb() {
+const db_1 = require("./db/db");
+const settings_1 = require("./common/config/settings");
+const app_1 = require("./app");
+function runApp() {
     return __awaiter(this, void 0, void 0, function* () {
-        try {
-            yield client.connect();
-            console.log('Connected successfully to mongo server');
-        }
-        catch (_a) {
-            console.log('!!! Cannot connect to db');
-            yield client.close();
-        }
+        yield db_1.db.run(settings_1.SETTINGS.MONGO_URL);
+        app_1.app.listen(settings_1.SETTINGS.PORT, () => {
+            console.log('Example app listening on port http://localhost:5000');
+        });
     });
 }
-exports.runDb = runDb;
+runApp();

@@ -1,24 +1,44 @@
-import { MongoClient } from 'mongodb'
-import { SETTINGS } from '../settings'
+import { Db, MongoClient } from 'mongodb'
+import { SETTINGS } from '../common/config/settings'
+import { IUserDBModel } from '../features/users/models/user.db.model'
 
-const url = SETTINGS.MONGO_URL
+export const db = {
+	client: {} as MongoClient,
 
-if (!url) {
-	throw new Error('!!!Url database is not defined!!!')
-}
-const client = new MongoClient(url)
+	getDbName(): Db {
+		return this.client.db(SETTINGS.DB_NAME)
+	},
 
-const dbName = 'social_dev'
-const db = client.db(dbName)
-export const blogsCollection = db.collection('blogs')
-export const postsCollection = db.collection('posts')
+	async run(url: string) {
+		try {
+			this.client = new MongoClient(url)
+			await this.client.connect()
+			await this.getDbName().command({ ping: 1 })
+			console.log('Connected successfully to mongo server')
+		} catch (e) {
+			console.log('!!! Cannot connect to db', e)
+			await this.client.close()
+		}
+	},
+	async stop() {
+		await this.client.close()
+		console.log('Connection successfully closed')
+	},
+	async drop() {
+		try {
+			const collections = await this.getDbName().listCollections().toArray()
 
-export async function runDb() {
-	try {
-		await client.connect()
-		console.log('Connected successfully to mongo server')
-	} catch {
-		console.log('!!! Cannot connect to db')
-		await client.close()
+			for (const collection of collections) {
+				await this.getDbName().collection(collection.name).deleteMany({})
+			}
+		} catch (error) {
+			console.log('Error in drop db', error)
+			await this.stop()
+		}
+	},
+	getCollection() {
+		return {
+			usersCollection: this.getDbName().collection<IUserDBModel>('users')
+		}
 	}
 }
