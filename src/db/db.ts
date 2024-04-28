@@ -1,6 +1,8 @@
 import { Db, MongoClient } from 'mongodb'
 import { SETTINGS } from '../common/config/settings'
-import { IUserDBModel } from '../features/users/models/user.db.model'
+import { IUserDbModel } from '../features/users/models/userDb.model'
+import {IBlogDbModel} from "../features/blogs/models/blogDb.model";
+import {IPostDbModel} from "../features/posts/models/postDb.model";
 
 export const db = {
 	client: {} as MongoClient,
@@ -12,6 +14,7 @@ export const db = {
 	async run(url: string) {
 		try {
 			this.client = new MongoClient(url)
+			//TODO: с VPN не подключается к БД mongo atlas
 			await this.client.connect()
 			await this.getDbName().command({ ping: 1 })
 			console.log('Connected successfully to mongo server')
@@ -38,7 +41,9 @@ export const db = {
 	},
 	getCollection() {
 		return {
-			usersCollection: this.getDbName().collection<IUserDBModel>('users')
+			usersCollection: this.getDbName().collection<IUserDbModel>('users'),
+			blogsCollection: this.getDbName().collection<IBlogDbModel>('blogs'),
+			postsCollection: this.getDbName().collection<IPostDbModel>('posts')
 		}
 	}
 }

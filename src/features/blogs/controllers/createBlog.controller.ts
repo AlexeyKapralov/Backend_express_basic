@@ -1,0 +1,10 @@
+import {Request, Response} from "express";
+import {IBlogInputModel} from "../models/blogInput.model";
+import {IBlogViewModel} from "../models/blogView.model";
+import {blogsService} from "../../../service/blogs.service";
+import {StatusCodes} from "http-status-codes";
+
+export const createBlogsController = async (req: Request<{},{},IBlogInputModel>, res: Response<IBlogViewModel>) => {
+    const result = await blogsService.createBlog(req.body)
+    result ? res.status(StatusCodes.CREATED).send(result) : res.status(StatusCodes.NOT_FOUND).send()
+}

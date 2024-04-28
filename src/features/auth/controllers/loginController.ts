@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
-import { ILoginInputModel } from '../../users/models/login.input.model'
 import { loginService } from '../../../service/login.service'
 import { StatusCodes } from 'http-status-codes'
+import {ILoginInputModel} from "../models/loginInputModel";
 
 export const loginController = async (
 	req: Request<{}, {}, ILoginInputModel>,

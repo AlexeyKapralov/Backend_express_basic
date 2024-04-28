@@ -4,6 +4,8 @@ import { usersRouter } from './features/users/users.router'
 import { authRouter } from './features/auth/authRouter'
 import { db } from './db/db'
 import { StatusCodes } from 'http-status-codes'
+import {blogsRouter} from "./features/blogs/blogs.router";
+import {postsRouter} from "./features/posts/posts.router";
 
 export const app = express()
 
@@ -18,4 +20,6 @@ app.delete(SETTINGS.PATH.TESTING, async (req: Request, res: Response) => {
 })
 
 app.use(SETTINGS.PATH.USERS, usersRouter)
+app.use(SETTINGS.PATH.BLOGS, blogsRouter)
+app.use(SETTINGS.PATH.POSTS, postsRouter)
 app.use(SETTINGS.PATH.AUTH, authRouter)

@@ -10,6 +10,8 @@ exports.SETTINGS = {
     PORT: process.env.PORT,
     PATH: {
         USERS: '/users',
+        BLOGS: '/blogs',
+        POSTS: '/posts',
         AUTH: '/auth',
         TESTING: '/testing/all-data'
     }

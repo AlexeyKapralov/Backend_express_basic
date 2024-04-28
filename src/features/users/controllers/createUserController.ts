@@ -1,16 +1,15 @@
 import { Request, Response } from 'express'
-import { IUserInputModel } from '../models/user.input.model'
-import { IUserViewModel } from '../models/user.view.model'
+import { IUserInputModel } from '../models/userInput.model'
+import { IUserViewModel } from '../models/userView.model'
 import { usersService } from '../../../service/users.service'
 import { StatusCodes } from 'http-status-codes'
 
-export const createPostController = async (
+export const createUserController = async (
 	req: Request<{}, {}, IUserInputModel>,
 	res: Response<IUserViewModel>
 ) => {
 	const result = await usersService.createUser(
-		req.body,
-		req.headers.authorization!
+		req.body
 	)
 
 	result

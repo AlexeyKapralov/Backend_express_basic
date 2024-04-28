@@ -1,21 +1,16 @@
-import { bcryptService } from '../common/adapters/bcrypt.service'
-import { IUserInputModel } from '../features/users/models/user.input.model'
-import {
-	IQueryUserModel,
-	IUserViewModel
-} from '../features/users/models/user.view.model'
-import { usersRepository } from '../repositories/users/users.repository'
-const bcrypt = require('bcrypt')
+import {bcryptService} from '../common/adapters/bcrypt.service'
+import {IUserInputModel} from '../features/users/models/userInput.model'
+import {IUserViewModel} from '../features/users/models/userView.model'
+import {usersRepository} from '../repositories/users/users.repository'
 
 export const usersService = {
-	async createUser(
-		data: IUserInputModel,
-		auth: string
-	): Promise<IUserViewModel | undefined> {
-		const passwordHash = await bcryptService.createPasswordHash(data.password)
-		return await usersRepository.createUser(data, passwordHash)
-	},
-	async getUsers(query: IQueryUserModel) {
-		return await usersRepository.findUsers(query)
-	}
+    async createUser(
+        data: IUserInputModel
+    ): Promise<IUserViewModel | undefined> {
+        const passwordHash = await bcryptService.createPasswordHash(data.password)
+        return await usersRepository.createUser(data, passwordHash)
+    },
+    async deleteUser(id: string) {
+        return await usersRepository.deleteUser(id)
+    }
 }

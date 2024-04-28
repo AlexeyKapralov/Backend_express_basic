@@ -6,14 +6,7 @@ export interface IUserViewModel {
 	password: string
 }
 
-export interface IQueryUserModel {
-	sortBy: string
-	sortDirection: string
-	pageNumber: number
-	pageSize: number
-	searchLoginTerm: string
-	searchEmailTerm: string
-}
+
 
 export interface IPaginatorUserViewModel {
 	pagesCount: number

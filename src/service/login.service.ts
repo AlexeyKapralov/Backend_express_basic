@@ -1,6 +1,6 @@
 import { bcryptService } from '../common/adapters/bcrypt.service'
-import { ILoginInputModel } from '../features/users/models/login.input.model'
 import { usersRepository } from '../repositories/users/users.repository'
+import {ILoginInputModel} from "../features/auth/models/loginInputModel";
 
 export const loginService = {
 	async loginUser(data: ILoginInputModel) {

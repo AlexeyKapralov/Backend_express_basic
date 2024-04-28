@@ -21,6 +21,7 @@ exports.db = {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 this.client = new mongodb_1.MongoClient(url);
+                //TODO: с VPN не подключается к БД mongo atlas
                 yield this.client.connect();
                 yield this.getDbName().command({ ping: 1 });
                 console.log('Connected successfully to mongo server');
@@ -53,7 +54,9 @@ exports.db = {
     },
     getCollection() {
         return {
-            usersCollection: this.getDbName().collection('users')
+            usersCollection: this.getDbName().collection('users'),
+            blogsCollection: this.getDbName().collection('blogs'),
+            postsCollection: this.getDbName().collection('posts')
         };
     }
 };

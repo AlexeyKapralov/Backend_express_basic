@@ -9,6 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const supertest_1 = require("supertest");
+const app_1 = require("../../src/app");
 const db_1 = require("../../src/db/db");
 const settings_1 = require("../../src/common/config/settings");
 const mongodb_memory_server_1 = require("mongodb-memory-server");
@@ -19,6 +21,27 @@ describe('user tests', () => {
         const mongod = yield mongodb_memory_server_1.MongoMemoryServer.create();
         const uri = mongod.getUri();
         yield db_1.db.run(uri);
+    }));
+    //TODO: написать тесты для проверки работы пагиинации
+    it('should get users with default pagination', () => __awaiter(void 0, void 0, void 0, function* () {
+        yield user_test_manager_1.userTestManager.createUsers(20);
+        const res = yield (0, supertest_1.agent)(app_1.app)
+            .get(settings_1.SETTINGS.PATH.USERS);
+        expect(res.body).toEqual({
+            pagesCount: 2,
+            page: 1,
+            pageSize: 10,
+            totalCount: 20,
+            items: expect.arrayContaining([
+                expect.objectContaining({
+                    id: expect.any(String),
+                    login: expect.any(String),
+                    email: expect.any(String),
+                    createdAt: expect.any(String),
+                    password: expect.any(String)
+                })
+            ])
+        });
     }));
     it(`shouldn't create user with auth and incorrect input data`, () => __awaiter(void 0, void 0, void 0, function* () {
         const data = {
@@ -44,6 +67,7 @@ describe('user tests', () => {
         };
         yield user_test_manager_1.userTestManager.createUser(data, settings_1.SETTINGS.ADMIN_AUTH);
     }));
+    //todo: тесты на удаление юзера
     afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
         db_1.db.stop();
     }));

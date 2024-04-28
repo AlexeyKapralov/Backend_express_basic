@@ -19,6 +19,8 @@ const users_router_1 = require("./features/users/users.router");
 const authRouter_1 = require("./features/auth/authRouter");
 const db_1 = require("./db/db");
 const http_status_codes_1 = require("http-status-codes");
+const blogs_router_1 = require("./features/blogs/blogs.router");
+const posts_router_1 = require("./features/posts/posts.router");
 exports.app = (0, express_1.default)();
 exports.app.use(express_1.default.json());
 exports.app.get('/', (req, res) => {
@@ -29,4 +31,6 @@ exports.app.delete(settings_1.SETTINGS.PATH.TESTING, (req, res) => __awaiter(voi
     res.status(http_status_codes_1.StatusCodes.NO_CONTENT).send();
 }));
 exports.app.use(settings_1.SETTINGS.PATH.USERS, users_router_1.usersRouter);
+exports.app.use(settings_1.SETTINGS.PATH.BLOGS, blogs_router_1.blogsRouter);
+exports.app.use(settings_1.SETTINGS.PATH.POSTS, posts_router_1.postsRouter);
 exports.app.use(settings_1.SETTINGS.PATH.AUTH, authRouter_1.authRouter);

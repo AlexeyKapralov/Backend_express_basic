@@ -10,8 +10,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getUsersController = void 0;
-const users_service_1 = require("../../../service/users.service");
-const getUsersController = (req_1, res_1, _a) => __awaiter(void 0, [req_1, res_1, _a], void 0, function* (req, res, {}) {
-    yield users_service_1.usersService.getUsers(req.query);
+const http_status_codes_1 = require("http-status-codes");
+const mappers_1 = require("../../../common/utils/mappers");
+const users_query_repository_1 = require("../../../repositories/users/users.query.repository");
+const getUsersController = (
+//TODO: Здесь для query нельзя сделать определённый тип, потому что в query могут попадать всякие разные
+// параметры и мы не можем им определить тип, а то я попытался так сделать и TS говорить про ошибку, т.е. по
+// сути можно [key: string... не писать по сути же?
+req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    //TODO: в query мы можем передать всё что угодно и потом этот объект мапить в любом случае надо, правильно?
+    // чтобы типам соответствовало всё дальше в сервисе
+    const query = (0, mappers_1.getQueryForUsers)(req.query);
+    const result = yield users_query_repository_1.usersQueryRepository.findUsers(query);
+    result !== undefined ? res.status(http_status_codes_1.StatusCodes.OK).send(result) : res.status(http_status_codes_1.StatusCodes.NOT_FOUND).send();
 });
 exports.getUsersController = getUsersController;

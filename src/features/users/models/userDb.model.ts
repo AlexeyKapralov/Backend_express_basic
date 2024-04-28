@@ -1,4 +1,4 @@
-export interface IUserDBModel {
+export interface IUserDbModel {
 	_id: string
 	login: string
 	email: string

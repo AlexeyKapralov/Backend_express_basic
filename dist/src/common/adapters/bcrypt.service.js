@@ -23,9 +23,9 @@ exports.bcryptService = {
             return yield bcrypt_1.default.hash(password, salt);
         });
     },
-    comparePasswordsHash(reqPassHash, dbPassHash) {
+    comparePasswordsHash(reqPassPlainText, dbPassHash) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield bcrypt_1.default.compare(reqPassHash, dbPassHash);
+            return yield bcrypt_1.default.compare(reqPassPlainText, dbPassHash);
         });
     }
 };

@@ -12,17 +12,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.usersService = void 0;
 const bcrypt_service_1 = require("../common/adapters/bcrypt.service");
 const users_repository_1 = require("../repositories/users/users.repository");
-const bcrypt = require('bcrypt');
 exports.usersService = {
-    createUser(data, auth) {
+    createUser(data) {
         return __awaiter(this, void 0, void 0, function* () {
             const passwordHash = yield bcrypt_service_1.bcryptService.createPasswordHash(data.password);
             return yield users_repository_1.usersRepository.createUser(data, passwordHash);
         });
     },
-    getUsers(query) {
+    deleteUser(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield users_repository_1.usersRepository.findUsers(query);
+            return yield users_repository_1.usersRepository.deleteUser(id);
         });
     }
 };
