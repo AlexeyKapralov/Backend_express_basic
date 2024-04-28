@@ -30,18 +30,22 @@ export const postsRepository = {
 
         const foundBlog = await blogsQueryRepository.getBlogByID(body.blogId)
 
-        const result = await db.getCollection().postsCollection.updateOne({
-            _id: id
-        }, {
-            $set: {
-                title: body.title,
-                shortDescription: body.shortDescription,
-                content: body.content,
-                blogId: body.blogId,
-                blogName: foundBlog!.name
-            }
-        })
-        return result.acknowledged
+        if (foundBlog) {
+
+            const result = await db.getCollection().postsCollection.updateOne({
+                _id: id
+            }, {
+                $set: {
+                    title: body.title,
+                    shortDescription: body.shortDescription,
+                    content: body.content,
+                    blogId: body.blogId,
+                    blogName: foundBlog!.name
+                }
+            })
+
+            return result.modifiedCount > 0
+        } else return false
     },
     async deletePost(id: string): Promise<boolean> {
         const result = await db.getCollection().postsCollection.deleteOne({_id: id})

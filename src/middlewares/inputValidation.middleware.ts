@@ -20,7 +20,7 @@ export const inputValidationMiddleware = (
 	const errors = myValidationResult(req)
 	if (!errors.isEmpty()) {
 		res
-			.status(StatusCodes.NOT_FOUND)
+			.status(StatusCodes.BAD_REQUEST)
 			.json({ errorsMessages: errors.array({ onlyFirstError: true }) })
 	} else {
 		next()

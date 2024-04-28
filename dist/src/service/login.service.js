@@ -15,7 +15,7 @@ const users_repository_1 = require("../repositories/users/users.repository");
 exports.loginService = {
     loginUser(data) {
         return __awaiter(this, void 0, void 0, function* () {
-            const user = yield users_repository_1.usersRepository.findUserByLoginOrEmail(data.loginOrEmail);
+            const user = yield users_repository_1.usersRepository.findUserWithPass(data.loginOrEmail);
             if (!user) {
                 return false;
             }

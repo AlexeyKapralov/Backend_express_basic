@@ -36,6 +36,15 @@ exports.usersRepository = {
             return result !== null ? (0, mappers_1.getUserViewModel)(result) : undefined;
         });
     },
+    findUserWithPass(loginOrEmail) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = yield db_1.db.getCollection().usersCollection.findOne({
+                $or: [{ login: loginOrEmail }, { email: loginOrEmail }]
+            });
+            //TODO: return сработал только после того как я резалт сделал явным типом as
+            return result !== null ? result : undefined;
+        });
+    },
     deleteUser(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield db_1.db.getCollection().usersCollection.deleteOne({

@@ -1,15 +1,16 @@
 import {Router} from "express";
 import {getBlogsController} from "./controllers/getBlogs.controller";
 import {
-    blogIdParamValidation,
     contentValidation,
     descriptionValidation,
     nameValidation,
     pageNumberValidation,
     pageSizeValidation,
-    searchNameTermValidation, shortDescriptionValidation,
+    searchNameTermValidation,
+    shortDescriptionValidation,
     sortByValidation,
-    sortDirectionValidation, titleValidation,
+    sortDirectionValidation,
+    titleValidation,
     websiteUrlValidation
 } from "../../common/validation/express-validation";
 import {inputValidationMiddleware} from "../../middlewares/inputValidation.middleware";
@@ -39,7 +40,7 @@ blogsRouter.get('/:id', getBlogByIdController)
 
 blogsRouter.get('/:id/posts',
     sortByValidation,
-    blogIdParamValidation,
+    // blogIdParamValidation,
     sortDirectionValidation,
     pageNumberValidation,
     pageSizeValidation,
@@ -60,7 +61,7 @@ blogsRouter.post('/',
 blogsRouter.post('/:id/posts',
 
     authMiddleware,
-    blogIdParamValidation,
+    // blogIdParamValidation,
     titleValidation,
     shortDescriptionValidation,
     contentValidation,

@@ -10,7 +10,6 @@ export const db = {
 	getDbName(): Db {
 		return this.client.db(SETTINGS.DB_NAME)
 	},
-
 	async run(url: string) {
 		try {
 			this.client = new MongoClient(url)
@@ -24,8 +23,8 @@ export const db = {
 		}
 	},
 	async stop() {
-		await this.client.close()
 		console.log('Connection successfully closed')
+		await this.client.close()
 	},
 	async drop() {
 		try {

@@ -33,7 +33,7 @@ export const usersQueryRepository = {
             .toArray()
 
         const countDocs = await await db.getCollection().usersCollection
-            .countDocuments()
+            .countDocuments(newQuery)
 
         if (res.length !== 0) {
             return {

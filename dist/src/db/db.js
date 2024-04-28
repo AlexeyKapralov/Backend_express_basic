@@ -34,8 +34,8 @@ exports.db = {
     },
     stop() {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.client.close();
             console.log('Connection successfully closed');
+            yield this.client.close();
         });
     },
     drop() {

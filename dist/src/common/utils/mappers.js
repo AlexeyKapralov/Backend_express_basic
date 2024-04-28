@@ -7,7 +7,6 @@ const getUserViewModel = (data) => {
         login: data.login,
         email: data.email,
         createdAt: data.createdAt,
-        password: data.password
     };
 };
 exports.getUserViewModel = getUserViewModel;
@@ -48,7 +47,7 @@ const getQueryForUsers = (query) => {
 exports.getQueryForUsers = getQueryForUsers;
 const getQueryForBlogs = (query) => {
     return {
-        searchNameTerm: query.SearchNameTerm,
+        searchNameTerm: query.searchNameTerm,
         sortBy: query.sortBy,
         sortDirection: query.sortDirection,
         pageNumber: +query.pageNumber,

@@ -14,7 +14,6 @@ export const getUserViewModel = (data: IUserDbModel): IUserViewModel => {
 		login: data.login,
 		email: data.email,
 		createdAt: data.createdAt,
-		password: data.password
 	}
 }
 
@@ -59,7 +58,7 @@ export const getQueryForBlogs = (query: {
 	[key: string]: string | undefined
 }): IBlogQueryModel => {
 	return {
-		searchNameTerm: query.SearchNameTerm!,
+		searchNameTerm: query.searchNameTerm!,
 		sortBy: query.sortBy!,
 		sortDirection: query.sortDirection!,
 		pageNumber: +query.pageNumber!,

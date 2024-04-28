@@ -37,7 +37,7 @@ describe('user tests', () => {
                     id: expect.any(String),
                     login: expect.any(String),
                     email: expect.any(String),
-                    createdAt: expect.any(String),
+                    createdAt: expect.stringMatching(/\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)/),
                     password: expect.any(String)
                 })
             ])
