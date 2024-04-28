@@ -44,7 +44,14 @@ export const usersQueryRepository = {
                 items: res.map(getUserViewModel)
             }
         } else {
-            return undefined
+            // return undefined
+            return {
+                pagesCount: Math.ceil(countDocs / query.pageSize),
+                page: query.pageNumber,
+                pageSize: query.pageSize,
+                totalCount: countDocs,
+                items: []
+            }
         }
     }
 }
