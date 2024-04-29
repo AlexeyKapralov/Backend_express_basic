@@ -23,16 +23,14 @@ export const usersRepository = {
                 $or: [{login: loginOrEmail}, {email: loginOrEmail}]
             }
         )
-        //TODO: return сработал только после того как я резалт сделал явным типом as
-        return result !== null ? getUserViewModel(result as IUserDbModel) : undefined
+        return result !== null ? getUserViewModel(result) : undefined
     },
     async findUserWithPass(loginOrEmail: string): Promise<IUserDbModel | undefined> {
         const result = await db.getCollection().usersCollection.findOne({
                 $or: [{login: loginOrEmail}, {email: loginOrEmail}]
             }
         )
-        //TODO: return сработал только после того как я резалт сделал явным типом as
-        return result !== null ? result as IUserDbModel : undefined
+        return result !== null ? result : undefined
     },
     async deleteUser(id: string) {
         const result = await db.getCollection().usersCollection.deleteOne({

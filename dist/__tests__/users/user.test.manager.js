@@ -14,7 +14,6 @@ const supertest_1 = require("supertest");
 const settings_1 = require("../../src/common/config/settings");
 const app_1 = require("../../src/app");
 const http_status_codes_1 = require("http-status-codes");
-const bcrypt_service_1 = require("../../src/common/adapters/bcrypt.service");
 const db_1 = require("../../src/db/db");
 const mongodb_1 = require("mongodb");
 const getRandomName = () => {
@@ -35,18 +34,26 @@ exports.userTestManager = {
             if (result.status === http_status_codes_1.StatusCodes.CREATED) {
                 expect(result.body).toEqual({
                     login: data.login,
-                    password: expect.any(String),
                     email: data.email,
                     createdAt: expect.any(String),
                     id: expect.any(String)
                 });
                 // TODO: почему в тестах при проверки соли мне требуется брать всё от 0 до 29 символа из хэша,
                 //  хотя в документации написано с 7го символа
-                const salt = result.body.password.slice(0, 29);
-                const passHash = yield bcrypt_service_1.bcryptService.createPasswordHash(data.password, salt);
-                const createdPassHash = yield bcrypt_service_1.bcryptService.createPasswordHash(result.body.password);
-                const isTruePass = yield bcrypt_service_1.bcryptService.comparePasswordsHash(passHash, createdPassHash);
-                expect(isTruePass).toBe(true);
+                // const salt = userWithPass!._id.slice(0, 29)
+                //
+                // const passHash = await bcryptService.createPasswordHash(
+                //     data.password,
+                //     salt
+                // )
+                // const createdPassHash = await bcryptService.createPasswordHash(
+                //     result.body.password
+                // )
+                // const isTruePass = await bcryptService.comparePasswordsHash(
+                //     passHash,
+                //     createdPassHash
+                // )
+                // expect(isTruePass).toBe(true)
             }
         });
     },
@@ -65,6 +72,49 @@ exports.userTestManager = {
                 // users = [...users, user];
                 yield db_1.db.getCollection().usersCollection.insertOne(user);
             }
+        });
+    },
+    deleteUser(id_1) {
+        return __awaiter(this, arguments, void 0, function* (id, auth = '', expected_status = http_status_codes_1.StatusCodes.NO_CONTENT) {
+            const buff = Buffer.from(auth, 'utf-8');
+            const decodedAuth = buff.toString('base64');
+            const result = yield (0, supertest_1.agent)(app_1.app)
+                .delete(`${settings_1.SETTINGS.PATH.USERS}/${id}`)
+                .set({ authorization: `Basic ${decodedAuth}` });
+            expect(result.status).toBe(expected_status);
+            if (result.status === http_status_codes_1.StatusCodes.NO_CONTENT) {
+                const res = yield db_1.db.getCollection().usersCollection.findOne({ _id: id });
+                expect(res).toBe(null);
+                // TODO: почему в тестах при проверки соли мне требуется брать всё от 0 до 29 символа из хэша,
+                //  хотя в документации написано с 7го символа
+                // const salt = userWithPass!._id.slice(0, 29)
+                //
+                // const passHash = await bcryptService.createPasswordHash(
+                //     data.password,
+                //     salt
+                // )
+                // const createdPassHash = await bcryptService.createPasswordHash(
+                //     result.body.password
+                // )
+                // const isTruePass = await bcryptService.comparePasswordsHash(
+                //     passHash,
+                //     createdPassHash
+                // )
+                // expect(isTruePass).toBe(true)
+            }
+        });
+    },
+    customSort(array, key, type = 'string', order = 'asc') {
+        return array.sort((a, b) => {
+            const valueA = (type === 'string') ? a[key].toLowerCase() : a[key];
+            const valueB = (type === 'string') ? b[key].toLowerCase() : b[key];
+            if (valueA < valueB) {
+                return (order === 'asc') ? -1 : 1;
+            }
+            if (valueA > valueB) {
+                return (order === 'asc') ? 1 : -1;
+            }
+            return 0;
         });
     }
 };

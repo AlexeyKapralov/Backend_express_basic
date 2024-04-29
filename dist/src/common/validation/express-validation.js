@@ -47,7 +47,7 @@ exports.websiteUrlValidation = (0, express_validator_1.body)('websiteUrl').trim(
 exports.titleValidation = (0, express_validator_1.body)('title').trim().isLength({ min: 1, max: 30 });
 exports.shortDescriptionValidation = (0, express_validator_1.body)('shortDescription').trim().isLength({ min: 1, max: 100 });
 exports.contentValidation = (0, express_validator_1.body)('content').trim().isLength({ min: 1, max: 1000 });
-//TODO: правильно ли так делать?
+// так не делается, но для задачи нужно и по другому никак
 exports.blogIdParamValidation = (0, express_validator_1.param)('id').trim().custom((value) => __awaiter(void 0, void 0, void 0, function* () {
     const blog = yield db_1.db.getCollection().blogsCollection.findOne({ _id: value });
     if (!blog) {

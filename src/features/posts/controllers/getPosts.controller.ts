@@ -1,11 +1,12 @@
 import {Request, Response} from "express";
 import {IPaginatorPostViewModel} from "../models/postView.model";
-import {getQueryForPosts} from "../../../common/utils/mappers";
 import {postsQueryRepository} from "../../../repositories/posts/postsQuery.repository";
 import {StatusCodes} from "http-status-codes";
+import {IQueryModel} from "../../users/models/userInput.model";
+import {getQueryParams} from "../../../common/utils/mappers";
 
-export const getPostsController = async (req: Request<{},{},{},{[key: string]: string | undefined}>, res: Response<IPaginatorPostViewModel>) => {
-    const query = getQueryForPosts(req.query)
+export const getPostsController = async (req: Request<{},{},{},IQueryModel>, res: Response<IPaginatorPostViewModel>) => {
+    const query = getQueryParams(req.query)
 
     const result = await postsQueryRepository.getPosts(query)
 

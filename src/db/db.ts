@@ -13,7 +13,6 @@ export const db = {
 	async run(url: string) {
 		try {
 			this.client = new MongoClient(url)
-			//TODO: с VPN не подключается к БД mongo atlas
 			await this.client.connect()
 			await this.getDbName().command({ ping: 1 })
 			console.log('Connected successfully to mongo server')

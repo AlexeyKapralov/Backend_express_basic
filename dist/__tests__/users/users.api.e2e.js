@@ -16,14 +16,16 @@ const settings_1 = require("../../src/common/config/settings");
 const mongodb_memory_server_1 = require("mongodb-memory-server");
 const user_test_manager_1 = require("./user.test.manager");
 const http_status_codes_1 = require("http-status-codes");
+const mappers_1 = require("../../src/common/utils/mappers");
 describe('user tests', () => {
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
         const mongod = yield mongodb_memory_server_1.MongoMemoryServer.create();
         const uri = mongod.getUri();
         yield db_1.db.run(uri);
     }));
-    //TODO: написать тесты для проверки работы пагиинации
+    //check pagination
     it('should get users with default pagination', () => __awaiter(void 0, void 0, void 0, function* () {
+        yield db_1.db.drop();
         yield user_test_manager_1.userTestManager.createUsers(20);
         const res = yield (0, supertest_1.agent)(app_1.app)
             .get(settings_1.SETTINGS.PATH.USERS);
@@ -38,11 +40,66 @@ describe('user tests', () => {
                     login: expect.any(String),
                     email: expect.any(String),
                     createdAt: expect.stringMatching(/\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)/),
-                    password: expect.any(String)
                 })
             ])
         });
+        const users = yield db_1.db.getCollection().usersCollection
+            .find()
+            .sort('createdAt', 'desc')
+            .skip((1 - 1) * 10)
+            .limit(10)
+            .toArray();
+        expect(users.map(mappers_1.getUserViewModel)).toEqual(res.body.items);
     }));
+    it('should get with input custom pagination', () => __awaiter(void 0, void 0, void 0, function* () {
+        yield db_1.db.drop();
+        yield user_test_manager_1.userTestManager.createUsers(20);
+        const res = yield (0, supertest_1.agent)(app_1.app)
+            .get(settings_1.SETTINGS.PATH.USERS)
+            .query({
+            sortBy: 'login',
+            sortDirection: 'asc',
+            pageNumber: 2,
+            pageSize: 5,
+            searchLoginTerm: 'John',
+            searchEmailTerm: '1'
+        });
+        const users = yield db_1.db.getCollection().usersCollection
+            .find({
+            $or: [
+                { login: { $regex: 'John', $options: 'i' } },
+                { email: { $regex: '1', $options: 'i' } }
+            ]
+        })
+            .sort('login', 'asc')
+            .skip((2 - 1) * 5)
+            .limit(5)
+            .toArray();
+        const countUsers = yield db_1.db.getCollection().usersCollection
+            .find({
+            $or: [
+                { login: { $regex: 'John', $options: 'i' } },
+                { email: { $regex: '1', $options: 'i' } }
+            ]
+        })
+            .toArray();
+        expect(res.body).toEqual({
+            pagesCount: Math.ceil(countUsers.length / 5),
+            page: 2,
+            pageSize: 5,
+            totalCount: countUsers.length,
+            items: expect.arrayContaining([
+                expect.objectContaining({
+                    id: expect.any(String),
+                    login: expect.any(String),
+                    email: expect.any(String),
+                    createdAt: expect.stringMatching(/\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)/)
+                })
+            ])
+        });
+        expect(users.map(mappers_1.getUserViewModel)).toEqual(res.body.items);
+    }));
+    //test create
     it(`shouldn't create user with auth and incorrect input data`, () => __awaiter(void 0, void 0, void 0, function* () {
         const data = {
             login: 'd',
@@ -67,7 +124,14 @@ describe('user tests', () => {
         };
         yield user_test_manager_1.userTestManager.createUser(data, settings_1.SETTINGS.ADMIN_AUTH);
     }));
-    //todo: тесты на удаление юзера
+    //test delete
+    it(`shouldn't delete user with unknown id`, () => __awaiter(void 0, void 0, void 0, function* () {
+        yield user_test_manager_1.userTestManager.deleteUser('aaaaa', settings_1.SETTINGS.ADMIN_AUTH, http_status_codes_1.StatusCodes.NOT_FOUND);
+    }));
+    it(`should delete user with correct id`, () => __awaiter(void 0, void 0, void 0, function* () {
+        const user = yield db_1.db.getCollection().usersCollection.findOne();
+        yield user_test_manager_1.userTestManager.deleteUser(user._id, settings_1.SETTINGS.ADMIN_AUTH);
+    }));
     afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
         db_1.db.stop();
     }));

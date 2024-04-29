@@ -16,13 +16,12 @@ describe('blogs tests', () => {
             .expect('All is running!')
         // .get(SETTINGS.PATH.BLOGS)
     })
+
     //TODO: тесты для get (default pagination + custom)
     //TODO: тесты для post (positive + negative)
-    //TODO: тесты для get post by blog id
-    //TODO: тесты для create post by blog id
-    //TODO: тесты для get blog by id
-    //TODO: тесты для put blog by id
-    //TODO: тесты для delete blog by id
+    //TODO: тесты для get post by id
+    //TODO: тесты для put post by id
+    //TODO: тесты для delete post by id
 
     afterAll(async () => {
         db.stop()

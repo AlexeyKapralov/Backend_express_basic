@@ -32,7 +32,6 @@ exports.usersRepository = {
             const result = yield db_1.db.getCollection().usersCollection.findOne({
                 $or: [{ login: loginOrEmail }, { email: loginOrEmail }]
             });
-            //TODO: return сработал только после того как я резалт сделал явным типом as
             return result !== null ? (0, mappers_1.getUserViewModel)(result) : undefined;
         });
     },
@@ -41,7 +40,6 @@ exports.usersRepository = {
             const result = yield db_1.db.getCollection().usersCollection.findOne({
                 $or: [{ login: loginOrEmail }, { email: loginOrEmail }]
             });
-            //TODO: return сработал только после того как я резалт сделал явным типом as
             return result !== null ? result : undefined;
         });
     },

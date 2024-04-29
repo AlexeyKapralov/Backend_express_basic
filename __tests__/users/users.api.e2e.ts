@@ -5,6 +5,7 @@ import {SETTINGS} from '../../src/common/config/settings'
 import {MongoMemoryServer} from 'mongodb-memory-server'
 import {userTestManager} from './user.test.manager'
 import {StatusCodes} from 'http-status-codes'
+import {getUserViewModel} from "../../src/common/utils/mappers";
 
 describe('user tests', () => {
     beforeAll(async () => {
@@ -13,9 +14,9 @@ describe('user tests', () => {
         await db.run(uri)
     })
 
-
-    //TODO: написать тесты для проверки работы пагиинации
+    //check pagination
     it('should get users with default pagination', async () => {
+        await db.drop()
         await userTestManager.createUsers(20)
 
         const res = await agent(app)
@@ -32,12 +33,76 @@ describe('user tests', () => {
                     login: expect.any(String),
                     email: expect.any(String),
                     createdAt: expect.stringMatching(/\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)/),
-                    password: expect.any(String)
                 })
             ])
         })
+
+        const users = await db.getCollection().usersCollection
+            .find()
+            .sort('createdAt', 'desc')
+            .skip((1 - 1) * 10)
+            .limit(10)
+            .toArray()
+
+        expect(users.map(getUserViewModel)).toEqual(res.body.items)
+
+
+    })
+    it('should get with input custom pagination', async () => {
+        await db.drop()
+        await userTestManager.createUsers(20)
+
+        const res = await agent(app)
+            .get(SETTINGS.PATH.USERS)
+            .query({
+                sortBy: 'login',
+                sortDirection: 'asc',
+                pageNumber: 2,
+                pageSize: 5,
+                searchLoginTerm: 'John',
+                searchEmailTerm: '1'
+            })
+
+
+        const users = await db.getCollection().usersCollection
+            .find({
+                $or: [
+                    {login: {$regex: 'John', $options: 'i'}},
+                    {email: {$regex: '1', $options: 'i'}}
+                ]
+            })
+            .sort('login', 'asc')
+            .skip((2 - 1) * 5)
+            .limit(5)
+            .toArray()
+        const countUsers = await db.getCollection().usersCollection
+            .find({
+                $or: [
+                    {login: {$regex: 'John', $options: 'i'}},
+                    {email: {$regex: '1', $options: 'i'}}
+                ]
+            })
+            .toArray()
+
+        expect(res.body).toEqual({
+            pagesCount: Math.ceil(countUsers.length / 5),
+            page: 2,
+            pageSize: 5,
+            totalCount: countUsers.length,
+            items: expect.arrayContaining([
+                expect.objectContaining({
+                    id: expect.any(String),
+                    login: expect.any(String),
+                    email: expect.any(String),
+                    createdAt: expect.stringMatching(/\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)/)
+                })
+            ])
+        })
+
+        expect(users.map(getUserViewModel)).toEqual(res.body.items)
     })
 
+    //test create
     it(`shouldn't create user with auth and incorrect input data`, async () => {
         const data = {
             login: 'd',
@@ -50,7 +115,6 @@ describe('user tests', () => {
             StatusCodes.BAD_REQUEST
         )
     })
-
     it(`shouldn't create user with auth and correct input data`, async () => {
         const data = {
             login: 'WwldYc21wu',
@@ -64,7 +128,6 @@ describe('user tests', () => {
             StatusCodes.UNAUTHORIZED
         )
     })
-
     it('should create user with auth and correct input data', async () => {
         const data = {
             login: 'WwldYc21wu',
@@ -74,7 +137,14 @@ describe('user tests', () => {
         await userTestManager.createUser(data, SETTINGS.ADMIN_AUTH)
     })
 
-    //todo: тесты на удаление юзера
+    //test delete
+    it(`shouldn't delete user with unknown id`, async () => {
+        await userTestManager.deleteUser('aaaaa', SETTINGS.ADMIN_AUTH, StatusCodes.NOT_FOUND)
+    })
+    it(`should delete user with correct id`, async () => {
+        const user = await db.getCollection().usersCollection.findOne()
+        await userTestManager.deleteUser(user!._id, SETTINGS.ADMIN_AUTH)
+    })
 
     afterAll(async () => {
         db.stop()

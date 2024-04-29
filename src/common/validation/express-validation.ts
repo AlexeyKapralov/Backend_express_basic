@@ -40,7 +40,8 @@ export const websiteUrlValidation = body('websiteUrl').trim().isLength({min: 1, 
 export const titleValidation = body('title').trim().isLength({min: 1, max: 30})
 export const shortDescriptionValidation = body('shortDescription').trim().isLength({min: 1, max: 100})
 export const contentValidation = body('content').trim().isLength({min: 1, max: 1000})
-//TODO: правильно ли так делать?
+
+// так не делается, но для задачи нужно и по другому никак
 export const blogIdParamValidation = param('id').trim().custom(async value => {
     const blog = await db.getCollection().blogsCollection.findOne({_id: value})
     if (!blog) {

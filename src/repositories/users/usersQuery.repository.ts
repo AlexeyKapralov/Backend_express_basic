@@ -2,12 +2,11 @@ import {IPaginatorUserViewModel} from "../../features/users/models/userView.mode
 import {db} from "../../db/db";
 import {SortDirection} from "mongodb";
 import {getUserViewModel} from "../../common/utils/mappers";
-import {IUserQueryModel} from "../../features/users/models/userInput.model";
+import {IQueryModel} from "../../features/users/models/userInput.model";
 
 export const usersQueryRepository = {
-    async findUsers(query: IUserQueryModel): Promise<IPaginatorUserViewModel | undefined> {
+    async findUsers(query: IQueryModel): Promise<IPaginatorUserViewModel | undefined> {
 
-        // TODO: так правильно делать?
         const conditions = []
         if (query.searchEmailTerm) {
             conditions.push(
@@ -21,36 +20,28 @@ export const usersQueryRepository = {
         }
         let newQuery = {}
         if (conditions.length > 0) {
-            newQuery = { $or: conditions}
+            newQuery = {$or: conditions}
         }
-
 
         const res = await db.getCollection().usersCollection
             .find(newQuery)
-            .sort(query.sortBy, query.sortDirection as SortDirection)
-            .skip((query.pageNumber - 1) * query.pageSize)
-            .limit(query.pageSize)
+            .sort(query.sortBy!, query.sortDirection as SortDirection)
+            .skip((query.pageNumber! - 1) * query.pageSize!)
+            .limit(query.pageSize!)
             .toArray()
 
-        const countDocs = await await db.getCollection().usersCollection
-            .countDocuments(newQuery)
+        let resNoLimit = await db.getCollection().usersCollection
+            .find(newQuery)
+            .toArray()
+        const countDocs = resNoLimit.length
 
         if (res.length !== 0) {
             return {
-                pagesCount: Math.ceil(countDocs / query.pageSize),
-                page: query.pageNumber,
-                pageSize: query.pageSize,
+                pagesCount: Math.ceil(countDocs / query.pageSize!),
+                page: query.pageNumber!,
+                pageSize: query.pageSize!,
                 totalCount: countDocs,
-                items: res.map(getUserViewModel)
-            }
-        } else {
-            // return undefined
-            return {
-                pagesCount: Math.ceil(countDocs / query.pageSize),
-                page: query.pageNumber,
-                pageSize: query.pageSize,
-                totalCount: countDocs,
-                items: []
+                items: res ? res.map(getUserViewModel) : []
             }
         }
     }

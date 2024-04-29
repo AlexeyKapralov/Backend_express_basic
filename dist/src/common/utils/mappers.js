@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getQueryForPosts = exports.getQueryForBlogs = exports.getQueryForUsers = exports.getPostViewModel = exports.getBlogViewModel = exports.getUserViewModel = void 0;
+exports.getQueryParams = exports.getPostViewModel = exports.getBlogViewModel = exports.getUserViewModel = void 0;
 const getUserViewModel = (data) => {
     return {
         id: data._id,
@@ -33,8 +33,7 @@ const getPostViewModel = (data) => {
     };
 };
 exports.getPostViewModel = getPostViewModel;
-//TODO: как и стоит ли объединять эти две функции в одну?
-const getQueryForUsers = (query) => {
+const getQueryParams = (query) => {
     return {
         searchEmailTerm: query.searchEmailTerm,
         searchLoginTerm: query.searchLoginTerm,
@@ -44,23 +43,4 @@ const getQueryForUsers = (query) => {
         pageSize: +query.pageSize
     };
 };
-exports.getQueryForUsers = getQueryForUsers;
-const getQueryForBlogs = (query) => {
-    return {
-        searchNameTerm: query.searchNameTerm,
-        sortBy: query.sortBy,
-        sortDirection: query.sortDirection,
-        pageNumber: +query.pageNumber,
-        pageSize: +query.pageSize
-    };
-};
-exports.getQueryForBlogs = getQueryForBlogs;
-const getQueryForPosts = (query) => {
-    return {
-        sortBy: query.sortBy,
-        sortDirection: query.sortDirection,
-        pageNumber: +query.pageNumber,
-        pageSize: +query.pageSize
-    };
-};
-exports.getQueryForPosts = getQueryForPosts;
+exports.getQueryParams = getQueryParams;
