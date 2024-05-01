@@ -23,11 +23,10 @@ export const postsRepository = {
             const result = await db.getCollection().postsCollection.insertOne(newPost)
             return result.acknowledged ? getPostViewModel(newPost) : undefined
         }
-
-
     },
     async updatePost(id: string, body: IPostInputModel): Promise<boolean> {
 
+        //todo: здесь правильно ли что я обращаюсь к query репозиторию
         const foundBlog = await blogsQueryRepository.getBlogByID(body.blogId)
 
         if (foundBlog) {

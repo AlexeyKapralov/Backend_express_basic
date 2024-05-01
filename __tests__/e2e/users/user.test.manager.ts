@@ -1,9 +1,9 @@
 import {agent} from 'supertest'
-import {IUserInputModel} from '../../src/features/users/models/userInput.model'
-import {SETTINGS} from '../../src/common/config/settings'
-import {app} from '../../src/app'
+import {IUserInputModel} from '../../../src/features/users/models/userInput.model'
+import {SETTINGS} from '../../../src/common/config/settings'
+import {app} from '../../../src/app'
 import {StatusCodes} from 'http-status-codes'
-import {db} from "../../src/db/db";
+import {db} from "../../../src/db/db";
 import {ObjectId} from "mongodb";
 
 const getRandomName = () => {
@@ -34,22 +34,6 @@ export const userTestManager = {
                 createdAt: expect.any(String),
                 id: expect.any(String)
             })
-            // TODO: почему в тестах при проверки соли мне требуется брать всё от 0 до 29 символа из хэша,
-            //  хотя в документации написано с 7го символа
-            // const salt = userWithPass!._id.slice(0, 29)
-            //
-            // const passHash = await bcryptService.createPasswordHash(
-            //     data.password,
-            //     salt
-            // )
-            // const createdPassHash = await bcryptService.createPasswordHash(
-            //     result.body.password
-            // )
-            // const isTruePass = await bcryptService.comparePasswordsHash(
-            //     passHash,
-            //     createdPassHash
-            // )
-            // expect(isTruePass).toBe(true)
         }
     },
 

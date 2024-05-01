@@ -16,8 +16,6 @@ export const blogsService = {
             createdAt: new Date().toISOString(),
             isMembership: false,
         }
-
-
         return await blogsRepository.createBlog(blog) ? getBlogViewModel(blog) : undefined
     },
     async updateBlogByID(id: string, body: IBlogInputModel): Promise<boolean> {

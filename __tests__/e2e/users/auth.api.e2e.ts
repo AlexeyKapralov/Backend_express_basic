@@ -1,11 +1,11 @@
-import { db } from '../../src/db/db'
-import { SETTINGS } from '../../src/common/config/settings'
+import { db } from '../../../src/db/db'
+import { SETTINGS } from '../../../src/common/config/settings'
 import { MongoMemoryServer } from 'mongodb-memory-server'
 import { StatusCodes } from 'http-status-codes'
 import { ObjectId } from 'mongodb'
 import { agent } from 'supertest'
-import { app } from '../../src/app'
-import { bcryptService } from '../../src/common/adapters/bcrypt.service'
+import { app } from '../../../src/app'
+import { bcryptService } from '../../../src/common/adapters/bcrypt.service'
 
 describe('user tests', () => {
 	beforeAll(async () => {

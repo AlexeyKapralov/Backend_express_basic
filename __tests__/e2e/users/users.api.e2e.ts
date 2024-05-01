@@ -1,11 +1,11 @@
 import {agent} from 'supertest'
-import {app} from '../../src/app'
-import {db} from '../../src/db/db'
-import {SETTINGS} from '../../src/common/config/settings'
+import {app} from '../../../src/app'
+import {db} from '../../../src/db/db'
+import {SETTINGS} from '../../../src/common/config/settings'
 import {MongoMemoryServer} from 'mongodb-memory-server'
 import {userTestManager} from './user.test.manager'
 import {StatusCodes} from 'http-status-codes'
-import {getUserViewModel} from "../../src/common/utils/mappers";
+import {getUserViewModel} from "../../../src/common/utils/mappers";
 
 describe('user tests', () => {
     beforeAll(async () => {
@@ -147,7 +147,7 @@ describe('user tests', () => {
     })
 
     afterAll(async () => {
-        db.stop()
+        await db.stop()
     })
 
     afterAll(done => {
