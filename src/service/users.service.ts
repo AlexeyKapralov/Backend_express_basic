@@ -3,6 +3,7 @@ import {IUserInputModel} from '../features/users/models/userInput.model'
 import {IUserViewModel} from '../features/users/models/userView.model'
 import {usersRepository} from '../repositories/users/users.repository'
 
+//TODO: переписать всё на новый тип Result Type
 export const usersService = {
     async createUser(
         data: IUserInputModel

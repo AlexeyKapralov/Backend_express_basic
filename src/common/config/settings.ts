@@ -13,5 +13,6 @@ export const SETTINGS = {
 		POSTS: '/posts',
 		AUTH: '/auth',
 		TESTING: '/testing/all-data'
-	}
+	},
+	SECRET_JWT: process.env.SECRET_JWT || ''
 }

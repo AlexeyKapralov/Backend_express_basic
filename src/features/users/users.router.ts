@@ -37,7 +37,6 @@ usersRouter.get(
     searchLoginTermValidation,
     searchEmailTermValidation,
     inputValidationMiddleware,
-
     getUsersController
 )
 

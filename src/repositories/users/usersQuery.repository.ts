@@ -1,4 +1,4 @@
-import {IPaginatorUserViewModel} from "../../features/users/models/userView.model";
+import {IPaginatorUserViewModel, IUserViewModel} from "../../features/users/models/userView.model";
 import {db} from "../../db/db";
 import {SortDirection} from "mongodb";
 import {getUserViewModel} from "../../common/utils/mappers";
@@ -44,5 +44,10 @@ export const usersQueryRepository = {
                 items: res ? res.map(getUserViewModel) : []
             }
         }
+    },
+    async findUserById(id: string): Promise<IUserViewModel | undefined> {
+        const res = await db.getCollection().usersCollection
+            .findOne({_id: id})
+        return res ? getUserViewModel(res) : undefined
     }
 }

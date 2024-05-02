@@ -1,23 +1,27 @@
-import { NextFunction, Request, Response } from 'express'
-import { StatusCodes } from 'http-status-codes'
-import { SETTINGS } from '../common/config/settings'
+import {NextFunction, Request, Response} from 'express'
+import {StatusCodes} from 'http-status-codes'
+import {jwtService} from "../common/adapters/jwt.service";
+import {usersQueryRepository} from "../repositories/users/usersQuery.repository";
 
-export const authMiddleware = (
-	req: Request,
-	res: Response,
-	next: NextFunction
+export const authMiddleware = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
 ) => {
-	const auth = req.headers['authorization'] as string
-	if (!auth) {
-		res.status(StatusCodes.UNAUTHORIZED).json({})
-		return
-	}
-	const buff = Buffer.from(auth.slice(5), 'base64')
-	const decodedAuth = buff.toString('utf-8')
+    const auth: string | undefined = req.headers.authorization
+    if (!auth) {
+        res.status(StatusCodes.UNAUTHORIZED).json({})
+        return
+    }
 
-	if (decodedAuth !== SETTINGS.ADMIN_AUTH || auth.slice(0, 5) !== 'Basic') {
-		res.status(StatusCodes.UNAUTHORIZED).json({})
-		return
-	}
-	next()
+    const token = req.headers.authorization!.split(' ')[1]
+
+    const userId = await jwtService.getUserIdByToken(token)
+
+    if (userId) {
+        const result = await usersQueryRepository.findUserById(userId.toString())
+        req.userId = result!.id
+        next()
+    }
+    res.status(StatusCodes.UNAUTHORIZED).json({})
 }

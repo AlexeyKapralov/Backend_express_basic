@@ -1,6 +1,7 @@
 import {IPostInputModel} from "../features/posts/models/postInput.model";
 import {postsRepository} from "../repositories/posts/posts.repository";
 
+//TODO: переписать всё на новый тип Result Type
 export const postsService = {
     async createPost(body: IPostInputModel) {
         return await postsRepository.createPost(body)

@@ -18,6 +18,7 @@ export const usersRepository = {
 
         return result ? getUserViewModel(user) : undefined
     },
+    //todo переместить все find в query репозиторий
     async findUserByLoginOrEmail(loginOrEmail: string): Promise<IUserViewModel | undefined> {
         const result = await db.getCollection().usersCollection.findOne({
                 $or: [{login: loginOrEmail}, {email: loginOrEmail}]
