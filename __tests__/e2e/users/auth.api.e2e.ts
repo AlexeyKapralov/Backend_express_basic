@@ -59,7 +59,7 @@ describe('user tests', () => {
 			.send(authData)
 			.set({ authorization: `Basic ${decodedAuth}` })
 
-		expect(result.status).toBe(StatusCodes.NO_CONTENT)
+		expect(result.status).toBe(StatusCodes.OK)
 	})
 
 	afterAll(done => {

@@ -12,7 +12,7 @@ const getRandomName = () => {
     return names[randomIndex];
 }
 
-export const userTestManager = {
+export const userManagerTest = {
     async createUser(
         data: IUserInputModel,
         auth: string = '',

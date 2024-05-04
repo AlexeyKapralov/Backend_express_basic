@@ -3,6 +3,7 @@ import { SETTINGS } from '../common/config/settings'
 import { IUserDbModel } from '../features/users/models/userDb.model'
 import {IBlogDbModel} from "../features/blogs/models/blogDb.model";
 import {IPostDbModel} from "../features/posts/models/postDb.model";
+import { ICommentDbModel } from '../features/comments/models/commentDb.model'
 
 export const db = {
 	client: {} as MongoClient,
@@ -41,7 +42,8 @@ export const db = {
 		return {
 			usersCollection: this.getDbName().collection<IUserDbModel>('users'),
 			blogsCollection: this.getDbName().collection<IBlogDbModel>('blogs'),
-			postsCollection: this.getDbName().collection<IPostDbModel>('posts')
+			postsCollection: this.getDbName().collection<IPostDbModel>('posts'),
+			commentsCollection: this.getDbName().collection<ICommentDbModel>('comments'),
 		}
 	}
 }

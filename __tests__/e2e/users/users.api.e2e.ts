@@ -3,7 +3,7 @@ import {app} from '../../../src/app'
 import {db} from '../../../src/db/db'
 import {SETTINGS} from '../../../src/common/config/settings'
 import {MongoMemoryServer} from 'mongodb-memory-server'
-import {userTestManager} from './user.test.manager'
+import {userManagerTest} from './userManager.test'
 import {StatusCodes} from 'http-status-codes'
 import {getUserViewModel} from "../../../src/common/utils/mappers";
 
@@ -17,7 +17,7 @@ describe('user tests', () => {
     //check pagination
     it('should get users with default pagination', async () => {
         await db.drop()
-        await userTestManager.createUsers(20)
+        await userManagerTest.createUsers(20)
 
         const res = await agent(app)
             .get(SETTINGS.PATH.USERS)
@@ -50,7 +50,7 @@ describe('user tests', () => {
     })
     it('should get with input custom pagination', async () => {
         await db.drop()
-        await userTestManager.createUsers(20)
+        await userManagerTest.createUsers(20)
 
         const res = await agent(app)
             .get(SETTINGS.PATH.USERS)
@@ -109,7 +109,7 @@ describe('user tests', () => {
             password: 'a',
             email: 'waterasdasd@e'
         }
-        await userTestManager.createUser(
+        await userManagerTest.createUser(
             data,
             SETTINGS.ADMIN_AUTH,
             StatusCodes.BAD_REQUEST
@@ -122,7 +122,7 @@ describe('user tests', () => {
             email:
                 'gHVEtCudxVZoK6ETpak74_r4X6TF-Yjyr-16FPZBouaMivMioRm21fgOP9RsaUHKqiit@oOxUwm6fKkBjstdw-wSawULg8PmBk9lAV06XQr9RE6aw_S9n5Is9qnLZweVHOwijtrgHhXuz7YjZ9PTChhkfYly4gq1Q1g2nz4o.dFIw'
         }
-        await userTestManager.createUser(
+        await userManagerTest.createUser(
             data,
             'no_valid_credentials',
             StatusCodes.UNAUTHORIZED
@@ -134,16 +134,16 @@ describe('user tests', () => {
             password: 'string',
             email: 'asw@mail.ru'
         }
-        await userTestManager.createUser(data, SETTINGS.ADMIN_AUTH)
+        await userManagerTest.createUser(data, SETTINGS.ADMIN_AUTH)
     })
 
     //test delete
     it(`shouldn't delete user with unknown id`, async () => {
-        await userTestManager.deleteUser('aaaaa', SETTINGS.ADMIN_AUTH, StatusCodes.NOT_FOUND)
+        await userManagerTest.deleteUser('aaaaa', SETTINGS.ADMIN_AUTH, StatusCodes.NOT_FOUND)
     })
     it(`should delete user with correct id`, async () => {
         const user = await db.getCollection().usersCollection.findOne()
-        await userTestManager.deleteUser(user!._id, SETTINGS.ADMIN_AUTH)
+        await userManagerTest.deleteUser(user!._id, SETTINGS.ADMIN_AUTH)
     })
 
     afterAll(async () => {

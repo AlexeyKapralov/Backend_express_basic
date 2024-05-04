@@ -1,7 +1,7 @@
 import {Request, Response} from 'express'
 import {loginService} from '../../../service/login.service'
 import {StatusCodes} from 'http-status-codes'
-import {ILoginInputModel} from "../models/loginInputModel";
+import {ILoginInputModel} from "../models/loginInput.model";
 import {ResultType} from "../../../common/types/result.type";
 import {ResultStatus} from "../../../common/types/resultStatus.type";
 import {jwtService} from "../../../common/adapters/jwt.service";

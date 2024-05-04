@@ -1,11 +1,12 @@
 import {SortDirection} from "mongodb";
 import {db} from "../../db/db";
 import {getPostViewModel} from "../../common/utils/mappers";
-import {IPaginatorPostViewModel, IPostViewModel} from "../../features/posts/models/postView.model";
+import {IPostViewModel} from "../../features/posts/models/postView.model";
 import {IQueryModel} from "../../features/users/models/userInput.model";
+import { IPaginator } from '../../common/types/paginator'
 
 export const postsQueryRepository = {
-    async getPosts(query: IQueryModel): Promise<IPaginatorPostViewModel | undefined> {
+    async getPosts(query: IQueryModel): Promise<IPaginator<IPostViewModel> | undefined> {
         const posts = await db.getCollection().postsCollection
             .find()
             .skip((query.pageNumber! - 1) * query.pageSize!)

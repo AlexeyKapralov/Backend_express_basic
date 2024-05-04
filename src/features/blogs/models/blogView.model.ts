@@ -6,11 +6,3 @@ export interface IBlogViewModel {
     createdAt: string
     isMembership: boolean
 }
-
-export interface IPaginatorBlogViewModel {
-    pagesCount: number
-    page: number
-    pageSize: number
-    totalCount: number
-    items: Array<IBlogViewModel>
-}

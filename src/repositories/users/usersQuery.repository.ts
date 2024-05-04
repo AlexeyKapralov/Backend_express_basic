@@ -1,11 +1,12 @@
-import {IPaginatorUserViewModel, IUserViewModel} from "../../features/users/models/userView.model";
+import { IUserViewModel} from "../../features/users/models/userView.model";
 import {db} from "../../db/db";
 import {SortDirection} from "mongodb";
 import {getUserViewModel} from "../../common/utils/mappers";
 import {IQueryModel} from "../../features/users/models/userInput.model";
+import { IPaginator } from '../../common/types/paginator'
 
 export const usersQueryRepository = {
-    async findUsers(query: IQueryModel): Promise<IPaginatorUserViewModel | undefined> {
+    async findUsers(query: IQueryModel): Promise<IPaginator<IUserViewModel> | undefined> {
 
         const conditions = []
         if (query.searchEmailTerm) {

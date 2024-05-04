@@ -7,11 +7,3 @@ export interface IPostViewModel {
     blogName: string
     createdAt: string
 }
-
-export interface IPaginatorPostViewModel {
-    pagesCount: number
-    page: number
-    pageSize: number
-    totalCount: number
-    items: Array<IPostViewModel>
-}

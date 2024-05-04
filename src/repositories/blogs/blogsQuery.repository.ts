@@ -1,12 +1,13 @@
 import {db} from "../../db/db";
 import {SortDirection} from "mongodb";
 import {getBlogViewModel, getPostViewModel} from "../../common/utils/mappers";
-import {IPaginatorBlogViewModel} from "../../features/blogs/models/blogView.model";
-import {IPaginatorPostViewModel} from "../../features/posts/models/postView.model";
 import {IQueryModel} from "../../features/users/models/userInput.model";
+import { IPaginator } from '../../common/types/paginator'
+import { IBlogViewModel } from '../../features/blogs/models/blogView.model'
+import { IPostViewModel } from '../../features/posts/models/postView.model'
 
 export const blogsQueryRepository = {
-    async getBlogs(query: IQueryModel): Promise<IPaginatorBlogViewModel | undefined> {
+    async getBlogs(query: IQueryModel): Promise<IPaginator<IBlogViewModel> | undefined> {
 
         const newQuery = {name: {$regex: query.searchNameTerm ?? '', $options: 'i'}}
 
@@ -40,7 +41,7 @@ export const blogsQueryRepository = {
         return result ? getBlogViewModel(result) : undefined
     },
 
-    async getPostsByBlogID(id: string, query: IQueryModel): Promise<IPaginatorPostViewModel | undefined> {
+    async getPostsByBlogID(id: string, query: IQueryModel): Promise<IPaginator<IPostViewModel> | undefined> {
 
         const res = await db.getCollection().postsCollection
             .find({blogId: id})
