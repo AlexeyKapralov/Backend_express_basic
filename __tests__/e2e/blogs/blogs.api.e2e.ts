@@ -11,12 +11,12 @@ describe('blogs tests', () => {
     })
 
     it(`should get blogs with filter `, async () => {
-        const res = await agent(app)
+        await agent(app)
             .get('/')
             .expect('All is running!')
         // .get(SETTINGS.PATH.BLOGS)
     })
-    //TODO: тесты для get (default pagination + custom)
+    //TODO: тесты для get (default pagination + custom) + должен быть пустой массив и пагинация если нет блогов
     //TODO: тесты для post (positive + negative)
     //TODO: тесты для get post by blog id
     //TODO: тесты для create post by blog id

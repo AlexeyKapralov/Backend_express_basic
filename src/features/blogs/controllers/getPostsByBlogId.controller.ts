@@ -2,9 +2,9 @@ import {Request, Response} from "express";
 import {blogsQueryRepository} from "../../../repositories/blogs/blogsQuery.repository";
 import {StatusCodes} from "http-status-codes";
 import {getQueryParams} from "../../../common/utils/mappers";
-import {IQueryModel} from "../../users/models/userInput.model";
 import { IPaginator } from '../../../common/types/paginator'
 import { IPostViewModel } from '../../posts/models/postView.model'
+import { IQueryModel } from '../../../common/types/query.model'
 
 export const getPostsByBlogIDController = async (
     req: Request<{ id: string }, {}, {}, IQueryModel>,

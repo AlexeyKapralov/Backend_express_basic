@@ -7,6 +7,7 @@ import {userManagerTest} from './userManager.test'
 import {StatusCodes} from 'http-status-codes'
 import {getUserViewModel} from "../../../src/common/utils/mappers";
 
+
 describe('user tests', () => {
     beforeAll(async () => {
         const mongod = await MongoMemoryServer.create()

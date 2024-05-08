@@ -1,12 +1,18 @@
 import { IPaginator } from '../../common/types/paginator'
 import { ICommentViewModel } from '../../features/comments/models/commentView.model'
 import { db } from '../../db/db'
-import { IQueryModel } from '../../features/users/models/userInput.model'
 import { getCommentView } from '../../common/utils/mappers'
 import { SortDirection } from 'mongodb'
+import { IQueryModel } from '../../common/types/query.model'
 
 export const commentsQueryRepository = {
-	async getComments(postId: string, query: IQueryModel): Promise<IPaginator<ICommentViewModel>> {
+	async getComments(postId: string, query: IQueryModel): Promise<IPaginator<ICommentViewModel> | undefined> {
+		const post = await db.getCollection().postsCollection.findOne({_id: postId})
+
+		if (!post) {
+			return undefined
+		}
+
 		const comments = await db.getCollection().commentsCollection
 			.find({postId:postId})
 			.sort(query.sortBy!, query.sortDirection! as SortDirection)
@@ -14,11 +20,15 @@ export const commentsQueryRepository = {
 			.limit(query.pageSize!)
 			.toArray()
 
+		const commentsCount = await db.getCollection().commentsCollection
+			.countDocuments({postId:postId})
+
+
 		return {
-			pagesCount: Math.ceil(comments.length / query.pageSize!),
+			pagesCount: Math.ceil(commentsCount / query.pageSize!),
 			page: query.pageNumber!,
 			pageSize: query.pageSize!,
-			totalCount: comments.length,
+			totalCount: commentsCount,
 			items: comments.map(getCommentView)
 		}
 	},

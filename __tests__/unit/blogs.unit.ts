@@ -2,13 +2,14 @@
 import {expect, jest} from '@jest/globals';
 import {blogsRepository} from "../../src/repositories/blogs/blogs.repository";
 import {blogsService} from "../../src/service/blogs.service";
+import { ResultStatus } from '../../src/common/types/resultStatus.type'
 
 describe('Test for createBlog method in blogsService', () => {
     afterEach(() => {
         jest.clearAllMocks();
     });
 
-    it('integration test for create a new blog from blogService', async () => {
+    it('unit test for create a new blog from blogService', async () => {
         // Подготавливаем данные для теста
         const mockInputData = {
             name: 'Test Blog',
@@ -39,12 +40,16 @@ describe('Test for createBlog method in blogsService', () => {
 
         // Проверяем, что метод вернул ожидаемый результат
         expect(result).toEqual({
-            id: expect.any(String),
-            name: mockInputData.name,
-            description: mockInputData.description,
-            websiteUrl: mockInputData.websiteUrl,
-            createdAt: expect.any(String),
-            isMembership: false,
+            status: ResultStatus.Success,
+            data: {
+                id: expect.any(String),
+                name: mockInputData.name,
+                description: mockInputData.description,
+                websiteUrl: mockInputData.websiteUrl,
+                createdAt: expect.any(String),
+                isMembership: false
+            }
+
         })
     })
 })

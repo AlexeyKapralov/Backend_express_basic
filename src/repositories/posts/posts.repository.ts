@@ -43,7 +43,7 @@ export const postsRepository = {
                 }
             })
 
-            return result.modifiedCount > 0
+            return result.matchedCount > 0
         } else return false
     },
     async deletePost(id: string): Promise<boolean> {

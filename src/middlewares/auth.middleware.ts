@@ -22,13 +22,16 @@ export const authMiddleware = async (
 
 		const userId = jwtService.getUserIdByToken(token)
 
+		let result
 		if (userId) {
-			const result = await usersQueryRepository.findUserById(userId.toString())
+			result = await usersQueryRepository.findUserById(userId.toString())
+		}
+		if (result) {
 			req.userId = result!.id
 			next()
 			return
 		}
-		res.status(StatusCodes.NOT_FOUND).json({})
+		res.status(StatusCodes.UNAUTHORIZED).json({})
 		return
 	}
 	if (typeAuth === 'Basic') {

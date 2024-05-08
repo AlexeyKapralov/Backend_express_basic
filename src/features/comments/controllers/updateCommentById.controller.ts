@@ -9,7 +9,7 @@ export const updateCommentByIdController = async (req: Request<{commentId:string
 
 	switch (result.status) {
 		case ResultStatus.Success:
-			res.status(StatusCodes.OK).json(result.data)
+			res.status(StatusCodes.NO_CONTENT).json(result.data)
 			break
 		case ResultStatus.NotFound:
 			res.status(StatusCodes.NOT_FOUND).json()

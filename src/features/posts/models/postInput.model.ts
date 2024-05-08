@@ -4,10 +4,3 @@ export interface IPostInputModel{
     content: string
     blogId: string
 }
-
-export interface IPostQueryModel {
-    pageNumber: number
-    pageSize: number
-    sortBy: string
-    sortDirection: string
-}

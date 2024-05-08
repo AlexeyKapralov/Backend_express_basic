@@ -8,6 +8,6 @@ export const getCommentByIdController = async (req: Request<{commentId:string}>,
 
 	comment
 		? res.status(StatusCodes.OK).json(comment)
-		: res.status(StatusCodes.OK).json()
+		: res.status(StatusCodes.NOT_FOUND).json()
 
 }

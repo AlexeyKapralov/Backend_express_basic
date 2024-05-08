@@ -1,7 +1,13 @@
 import { body, param, query } from 'express-validator'
 import { db } from '../../db/db'
 
-export const loginValidation = body('login')
+export const loginValidation = body(['login'])
+	.trim()
+	.isLength({ min: 3, max: 10 })
+	.matches('^[a-zA-Z0-9_-]*$')
+	.exists()
+
+export const loginOrEmailValidation = body(['loginOrEmail'])
 	.trim()
 	.isLength({ min: 3, max: 10 })
 	.matches('^[a-zA-Z0-9_-]*$')

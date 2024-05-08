@@ -71,23 +71,6 @@ export const userManagerTest = {
         if (result.status === StatusCodes.NO_CONTENT) {
             const res = await db.getCollection().usersCollection.findOne({_id: id})
             expect(res).toBe(null)
-
-            // TODO: почему в тестах при проверки соли мне требуется брать всё от 0 до 29 символа из хэша,
-            //  хотя в документации написано с 7го символа
-            // const salt = userWithPass!._id.slice(0, 29)
-            //
-            // const passHash = await bcryptService.createPasswordHash(
-            //     data.password,
-            //     salt
-            // )
-            // const createdPassHash = await bcryptService.createPasswordHash(
-            //     result.body.password
-            // )
-            // const isTruePass = await bcryptService.comparePasswordsHash(
-            //     passHash,
-            //     createdPassHash
-            // )
-            // expect(isTruePass).toBe(true)
         }
     },
 

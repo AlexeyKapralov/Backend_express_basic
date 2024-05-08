@@ -11,6 +11,6 @@ export const createCommentForPost = async (req: Request<{
 	const result = await postsService.createComment(req.userId!, req.params.postId, req.body)
 
 	result.status === ResultStatus.Success
-		? res.status(StatusCodes.OK).json(result.data!)
+		? res.status(StatusCodes.CREATED).json(result.data!)
 		: res.status(StatusCodes.NOT_FOUND).json()
 }

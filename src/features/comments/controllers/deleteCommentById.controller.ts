@@ -6,7 +6,17 @@ import { StatusCodes } from 'http-status-codes'
 export const deleteCommentByIdController = async (req: Request<{commentId: string}>, res:Response) => {
 	const result = await commentsService.deleteComment(req.userId!, req.params.commentId)
 
-	result.status === ResultStatus.Success
-		? res.status(StatusCodes.OK).json()
-		: res.status(StatusCodes.NOT_FOUND).json()
+	switch (result.status) {
+		case ResultStatus.Success:
+			res.status(StatusCodes.NO_CONTENT).json()
+			break
+		case ResultStatus.NotFound:
+			res.status(StatusCodes.NOT_FOUND).json()
+			break
+		case ResultStatus.Forbidden:
+			res.status(StatusCodes.FORBIDDEN).json()
+			break
+		default:
+			res.status(StatusCodes.BAD_REQUEST).json()
+	}
 }

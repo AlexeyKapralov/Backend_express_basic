@@ -2,12 +2,12 @@ import {IUserDbModel} from '../../features/users/models/userDb.model'
 import {IUserViewModel} from '../../features/users/models/userView.model'
 import {IBlogDbModel} from "../../features/blogs/models/blogDb.model";
 import {IBlogViewModel} from "../../features/blogs/models/blogView.model";
-import {IQueryModel} from "../../features/users/models/userInput.model";
 import {IPostDbModel} from "../../features/posts/models/postDb.model";
 import {IPostViewModel} from "../../features/posts/models/postView.model";
 import { IMeViewModel } from '../../features/auth/models/meView.model'
 import { ICommentDbModel } from '../../features/comments/models/commentDb.model'
 import { ICommentViewModel } from '../../features/comments/models/commentView.model'
+import { IQueryModel } from '../types/query.model'
 
 export const getUserViewModel = (data: IUserDbModel): IUserViewModel => {
     return {
