@@ -12,8 +12,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.createPostByBlogIdController = void 0;
 const blogs_service_1 = require("../../../service/blogs.service");
 const http_status_codes_1 = require("http-status-codes");
+const resultStatus_type_1 = require("../../../common/types/resultStatus.type");
 const createPostByBlogIdController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield blogs_service_1.blogsService.createPostByBlogId(req.params.id, req.body);
-    result ? res.status(http_status_codes_1.StatusCodes.CREATED).send(result) : res.status(http_status_codes_1.StatusCodes.NOT_FOUND).send();
+    result.status === resultStatus_type_1.ResultStatus.Success
+        ? res.status(http_status_codes_1.StatusCodes.CREATED).send(result.data)
+        : res.status(http_status_codes_1.StatusCodes.NOT_FOUND).send();
 });
 exports.createPostByBlogIdController = createPostByBlogIdController;

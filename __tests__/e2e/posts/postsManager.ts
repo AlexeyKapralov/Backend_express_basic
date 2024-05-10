@@ -63,6 +63,20 @@ export const postsManagerTest = {
 			)
 			return res.body
 		}
+		if (res.status === StatusCodes.CREATED) {
+			expect(res.body).toEqual(
+				{
+					'id': expect.any(String),
+					'title': expect.any(String),
+					'shortDescription': expect.any(String),
+					'content': expect.any(String),
+					'blogId': createdBlog !== 'default' ? createdBlog.id : '',
+					'blogName': createdBlog !== 'default' ? createdBlog.name : '',
+					'createdAt': expect.stringMatching(/\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)/)
+				}
+			)
+			return res.body
+		}
 		return undefined
 
 	},

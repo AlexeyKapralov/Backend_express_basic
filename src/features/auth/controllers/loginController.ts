@@ -5,9 +5,9 @@ import {ILoginInputModel} from "../models/loginInput.model";
 import {ResultType} from "../../../common/types/result.type";
 import {ResultStatus} from "../../../common/types/resultStatus.type";
 import {jwtService} from "../../../common/adapters/jwt.service";
-import {usersRepository} from "../../../repositories/users/users.repository";
 import {ILoginSuccessViewModel} from "../../../common/types/loginSuccessView.model";
 import { getUserViewModel } from '../../../common/utils/mappers'
+import { usersQueryRepository } from '../../../repositories/users/usersQuery.repository'
 
 // export interface
 
@@ -19,7 +19,7 @@ export const loginController = async (
 
     let accessToken
     if (result.status === ResultStatus.Success) {
-        const result = await usersRepository.findUserByLoginOrEmail(req.body.loginOrEmail)
+        const result = await usersQueryRepository.findUserByLoginOrEmail(req.body.loginOrEmail)
         accessToken = jwtService.createJwt(getUserViewModel(result!))
     }
 

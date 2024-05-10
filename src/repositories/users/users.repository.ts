@@ -22,7 +22,12 @@ export const usersRepository = {
 
 		return result ? user : undefined
 	},
-
+	async deleteUser(id: string) {
+		const result = await db.getCollection().usersCollection.deleteOne({
+			_id: id
+		})
+		return result.deletedCount > 0
+	},
 	async updateUserConfirm(
 		code: string,
 		isConfirmed: boolean = true
@@ -30,27 +35,5 @@ export const usersRepository = {
     const result =
 				await db.getCollection().usersCollection.updateOne({ confirmationCode: code }, {$set: { isConfirmed: isConfirmed }})
     return result.matchedCount > 0
-	},
-
-	//todo переместить все find в query репозиторий
-	async findUserByLoginOrEmail(loginOrEmail: string): Promise<IUserDbModel | undefined> {
-		const result = await db.getCollection().usersCollection.findOne({
-				$or: [{ login: loginOrEmail }, { email: loginOrEmail }]
-			}
-		)
-		return result !== null ? result : undefined
-	},
-	async findUserWithPass(loginOrEmail: string): Promise<IUserDbModel | undefined> {
-		const result = await db.getCollection().usersCollection.findOne({
-				$or: [{ login: loginOrEmail }, { email: loginOrEmail }]
-			}
-		)
-		return result !== null ? result : undefined
-	},
-	async deleteUser(id: string) {
-		const result = await db.getCollection().usersCollection.deleteOne({
-			_id: id
-		})
-		return result.deletedCount > 0
 	}
 }

@@ -55,5 +55,19 @@ export const usersQueryRepository = {
 			{ confirmationCode: code }
 		)
 		return user ? user : undefined
+	},
+	async findUserByLoginOrEmail(loginOrEmail: string): Promise<IUserDbModel | undefined> {
+		const result = await db.getCollection().usersCollection.findOne({
+				$or: [{ login: loginOrEmail }, { email: loginOrEmail }]
+			}
+		)
+		return result !== null ? result : undefined
+	},
+	async findUserWithPass(loginOrEmail: string): Promise<IUserDbModel | undefined> {
+		const result = await db.getCollection().usersCollection.findOne({
+				$or: [{ login: loginOrEmail }, { email: loginOrEmail }]
+			}
+		)
+		return result !== null ? result : undefined
 	}
 }

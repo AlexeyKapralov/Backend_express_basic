@@ -189,7 +189,6 @@ describe('posts tests', () => {
             }
         }
     }));
-    //TODO: переделать этот тест в негативный
     it(`should update post by id`, () => __awaiter(void 0, void 0, void 0, function* () {
         const accessToken = yield authManager_test_1.authManagerTest.createAndAuthUser();
         const createdBlog = yield blogsManager_test_1.blogsManagerTest.createBlog('default', accessToken);

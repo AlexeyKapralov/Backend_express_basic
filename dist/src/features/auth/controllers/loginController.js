@@ -14,14 +14,14 @@ const login_service_1 = require("../../../service/login.service");
 const http_status_codes_1 = require("http-status-codes");
 const resultStatus_type_1 = require("../../../common/types/resultStatus.type");
 const jwt_service_1 = require("../../../common/adapters/jwt.service");
-const users_repository_1 = require("../../../repositories/users/users.repository");
 const mappers_1 = require("../../../common/utils/mappers");
+const usersQuery_repository_1 = require("../../../repositories/users/usersQuery.repository");
 // export interface
 const loginController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield login_service_1.loginService.loginUser(req.body);
     let accessToken;
     if (result.status === resultStatus_type_1.ResultStatus.Success) {
-        const result = yield users_repository_1.usersRepository.findUserByLoginOrEmail(req.body.loginOrEmail);
+        const result = yield usersQuery_repository_1.usersQueryRepository.findUserByLoginOrEmail(req.body.loginOrEmail);
         accessToken = jwt_service_1.jwtService.createJwt((0, mappers_1.getUserViewModel)(result));
     }
     result.status === resultStatus_type_1.ResultStatus.Success

@@ -13,18 +13,34 @@ exports.usersService = void 0;
 const bcrypt_service_1 = require("../common/adapters/bcrypt.service");
 const users_repository_1 = require("../repositories/users/users.repository");
 const mappers_1 = require("../common/utils/mappers");
-//TODO: переписать всё на новый тип Result Type
+const resultStatus_type_1 = require("../common/types/resultStatus.type");
 exports.usersService = {
     createUser(data) {
         return __awaiter(this, void 0, void 0, function* () {
             const passwordHash = yield bcrypt_service_1.bcryptService.createPasswordHash(data.password);
             const user = yield users_repository_1.usersRepository.createUser(data, passwordHash, 'admin');
-            return user ? (0, mappers_1.getUserViewModel)(user) : undefined;
+            return user
+                ? {
+                    status: resultStatus_type_1.ResultStatus.Success,
+                    data: (0, mappers_1.getUserViewModel)(user)
+                }
+                : {
+                    status: resultStatus_type_1.ResultStatus.BadRequest,
+                    data: null
+                };
         });
     },
     deleteUser(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield users_repository_1.usersRepository.deleteUser(id);
+            return (yield users_repository_1.usersRepository.deleteUser(id))
+                ? {
+                    status: resultStatus_type_1.ResultStatus.Success,
+                    data: null
+                }
+                : {
+                    status: resultStatus_type_1.ResultStatus.BadRequest,
+                    data: null
+                };
         });
     }
 };

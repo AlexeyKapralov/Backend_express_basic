@@ -8,17 +8,42 @@ import { commentsRepository } from '../repositories/comments/comments.repository
 import { ResultStatus } from '../common/types/resultStatus.type'
 import { usersQueryRepository } from '../repositories/users/usersQuery.repository'
 import { getCommentView } from '../common/utils/mappers'
+import { IPostViewModel } from '../features/posts/models/postView.model'
 
-//TODO: переписать всё на новый тип Result Type
 export const postsService = {
-	async createPost(body: IPostInputModel) {
-		return await postsRepository.createPost(body)
+	async createPost(body: IPostInputModel): Promise<ResultType<IPostViewModel | null>> {
+		const result = await postsRepository.createPost(body)
+		return result
+			? {
+				status: ResultStatus.Success,
+				data: result
+			}
+			: {
+				status: ResultStatus.BadRequest,
+				data: null
+			}
 	},
-	async updatePost(id: string, body: IPostInputModel) {
+	async updatePost(id: string, body: IPostInputModel):Promise<ResultType> {
 		return await postsRepository.updatePost(id, body)
+			? {
+				status: ResultStatus.Success,
+				data: null
+			}
+			: {
+				status: ResultStatus.BadRequest,
+				data: null
+			}
 	},
-	async deletePost(id: string) {
+	async deletePost(id: string):Promise<ResultType> {
 		return await postsRepository.deletePost(id)
+			? {
+				status: ResultStatus.Success,
+				data: null
+			}
+			: {
+				status: ResultStatus.BadRequest,
+				data: null
+			}
 	},
 	async createComment(userId: string, postId: string, body: ICommentInputModel): Promise<ResultType<ICommentViewModel | null>> {
 		const post = await postsQueryRepository.getPostById(postId)
@@ -31,10 +56,10 @@ export const postsService = {
 					status: ResultStatus.Success,
 					data: getCommentView(res)
 				}
-        : {
-            status: ResultStatus.BadRequest,
-            data: null
-        }
+				: {
+					status: ResultStatus.BadRequest,
+					data: null
+				}
 		} else {
 			return {
 				status: ResultStatus.NotFound,

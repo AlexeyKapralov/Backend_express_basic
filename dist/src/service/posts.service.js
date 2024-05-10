@@ -16,21 +16,45 @@ const comments_repository_1 = require("../repositories/comments/comments.reposit
 const resultStatus_type_1 = require("../common/types/resultStatus.type");
 const usersQuery_repository_1 = require("../repositories/users/usersQuery.repository");
 const mappers_1 = require("../common/utils/mappers");
-//TODO: переписать всё на новый тип Result Type
 exports.postsService = {
     createPost(body) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield posts_repository_1.postsRepository.createPost(body);
+            const result = yield posts_repository_1.postsRepository.createPost(body);
+            return result
+                ? {
+                    status: resultStatus_type_1.ResultStatus.Success,
+                    data: result
+                }
+                : {
+                    status: resultStatus_type_1.ResultStatus.BadRequest,
+                    data: null
+                };
         });
     },
     updatePost(id, body) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield posts_repository_1.postsRepository.updatePost(id, body);
+            return (yield posts_repository_1.postsRepository.updatePost(id, body))
+                ? {
+                    status: resultStatus_type_1.ResultStatus.Success,
+                    data: null
+                }
+                : {
+                    status: resultStatus_type_1.ResultStatus.BadRequest,
+                    data: null
+                };
         });
     },
     deletePost(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield posts_repository_1.postsRepository.deletePost(id);
+            return (yield posts_repository_1.postsRepository.deletePost(id))
+                ? {
+                    status: resultStatus_type_1.ResultStatus.Success,
+                    data: null
+                }
+                : {
+                    status: resultStatus_type_1.ResultStatus.BadRequest,
+                    data: null
+                };
         });
     },
     createComment(userId, postId, body) {

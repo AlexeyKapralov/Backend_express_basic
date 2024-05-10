@@ -12,10 +12,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.createUserController = void 0;
 const users_service_1 = require("../../../service/users.service");
 const http_status_codes_1 = require("http-status-codes");
+const resultStatus_type_1 = require("../../../common/types/resultStatus.type");
 const createUserController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield users_service_1.usersService.createUser(req.body);
-    result
-        ? res.status(http_status_codes_1.StatusCodes.CREATED).send(result)
+    result.status === resultStatus_type_1.ResultStatus.Success
+        ? res.status(http_status_codes_1.StatusCodes.CREATED).send(result.data)
         : res.status(http_status_codes_1.StatusCodes.NOT_FOUND).json();
 });
 exports.createUserController = createUserController;

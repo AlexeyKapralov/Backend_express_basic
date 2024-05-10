@@ -32,35 +32,18 @@ exports.usersRepository = {
             return result ? user : undefined;
         });
     },
-    updateUserConfirm(code_1) {
-        return __awaiter(this, arguments, void 0, function* (code, isConfirmed = true) {
-            const result = yield db_1.db.getCollection().usersCollection.updateOne({ confirmationCode: code }, { $set: { isConfirmed: isConfirmed } });
-            return result.matchedCount > 0;
-        });
-    },
-    //todo переместить все find в query репозиторий
-    findUserByLoginOrEmail(loginOrEmail) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const result = yield db_1.db.getCollection().usersCollection.findOne({
-                $or: [{ login: loginOrEmail }, { email: loginOrEmail }]
-            });
-            return result !== null ? result : undefined;
-        });
-    },
-    findUserWithPass(loginOrEmail) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const result = yield db_1.db.getCollection().usersCollection.findOne({
-                $or: [{ login: loginOrEmail }, { email: loginOrEmail }]
-            });
-            return result !== null ? result : undefined;
-        });
-    },
     deleteUser(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield db_1.db.getCollection().usersCollection.deleteOne({
                 _id: id
             });
             return result.deletedCount > 0;
+        });
+    },
+    updateUserConfirm(code_1) {
+        return __awaiter(this, arguments, void 0, function* (code, isConfirmed = true) {
+            const result = yield db_1.db.getCollection().usersCollection.updateOne({ confirmationCode: code }, { $set: { isConfirmed: isConfirmed } });
+            return result.matchedCount > 0;
         });
     }
 };

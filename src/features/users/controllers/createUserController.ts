@@ -3,6 +3,7 @@ import { IUserInputModel } from '../models/userInput.model'
 import { IUserViewModel } from '../models/userView.model'
 import { usersService } from '../../../service/users.service'
 import { StatusCodes } from 'http-status-codes'
+import { ResultStatus } from '../../../common/types/resultStatus.type'
 
 export const createUserController = async (
 	req: Request<{}, {}, IUserInputModel>,
@@ -12,7 +13,7 @@ export const createUserController = async (
 		req.body
 	)
 
-	result
-		? res.status(StatusCodes.CREATED).send(result)
+	result.status === ResultStatus.Success
+		? res.status(StatusCodes.CREATED).send(result.data!)
 		: res.status(StatusCodes.NOT_FOUND).json()
 }

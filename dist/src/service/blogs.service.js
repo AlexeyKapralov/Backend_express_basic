@@ -15,7 +15,6 @@ const blogs_repository_1 = require("../repositories/blogs/blogs.repository");
 const mappers_1 = require("../common/utils/mappers");
 const posts_repository_1 = require("../repositories/posts/posts.repository");
 const resultStatus_type_1 = require("../common/types/resultStatus.type");
-//TODO: переписать всё на новый тип Result Type
 exports.blogsService = {
     createBlog(body) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -25,7 +24,7 @@ exports.blogsService = {
                 description: body.description,
                 websiteUrl: body.websiteUrl,
                 createdAt: new Date().toISOString(),
-                isMembership: false,
+                isMembership: false
             };
             const result = yield blogs_repository_1.blogsRepository.createBlog(blog);
             return result ? {
@@ -40,12 +39,29 @@ exports.blogsService = {
     },
     updateBlogByID(id, body) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield blogs_repository_1.blogsRepository.updateBlogByID(id, body);
+            const result = yield blogs_repository_1.blogsRepository.updateBlogByID(id, body);
+            return result
+                ? {
+                    status: resultStatus_type_1.ResultStatus.Success,
+                    data: null
+                }
+                : {
+                    status: resultStatus_type_1.ResultStatus.NotFound,
+                    data: null
+                };
         });
     },
     deleteBlogByID(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield blogs_repository_1.blogsRepository.deleteBlogByID(id);
+            return (yield blogs_repository_1.blogsRepository.deleteBlogByID(id))
+                ? {
+                    status: resultStatus_type_1.ResultStatus.Success,
+                    data: null
+                }
+                : {
+                    status: resultStatus_type_1.ResultStatus.NotFound,
+                    data: null
+                };
         });
     },
     createPostByBlogId(blogId, body) {
@@ -54,9 +70,18 @@ exports.blogsService = {
                 title: body.title,
                 shortDescription: body.shortDescription,
                 content: body.content,
-                blogId: blogId,
+                blogId: blogId
             };
-            return yield posts_repository_1.postsRepository.createPost(newBody);
+            const result = yield posts_repository_1.postsRepository.createPost(newBody);
+            return result
+                ? {
+                    status: resultStatus_type_1.ResultStatus.Success,
+                    data: result
+                }
+                : {
+                    status: resultStatus_type_1.ResultStatus.BadRequest,
+                    data: null
+                };
         });
     }
 };

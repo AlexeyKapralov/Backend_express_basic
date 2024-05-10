@@ -9,6 +9,7 @@ import { db } from '../db/db'
 import { v4 as uuidv4 } from 'uuid'
 import { add } from 'date-fns'
 import { SETTINGS } from '../common/config/settings'
+import { usersQueryRepository } from '../repositories/users/usersQuery.repository'
 
 export const loginService = {
 	async registrationUser(data: IUserInputModel): Promise<ResultType> {
@@ -47,7 +48,7 @@ export const loginService = {
 		}
 	},
 	async resendConfirmationCode(email: string): Promise<ResultType> {
-		const user = await usersRepository.findUserByLoginOrEmail(email)
+		const user = await usersQueryRepository.findUserByLoginOrEmail(email)
 
 		if (user) {
 			const code = uuidv4()
@@ -82,7 +83,7 @@ export const loginService = {
 		}
 	},
 	async loginUser(data: ILoginInputModel): Promise<ResultType> {
-		const user = await usersRepository.findUserWithPass(data.loginOrEmail)
+		const user = await usersQueryRepository.findUserWithPass(data.loginOrEmail)
 
 		if (!user) {
 			return {

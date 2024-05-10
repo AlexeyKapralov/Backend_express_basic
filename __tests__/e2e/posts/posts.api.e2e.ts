@@ -18,7 +18,7 @@ describe('posts tests', () => {
 		const uri = mongod.getUri()
 		await db.run(uri)
 	})
-	beforeEach(async ()=> {
+	beforeEach(async () => {
 		await db.drop()
 	})
 
@@ -210,7 +210,7 @@ describe('posts tests', () => {
 
 		}
 	})
-	//TODO: переделать этот тест в негативный
+
 	it(`should update post by id`, async () => {
 		const accessToken = await authManagerTest.createAndAuthUser()
 		const createdBlog: IBlogViewModel | undefined = await blogsManagerTest.createBlog('default', accessToken!)
@@ -237,6 +237,7 @@ describe('posts tests', () => {
 
 		}
 	})
+
 	//TODO: тесты для delete post by id
 	//todo: комментарии не должны от другого пользователя обновляться
 

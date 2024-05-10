@@ -18,6 +18,7 @@ const db_1 = require("../db/db");
 const uuid_1 = require("uuid");
 const date_fns_1 = require("date-fns");
 const settings_1 = require("../common/config/settings");
+const usersQuery_repository_1 = require("../repositories/users/usersQuery.repository");
 exports.loginService = {
     registrationUser(data) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -60,7 +61,7 @@ exports.loginService = {
     },
     resendConfirmationCode(email) {
         return __awaiter(this, void 0, void 0, function* () {
-            const user = yield users_repository_1.usersRepository.findUserByLoginOrEmail(email);
+            const user = yield usersQuery_repository_1.usersQueryRepository.findUserByLoginOrEmail(email);
             if (user) {
                 const code = (0, uuid_1.v4)();
                 const confirmationCodeExpiredNew = (0, date_fns_1.add)(new Date(), settings_1.SETTINGS.EXPIRED_LIFE);
@@ -94,7 +95,7 @@ exports.loginService = {
     },
     loginUser(data) {
         return __awaiter(this, void 0, void 0, function* () {
-            const user = yield users_repository_1.usersRepository.findUserWithPass(data.loginOrEmail);
+            const user = yield usersQuery_repository_1.usersQueryRepository.findUserWithPass(data.loginOrEmail);
             if (!user) {
                 return {
                     data: null,
