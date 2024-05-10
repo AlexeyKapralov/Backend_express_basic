@@ -14,6 +14,10 @@ const bcrypt_service_1 = require("../common/adapters/bcrypt.service");
 const users_repository_1 = require("../repositories/users/users.repository");
 const resultStatus_type_1 = require("../common/types/resultStatus.type");
 const email_service_1 = require("../common/adapters/email.service");
+const db_1 = require("../db/db");
+const uuid_1 = require("uuid");
+const date_fns_1 = require("date-fns");
+const settings_1 = require("../common/config/settings");
 exports.loginService = {
     registrationUser(data) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -57,22 +61,35 @@ exports.loginService = {
     resendConfirmationCode(email) {
         return __awaiter(this, void 0, void 0, function* () {
             const user = yield users_repository_1.usersRepository.findUserByLoginOrEmail(email);
-            const html = `
+            if (user) {
+                const code = (0, uuid_1.v4)();
+                const confirmationCodeExpiredNew = (0, date_fns_1.add)(new Date(), settings_1.SETTINGS.EXPIRED_LIFE);
+                yield db_1.db.getCollection().usersCollection.updateOne({ _id: user._id }, { $set: { confirmationCode: code,
+                        confirmationCodeExpired: confirmationCodeExpiredNew
+                    }
+                });
+                const html = `
 				 <h1>Thank you for registration</h1>
 				 <p>To finish registration please follow the link below:
-						 <a href='https://ab.com?code=${user.confirmationCode}'>complete registration</a>
+						 <a href='https://ab.com?code=${code}'>complete registration</a>
 				 </p>
 			`;
-            try {
-                email_service_1.emailService.sendConfirmationCode(user.email, 'Confirmation code', html);
+                try {
+                    email_service_1.emailService.sendConfirmationCode(user.email, 'Confirmation code', html);
+                }
+                catch (e) {
+                    console.error(`some problems with send confirm code ${e}`);
+                }
+                return {
+                    status: resultStatus_type_1.ResultStatus.Success,
+                    data: null
+                };
             }
-            catch (e) {
-                console.error(`some problems with send confirm code ${e}`);
-            }
-            return {
-                status: resultStatus_type_1.ResultStatus.Success,
-                data: null
-            };
+            else
+                return {
+                    status: resultStatus_type_1.ResultStatus.NotFound,
+                    data: null
+                };
         });
     },
     loginUser(data) {

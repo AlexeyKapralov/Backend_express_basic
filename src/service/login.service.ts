@@ -5,6 +5,10 @@ import { ResultType } from '../common/types/result.type'
 import { ResultStatus } from '../common/types/resultStatus.type'
 import { IUserInputModel } from '../features/users/models/userInput.model'
 import { emailService } from '../common/adapters/email.service'
+import { db } from '../db/db'
+import { v4 as uuidv4 } from 'uuid'
+import { add } from 'date-fns'
+import { SETTINGS } from '../common/config/settings'
 
 export const loginService = {
 	async registrationUser(data: IUserInputModel): Promise<ResultType> {
@@ -45,20 +49,35 @@ export const loginService = {
 	async resendConfirmationCode(email: string): Promise<ResultType> {
 		const user = await usersRepository.findUserByLoginOrEmail(email)
 
-		const html = `
+		if (user) {
+			const code = uuidv4()
+			const confirmationCodeExpiredNew = add(new Date(),SETTINGS.EXPIRED_LIFE)
+			await db.getCollection().usersCollection.updateOne(
+				{ _id: user._id },
+				{ $set:
+						{ confirmationCode: code,
+							confirmationCodeExpired: confirmationCodeExpiredNew
+						}
+				})
+
+			const html = `
 				 <h1>Thank you for registration</h1>
 				 <p>To finish registration please follow the link below:
-						 <a href='https://ab.com?code=${user!.confirmationCode}'>complete registration</a>
+						 <a href='https://ab.com?code=${code}'>complete registration</a>
 				 </p>
 			`
-		try {
-			emailService.sendConfirmationCode(user!.email, 'Confirmation code', html)
-		} catch (e) {
-			console.error(`some problems with send confirm code ${e}`)
-		}
+			try {
+				emailService.sendConfirmationCode(user.email, 'Confirmation code', html)
+			} catch (e) {
+				console.error(`some problems with send confirm code ${e}`)
+			}
 
-		return {
-			status: ResultStatus.Success,
+			return {
+				status: ResultStatus.Success,
+				data: null
+			}
+		} else return {
+			status: ResultStatus.NotFound,
 			data: null
 		}
 	},

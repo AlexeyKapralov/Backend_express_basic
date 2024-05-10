@@ -52,7 +52,6 @@ describe('user tests', () => {
 			confirmationCode: 'abc',
 			isConfirmed: true,
 			confirmationCodeExpired: new Date(),
-
 		}
 		await db.getCollection().usersCollection.insertOne(data)
 

@@ -14,9 +14,12 @@ const supertest_1 = require("supertest");
 const app_1 = require("../../../src/app");
 const settings_1 = require("../../../src/common/config/settings");
 const http_status_codes_1 = require("http-status-codes");
+const mongodb_1 = require("mongodb");
+const db_1 = require("../../../src/db/db");
+const generators_1 = require("../../../src/common/utils/generators");
 exports.blogsManagerTest = {
     createBlog() {
-        return __awaiter(this, arguments, void 0, function* (data = 'default', accessToken) {
+        return __awaiter(this, arguments, void 0, function* (data = 'default', accessToken, expectedStatus = http_status_codes_1.StatusCodes.CREATED) {
             if (data === 'default') {
                 data = {
                     'name': 'string',
@@ -28,16 +31,34 @@ exports.blogsManagerTest = {
                 .post(settings_1.SETTINGS.PATH.BLOGS)
                 .send(data)
                 .set({ authorization: `Bearer ${accessToken}` })
-                .expect(http_status_codes_1.StatusCodes.CREATED);
-            expect(res.body).toEqual({
-                id: expect.any(String),
-                name: data.name,
-                description: data.description,
-                websiteUrl: data.websiteUrl,
-                createdAt: expect.stringMatching(/\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)/),
-                isMembership: false
-            });
+                .expect(expectedStatus);
+            if (res.status === http_status_codes_1.StatusCodes.CREATED) {
+                expect(res.body).toEqual({
+                    id: expect.any(String),
+                    name: data.name,
+                    description: data.description,
+                    websiteUrl: data.websiteUrl,
+                    createdAt: expect.stringMatching(/\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)/),
+                    isMembership: false
+                });
+            }
             return res.body;
+        });
+    },
+    createBlogs(count) {
+        return __awaiter(this, void 0, void 0, function* () {
+            for (let i = 0; i < count; i++) {
+                const randomTitle = (0, generators_1.getRandomTitle)() + 'i';
+                let blog = {
+                    _id: new mongodb_1.ObjectId().toString(),
+                    name: (0, generators_1.getRandomTitle)() + 'i',
+                    isMembership: true,
+                    websiteUrl: randomTitle + '.com',
+                    description: randomTitle + ' : description about it',
+                    createdAt: new Date().toISOString(),
+                };
+                yield db_1.db.getCollection().blogsCollection.insertOne(blog);
+            }
         });
     }
 };

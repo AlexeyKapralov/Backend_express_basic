@@ -14,9 +14,10 @@ const mongodb_1 = require("mongodb");
 const db_1 = require("../../db/db");
 const uuid_1 = require("uuid");
 const date_fns_1 = require("date-fns");
+const settings_1 = require("../../common/config/settings");
 exports.usersRepository = {
-    createUser(data, hash) {
-        return __awaiter(this, void 0, void 0, function* () {
+    createUser(data_1, hash_1) {
+        return __awaiter(this, arguments, void 0, function* (data, hash, admin = 'noAdmin') {
             const user = {
                 _id: new mongodb_1.ObjectId().toString(),
                 login: data.login,
@@ -24,8 +25,8 @@ exports.usersRepository = {
                 createdAt: new Date().toISOString(),
                 password: hash,
                 confirmationCode: (0, uuid_1.v4)(),
-                confirmationCodeExpired: (0, date_fns_1.add)(new Date(), { hours: 1 }),
-                isConfirmed: false
+                confirmationCodeExpired: (0, date_fns_1.add)(new Date(), settings_1.SETTINGS.EXPIRED_LIFE),
+                isConfirmed: admin === 'admin'
             };
             const result = yield db_1.db.getCollection().usersCollection.insertOne(user);
             return result ? user : undefined;

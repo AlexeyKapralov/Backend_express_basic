@@ -21,6 +21,9 @@ describe('auth test', () => {
         const uri = mongod.getUri();
         yield db_1.db.run(uri);
     }));
+    beforeEach(() => __awaiter(void 0, void 0, void 0, function* () {
+        yield db_1.db.drop();
+    }));
     it(`should write All is running `, () => __awaiter(void 0, void 0, void 0, function* () {
         yield (0, supertest_1.agent)(app_1.app)
             .get('/')

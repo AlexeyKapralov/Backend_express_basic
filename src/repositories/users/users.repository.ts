@@ -4,9 +4,10 @@ import { IUserInputModel } from '../../features/users/models/userInput.model'
 import { db } from '../../db/db'
 import { v4 as uuidv4 } from 'uuid'
 import { add } from 'date-fns'
+import { SETTINGS } from '../../common/config/settings'
 
 export const usersRepository = {
-	async createUser(data: IUserInputModel, hash: string) {
+	async createUser(data: IUserInputModel, hash: string, admin: 'admin' | 'noAdmin' = 'noAdmin') {
 		const user: IUserDbModel = {
 			_id: new ObjectId().toString(),
 			login: data.login,
@@ -14,8 +15,8 @@ export const usersRepository = {
 			createdAt: new Date().toISOString(),
 			password: hash,
 			confirmationCode: uuidv4(),
-			confirmationCodeExpired: add(new Date(), { hours: 1 }),
-			isConfirmed: false
+			confirmationCodeExpired: add(new Date(), SETTINGS.EXPIRED_LIFE),
+			isConfirmed: admin === 'admin'
 		}
 		const result = await db.getCollection().usersCollection.insertOne(user)
 

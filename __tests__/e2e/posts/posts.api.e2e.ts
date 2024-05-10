@@ -18,6 +18,9 @@ describe('posts tests', () => {
 		const uri = mongod.getUri()
 		await db.run(uri)
 	})
+	beforeEach(async ()=> {
+		await db.drop()
+	})
 
 	it(`should get posts with filter `, async () => {
 		await agent(app)
@@ -208,33 +211,6 @@ describe('posts tests', () => {
 		}
 	})
 	//TODO: переделать этот тест в негативный
-	it(`should update post by id`, async () => {
-		const accessToken = await authManagerTest.createAndAuthUser()
-		const createdBlog: IBlogViewModel | undefined = await blogsManagerTest.createBlog('default', accessToken!)
-		if (createdBlog) {
-			const requestBody = {
-				'title': 'a',
-				'shortDescription': 'abc',
-				'content': 'abcd',
-				'blogId': createdBlog!.id
-			}
-
-			const post = await postsManagerTest.createPost(requestBody, accessToken!, StatusCodes.CREATED, createdBlog)
-
-			const requestBody2 = {
-				'title': 'abc',
-				'shortDescription': 'abc',
-				'content': 'abcd',
-				'blogId': createdBlog!.id
-			}
-
-			if (post) {
-				await postsManagerTest.updatePostById(post.id, accessToken!, requestBody2)
-			}
-
-		}
-	})
-
 	it(`should update post by id`, async () => {
 		const accessToken = await authManagerTest.createAndAuthUser()
 		const createdBlog: IBlogViewModel | undefined = await blogsManagerTest.createBlog('default', accessToken!)

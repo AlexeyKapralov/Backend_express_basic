@@ -103,7 +103,10 @@ exports.codeValidation = (0, express_validator_1.body)('code')
     if (!user) {
         throw new Error('user not found');
     }
-    if (user.confirmationCodeExpired < new Date(Date.now())) {
+    if (user.isConfirmed) {
+        throw new Error('user already confirmed');
+    }
+    if (user.confirmationCodeExpired < new Date()) {
         throw new Error('confirmation code expired');
     }
 }));

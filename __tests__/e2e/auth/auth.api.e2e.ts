@@ -12,6 +12,9 @@ describe('auth test', () => {
 		const uri = mongod.getUri()
 		await db.run(uri)
 	})
+	beforeEach(async ()=> {
+		await db.drop()
+	})
 
 	it(`should write All is running `, async () => {
 		await agent(app)

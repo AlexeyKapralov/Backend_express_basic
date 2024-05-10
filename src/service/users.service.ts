@@ -10,7 +10,7 @@ export const usersService = {
         data: IUserInputModel
     ): Promise<IUserViewModel | undefined> {
         const passwordHash = await bcryptService.createPasswordHash(data.password)
-        const user =  await usersRepository.createUser(data, passwordHash)
+        const user =  await usersRepository.createUser(data, passwordHash, 'admin')
         return user ? getUserViewModel(user) : undefined
     },
     async deleteUser(id: string) {

@@ -25,6 +25,9 @@ describe('posts tests', () => {
         const uri = mongod.getUri();
         yield db_1.db.run(uri);
     }));
+    beforeEach(() => __awaiter(void 0, void 0, void 0, function* () {
+        yield db_1.db.drop();
+    }));
     it(`should get posts with filter `, () => __awaiter(void 0, void 0, void 0, function* () {
         yield (0, supertest_1.agent)(app_1.app)
             .get('/')
@@ -187,28 +190,6 @@ describe('posts tests', () => {
         }
     }));
     //TODO: переделать этот тест в негативный
-    it(`should update post by id`, () => __awaiter(void 0, void 0, void 0, function* () {
-        const accessToken = yield authManager_test_1.authManagerTest.createAndAuthUser();
-        const createdBlog = yield blogsManager_test_1.blogsManagerTest.createBlog('default', accessToken);
-        if (createdBlog) {
-            const requestBody = {
-                'title': 'a',
-                'shortDescription': 'abc',
-                'content': 'abcd',
-                'blogId': createdBlog.id
-            };
-            const post = yield postsManager_1.postsManagerTest.createPost(requestBody, accessToken, http_status_codes_1.StatusCodes.CREATED, createdBlog);
-            const requestBody2 = {
-                'title': 'abc',
-                'shortDescription': 'abc',
-                'content': 'abcd',
-                'blogId': createdBlog.id
-            };
-            if (post) {
-                yield postsManager_1.postsManagerTest.updatePostById(post.id, accessToken, requestBody2);
-            }
-        }
-    }));
     it(`should update post by id`, () => __awaiter(void 0, void 0, void 0, function* () {
         const accessToken = yield authManager_test_1.authManagerTest.createAndAuthUser();
         const createdBlog = yield blogsManager_test_1.blogsManagerTest.createBlog('default', accessToken);

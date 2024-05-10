@@ -9,12 +9,9 @@ import { IPostInputModel } from '../../../src/features/posts/models/postInput.mo
 import { blogsManagerTest } from '../blogs/blogsManager.test'
 import { IPostViewModel } from '../../../src/features/posts/models/postView.model'
 import { IBlogViewModel } from '../../../src/features/blogs/models/blogView.model'
+import { getRandomTitle } from '../../../src/common/utils/generators'
 
-const getRandomTitle = () => {
-	const titles = ['Travel', 'Food', 'Car', 'Animals', 'Love', 'Philosophy', 'Psychology', 'Music', 'Movies', 'Experimental']
-	const randomIndex = Math.floor(Math.random() * titles.length)
-	return titles[randomIndex]
-}
+
 
 export const postsManagerTest = {
 	async createPosts(count: number) {

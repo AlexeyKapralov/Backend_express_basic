@@ -17,18 +17,14 @@ const app_1 = require("../../../src/app");
 const settings_1 = require("../../../src/common/config/settings");
 const http_status_codes_1 = require("http-status-codes");
 const blogsManager_test_1 = require("../blogs/blogsManager.test");
-const getRandomTitle = () => {
-    const titles = ['Travel', 'Food', 'Car', 'Animals', 'Love', 'Philosophy', 'Psychology', 'Music', 'Movies', 'Experimental'];
-    const randomIndex = Math.floor(Math.random() * titles.length);
-    return titles[randomIndex];
-};
+const generators_1 = require("../../../src/common/utils/generators");
 exports.postsManagerTest = {
     createPosts(count) {
         return __awaiter(this, void 0, void 0, function* () {
             for (let i = 0; i < count; i++) {
                 let post = {
                     _id: new mongodb_1.ObjectId().toString(),
-                    title: getRandomTitle() + i,
+                    title: (0, generators_1.getRandomTitle)() + i,
                     createdAt: new Date().toISOString(),
                     blogId: i % 2 === 0 ? `generatedBlogId ${i + 1}` : `generatedBlogId ${i}`,
                     blogName: i % 2 === 0 ? `generatedName ${i + 1}` : `generatedName ${i}`,

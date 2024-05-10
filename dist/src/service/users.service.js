@@ -18,7 +18,7 @@ exports.usersService = {
     createUser(data) {
         return __awaiter(this, void 0, void 0, function* () {
             const passwordHash = yield bcrypt_service_1.bcryptService.createPasswordHash(data.password);
-            const user = yield users_repository_1.usersRepository.createUser(data, passwordHash);
+            const user = yield users_repository_1.usersRepository.createUser(data, passwordHash, 'admin');
             return user ? (0, mappers_1.getUserViewModel)(user) : undefined;
         });
     },
