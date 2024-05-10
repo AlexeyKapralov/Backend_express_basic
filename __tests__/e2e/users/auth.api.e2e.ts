@@ -6,6 +6,7 @@ import { ObjectId } from 'mongodb'
 import { agent } from 'supertest'
 import { app } from '../../../src/app'
 import { bcryptService } from '../../../src/common/adapters/bcrypt.service'
+import { IUserDbModel } from '../../../src/features/users/models/userDb.model'
 
 describe('user tests', () => {
 	beforeAll(async () => {
@@ -15,12 +16,15 @@ describe('user tests', () => {
 	})
 
 	it(`shouldn't auth user `, async () => {
-		const data = {
+		const data: IUserDbModel = {
 			_id: String(new ObjectId()),
 			login: 'WwldYc21wu',
 			password: await bcryptService.createPasswordHash('string'),
 			email: 'asw@mail.ru',
-			createdAt: new Date().toISOString()
+			createdAt: new Date().toISOString(),
+			confirmationCodeExpired: new Date(),
+			isConfirmed: true,
+			confirmationCode: 'abcd'
 		}
 		await db.getCollection().usersCollection.insertOne(data)
 
@@ -39,12 +43,16 @@ describe('user tests', () => {
 	})
 
 	it(`should auth user `, async () => {
-		const data = {
+		const data:IUserDbModel = {
 			_id: String(new ObjectId()),
 			login: 'WwldYc21wu',
 			password: await bcryptService.createPasswordHash('string'),
 			email: 'asw@mail.ru',
-			createdAt: new Date().toISOString()
+			createdAt: new Date().toISOString(),
+			confirmationCode: 'abc',
+			isConfirmed: true,
+			confirmationCodeExpired: new Date(),
+
 		}
 		await db.getCollection().usersCollection.insertOne(data)
 

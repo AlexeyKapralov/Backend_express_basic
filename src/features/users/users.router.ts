@@ -2,7 +2,7 @@ import {Router} from 'express'
 import {createUserController} from './controllers/createUserController'
 import {authMiddleware} from '../../middlewares/auth.middleware'
 import {
-    emailValidation,
+    emailValidationForRegistration,
     loginValidation,
     pageNumberValidation,
     pageSizeValidation,
@@ -23,7 +23,7 @@ usersRouter.post(
     authMiddleware,
     loginValidation,
     passwordValidation,
-    emailValidation,
+    emailValidationForRegistration,
     inputValidationMiddleware,
     createUserController
 )

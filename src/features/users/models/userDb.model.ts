@@ -4,4 +4,7 @@ export interface IUserDbModel {
 	email: string
 	createdAt: string
 	password: string
+	confirmationCode: string
+	confirmationCodeExpired: Date
+	isConfirmed: boolean
 }

@@ -5,6 +5,9 @@ import {app} from '../../../src/app'
 import {StatusCodes} from 'http-status-codes'
 import {db} from "../../../src/db/db";
 import {ObjectId} from "mongodb";
+import { IUserDbModel } from '../../../src/features/users/models/userDb.model'
+import { add } from 'date-fns'
+import { IUserViewModel } from '../../../src/features/users/models/userView.model'
 
 const getRandomName = () => {
     const names = ["John", "Alice", "Bob", "Eva", "Michael", "Emma", "David", "Sophia", "James", "Olivia"];
@@ -14,10 +17,17 @@ const getRandomName = () => {
 
 export const userManagerTest = {
     async createUser(
-        data: IUserInputModel,
+        data: IUserInputModel | 'default' = 'default',
         auth: string = '',
         expected_status: number = StatusCodes.CREATED
-    ) {
+    ): Promise<IUserViewModel> {
+        if (data === 'default') {
+            data = {
+                login: 'login',
+                password: 'qwert1234',
+                email: 'asdf@mail.ru'
+            }
+        }
         const buff = Buffer.from(auth, 'utf-8')
         const decodedAuth = buff.toString('base64')
         const result = await agent(app)
@@ -35,18 +45,22 @@ export const userManagerTest = {
                 id: expect.any(String)
             })
         }
+        return result.body
     },
 
 
     async createUsers(count: number) {
         // let users = [];
         for (let i = 0; i < count; i++) {
-            let user = {
+            let user: IUserDbModel = {
                 _id: new ObjectId().toString(),
                 login: getRandomName() + i, // Добавляем к имени номер
                 email: `generatedEmail${i}@example.com`,
                 createdAt: new Date().toISOString(),
-                password: `generatedPassword${i}`
+                password: `generatedPassword${i}`,
+                isConfirmed: false,
+                confirmationCodeExpired: add(new Date(), {hours:1}),
+                confirmationCode: 'abcd'
             };
             // users.push(user);
             // users = [...users, user];

@@ -1,11 +1,17 @@
 import { body, param, query } from 'express-validator'
 import { db } from '../../db/db'
+import { IUserDbModel } from '../../features/users/models/userDb.model'
 
 export const loginValidation = body(['login'])
 	.trim()
 	.isLength({ min: 3, max: 10 })
 	.matches('^[a-zA-Z0-9_-]*$')
-	.exists()
+	.custom(async (login: string) => {
+		const users = await db.getCollection().usersCollection.find({login: login}).toArray()
+		if (users.length > 0) {
+			throw new Error('login already exist')
+		}
+	})
 
 export const loginOrEmailValidation = body(['loginOrEmail'])
 	.trim()
@@ -18,7 +24,29 @@ export const passwordValidation = body('password')
 	.isLength({ min: 6, max: 20 })
 	.exists()
 
-export const emailValidation = body('email').trim().isURL().exists()
+export const emailValidationForRegistration = body('email')
+	.trim()
+	.isURL()
+	.isLength({min:1})
+	.custom(async (email: string) => {
+		const user:Array<IUserDbModel> = await db.getCollection().usersCollection.find({email: email}).toArray()
+		if (user.length > 0) {
+			throw new Error('email already use')
+		}
+	})
+export const emailValidationForResend = body('email')
+	.trim()
+	.isURL()
+	.isLength({min:1})
+	.custom(async (email: string) => {
+		const user:Array<IUserDbModel> = await db.getCollection().usersCollection.find({email: email}).toArray()
+		if (user.length === 0) {
+			throw new Error('email incorrect')
+		}
+		if (user[0].isConfirmed) {
+			throw new Error('email already is confirmed')
+		}
+	})
 
 export const sortByValidation = query('sortBy').trim().default('createdAt')
 export const sortDirectionValidation = query('sortDirection')
@@ -64,4 +92,17 @@ export const blogIdInBodyValidation = body('blogId').trim().custom(async value =
 export const contentCommentValidation = body('content')
 	.trim()
 	.isLength({ min: 20, max: 300 })
+
+export const codeValidation = body('code')
+	.trim()
+	.isLength({min:1})
+	.custom(async code => {
+		const user = await db.getCollection().usersCollection.findOne({confirmationCode: code})
+		if (!user) {
+			throw new Error('user not found')
+		}
+		if (user.confirmationCodeExpired < new Date(Date.now())) {
+			throw new Error('confirmation code expired')
+		}
+	})
 

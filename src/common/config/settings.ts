@@ -15,5 +15,7 @@ export const SETTINGS = {
 		AUTH: '/auth',
 		TESTING: '/testing/all-data'
 	},
-	SECRET_JWT: process.env.SECRET_JWT || ''
+	SECRET_JWT: process.env.SECRET_JWT || '',
+	LOGIN_MAIL: process.env.LOGIN_MAIL || '',
+	PASS_MAIL: process.env.PASS_MAIL || '',
 }

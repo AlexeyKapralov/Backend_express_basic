@@ -3,5 +3,5 @@ module.exports = {
 	preset: 'ts-jest',
 	testEnvironment: 'node',
 	testTimeout: 10000,
-	testRegex: '.unit.ts$'
+	testRegex: '.integration.ts$'
 }
