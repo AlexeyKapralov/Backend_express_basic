@@ -19,6 +19,15 @@ const http_status_codes_1 = require("http-status-codes");
 const blogsManager_test_1 = require("../blogs/blogsManager.test");
 const generators_1 = require("../../../src/common/utils/generators");
 exports.postsManagerTest = {
+    deletePost(id_1, accessToken_1) {
+        return __awaiter(this, arguments, void 0, function* (id, accessToken, expectedStatus = http_status_codes_1.StatusCodes.NO_CONTENT) {
+            yield (0, supertest_1.agent)(app_1.app)
+                .delete(`${settings_1.SETTINGS.PATH.POSTS}/${id}`)
+                .set({ authorization: `Bearer ${accessToken}` })
+                .expect(expectedStatus);
+            expect(yield db_1.db.getCollection().postsCollection.find({ _id: id }).toArray()).toEqual([]);
+        });
+    },
     createPosts(count) {
         return __awaiter(this, void 0, void 0, function* () {
             for (let i = 0; i < count; i++) {
@@ -35,31 +44,27 @@ exports.postsManagerTest = {
             }
         });
     },
-    createPost(requestBody_1, accessToken_1) {
-        return __awaiter(this, arguments, void 0, function* (requestBody, accessToken, expectedStatus = http_status_codes_1.StatusCodes.CREATED, createdBlog = 'default') {
+    createPost() {
+        return __awaiter(this, arguments, void 0, function* (requestBody = 'default', accessToken, expectedStatus = http_status_codes_1.StatusCodes.CREATED, createdBlog = 'default') {
             if (createdBlog === 'default') {
                 const blog = yield blogsManager_test_1.blogsManagerTest.createBlog('default', accessToken);
                 if (blog) {
                     createdBlog = blog;
                 }
             }
+            if (requestBody === 'default') {
+                requestBody = {
+                    "title": "string",
+                    "shortDescription": "string",
+                    "content": "string",
+                    "blogId": createdBlog !== 'default' ? createdBlog.id : ''
+                };
+            }
             const res = yield (0, supertest_1.agent)(app_1.app)
                 .post(settings_1.SETTINGS.PATH.POSTS)
                 .send(requestBody)
                 .set({ authorization: `Bearer ${accessToken}` })
                 .expect(expectedStatus);
-            if (res.status === http_status_codes_1.StatusCodes.CREATED) {
-                expect(res.body).toEqual({
-                    'id': expect.any(String),
-                    'title': expect.any(String),
-                    'shortDescription': expect.any(String),
-                    'content': expect.any(String),
-                    'blogId': createdBlog !== 'default' ? createdBlog.id : '',
-                    'blogName': createdBlog !== 'default' ? createdBlog.name : '',
-                    'createdAt': expect.stringMatching(/\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)/)
-                });
-                return res.body;
-            }
             if (res.status === http_status_codes_1.StatusCodes.CREATED) {
                 expect(res.body).toEqual({
                     'id': expect.any(String),

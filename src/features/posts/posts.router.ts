@@ -54,6 +54,7 @@ postsRouter.put('/:id',
 
 postsRouter.delete('/:id',
     authMiddleware,
+    titleValidation,
     deletePostController
 )
 

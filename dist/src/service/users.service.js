@@ -14,6 +14,7 @@ const bcrypt_service_1 = require("../common/adapters/bcrypt.service");
 const users_repository_1 = require("../repositories/users/users.repository");
 const mappers_1 = require("../common/utils/mappers");
 const resultStatus_type_1 = require("../common/types/resultStatus.type");
+const usersQuery_repository_1 = require("../repositories/users/usersQuery.repository");
 exports.usersService = {
     createUser(data) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -32,15 +33,24 @@ exports.usersService = {
     },
     deleteUser(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return (yield users_repository_1.usersRepository.deleteUser(id))
-                ? {
-                    status: resultStatus_type_1.ResultStatus.Success,
-                    data: null
-                }
-                : {
-                    status: resultStatus_type_1.ResultStatus.BadRequest,
+            const user = yield usersQuery_repository_1.usersQueryRepository.findUserById(id);
+            if (user) {
+                return (yield users_repository_1.usersRepository.deleteUser(id))
+                    ? {
+                        status: resultStatus_type_1.ResultStatus.Success,
+                        data: null
+                    }
+                    : {
+                        status: resultStatus_type_1.ResultStatus.BadRequest,
+                        data: null
+                    };
+            }
+            else {
+                return {
+                    status: resultStatus_type_1.ResultStatus.NotFound,
                     data: null
                 };
+            }
         });
     }
 };

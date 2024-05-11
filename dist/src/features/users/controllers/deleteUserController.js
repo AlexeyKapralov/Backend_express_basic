@@ -12,9 +12,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteUserController = void 0;
 const users_service_1 = require("../../../service/users.service");
 const http_status_codes_1 = require("http-status-codes");
+const resultStatus_type_1 = require("../../../common/types/resultStatus.type");
 const deleteUserController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     const result = yield users_service_1.usersService.deleteUser(id);
-    return result ? res.status(http_status_codes_1.StatusCodes.NO_CONTENT).send() : res.status(http_status_codes_1.StatusCodes.NOT_FOUND).send();
+    return result.status === resultStatus_type_1.ResultStatus.Success ? res.status(http_status_codes_1.StatusCodes.NO_CONTENT).send() : res.status(http_status_codes_1.StatusCodes.NOT_FOUND).send();
 });
 exports.deleteUserController = deleteUserController;

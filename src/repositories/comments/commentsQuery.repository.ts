@@ -23,7 +23,6 @@ export const commentsQueryRepository = {
 		const commentsCount = await db.getCollection().commentsCollection
 			.countDocuments({postId:postId})
 
-
 		return {
 			pagesCount: Math.ceil(commentsCount / query.pageSize!),
 			page: query.pageNumber!,

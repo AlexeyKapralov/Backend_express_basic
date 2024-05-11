@@ -238,8 +238,15 @@ describe('posts tests', () => {
 		}
 	})
 
-	//TODO: тесты для delete post by id
-	//todo: комментарии не должны от другого пользователя обновляться
+	//тесты для delete post by id
+	it(`should delete post`, async () => {
+		let accessToken = await authManagerTest.createAndAuthUser()
+		!accessToken ? accessToken = '' : accessToken
+		const post = await postsManagerTest.createPost('default', accessToken)
+		if (post) {
+			await postsManagerTest.deletePost(post.id, accessToken)
+		}
+	});
 
 	afterAll(async () => {
 		db.stop()

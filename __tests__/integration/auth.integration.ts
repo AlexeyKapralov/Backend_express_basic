@@ -21,6 +21,14 @@ describe('Integration Auth', () => {
 		})
 	})
 
+	afterAll(async () => {
+		await db.stop()
+	})
+
+	afterAll(done => {
+		done()
+	})
+
 	it('should register user (add in db with confirmation code', async () => {
 		const data: IUserInputModel = {
 			login: 'qwerty',
@@ -59,13 +67,5 @@ describe('Integration Auth', () => {
 		expect(emailService.sendConfirmationCode).toHaveBeenCalled()
 		expect(emailService.sendConfirmationCode).toHaveBeenCalledTimes(1)
 		expect(userUpdated[0].isConfirmed = true)
-	})
-
-	afterAll(async () => {
-		await db.stop()
-	})
-
-	afterAll(done => {
-		done()
 	})
 })

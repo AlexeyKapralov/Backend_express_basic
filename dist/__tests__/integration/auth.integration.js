@@ -27,6 +27,12 @@ describe('Integration Auth', () => {
             return true;
         });
     }));
+    afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
+        yield db_1.db.stop();
+    }));
+    afterAll(done => {
+        done();
+    });
     it('should register user (add in db with confirmation code', () => __awaiter(void 0, void 0, void 0, function* () {
         const data = {
             login: 'qwerty',
@@ -58,10 +64,4 @@ describe('Integration Auth', () => {
         expect(email_service_1.emailService.sendConfirmationCode).toHaveBeenCalledTimes(1);
         expect(userUpdated[0].isConfirmed = true);
     }));
-    afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
-        yield db_1.db.stop();
-    }));
-    afterAll(done => {
-        done();
-    });
 });

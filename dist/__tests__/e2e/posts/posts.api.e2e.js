@@ -211,8 +211,15 @@ describe('posts tests', () => {
             }
         }
     }));
-    //TODO: тесты для delete post by id
-    //todo: комментарии не должны от другого пользователя обновляться
+    //тесты для delete post by id
+    it(`should delete post`, () => __awaiter(void 0, void 0, void 0, function* () {
+        let accessToken = yield authManager_test_1.authManagerTest.createAndAuthUser();
+        !accessToken ? accessToken = '' : accessToken;
+        const post = yield postsManager_1.postsManagerTest.createPost('default', accessToken);
+        if (post) {
+            yield postsManager_1.postsManagerTest.deletePost(post.id, accessToken);
+        }
+    }));
     afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
         db_1.db.stop();
     }));
