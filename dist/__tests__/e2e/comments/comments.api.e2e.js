@@ -15,7 +15,7 @@ const commentsManager_test_1 = require("./commentsManager.test");
 const supertest_1 = require("supertest");
 const app_1 = require("../../../src/app");
 const settings_1 = require("../../../src/common/config/settings");
-const postsManager_1 = require("../posts/postsManager");
+const postsManager_test_1 = require("../posts/postsManager.test");
 const mappers_1 = require("../../../src/common/utils/mappers");
 describe('comments e2e tests', () => {
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
@@ -25,7 +25,7 @@ describe('comments e2e tests', () => {
     }));
     beforeEach(() => __awaiter(void 0, void 0, void 0, function* () {
         yield db_1.db.drop();
-        yield postsManager_1.postsManagerTest.createPosts(1);
+        yield postsManager_test_1.postsManagerTest.createPosts(1);
     }));
     afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
         yield db_1.db.stop();

@@ -15,7 +15,7 @@ const supertest_1 = require("supertest");
 const app_1 = require("../../../src/app");
 const settings_1 = require("../../../src/common/config/settings");
 const mappers_1 = require("../../../src/common/utils/mappers");
-const postsManager_1 = require("./postsManager");
+const postsManager_test_1 = require("./postsManager.test");
 const http_status_codes_1 = require("http-status-codes");
 const authManager_test_1 = require("../auth/authManager.test");
 const blogsManager_test_1 = require("../blogs/blogsManager.test");
@@ -47,7 +47,7 @@ describe('posts tests', () => {
     }));
     it('should get posts with default pagination', () => __awaiter(void 0, void 0, void 0, function* () {
         yield db_1.db.drop();
-        yield postsManager_1.postsManagerTest.createPosts(20);
+        yield postsManager_test_1.postsManagerTest.createPosts(20);
         const res = yield (0, supertest_1.agent)(app_1.app)
             .get(settings_1.SETTINGS.PATH.POSTS);
         expect(res.body).toEqual({
@@ -77,7 +77,7 @@ describe('posts tests', () => {
     }));
     it('should get posts with custom pagination', () => __awaiter(void 0, void 0, void 0, function* () {
         yield db_1.db.drop();
-        yield postsManager_1.postsManagerTest.createPosts(20);
+        yield postsManager_test_1.postsManagerTest.createPosts(20);
         const query = {
             pageNumber: 3,
             pageSize: 6,
@@ -154,7 +154,7 @@ describe('posts tests', () => {
                 'content': 'string',
                 'blogId': createdBlog.id
             };
-            yield postsManager_1.postsManagerTest.createPost(requestBody, accessToken, http_status_codes_1.StatusCodes.CREATED, createdBlog);
+            yield postsManager_test_1.postsManagerTest.createPost(requestBody, accessToken, http_status_codes_1.StatusCodes.CREATED, createdBlog);
         }
     }));
     it(`shouldn't get post by id with incorrect id`, () => __awaiter(void 0, void 0, void 0, function* () {
@@ -167,9 +167,9 @@ describe('posts tests', () => {
                 'content': 'string',
                 'blogId': createdBlog.id
             };
-            const post = yield postsManager_1.postsManagerTest.createPost(requestBody, accessToken, http_status_codes_1.StatusCodes.CREATED, createdBlog);
+            const post = yield postsManager_test_1.postsManagerTest.createPost(requestBody, accessToken, http_status_codes_1.StatusCodes.CREATED, createdBlog);
             if (post) {
-                yield postsManager_1.postsManagerTest.getPostById('random text', http_status_codes_1.StatusCodes.NOT_FOUND);
+                yield postsManager_test_1.postsManagerTest.getPostById('random text', http_status_codes_1.StatusCodes.NOT_FOUND);
             }
         }
     }));
@@ -183,9 +183,9 @@ describe('posts tests', () => {
                 'content': 'string',
                 'blogId': createdBlog.id
             };
-            const post = yield postsManager_1.postsManagerTest.createPost(requestBody, accessToken, http_status_codes_1.StatusCodes.CREATED, createdBlog);
+            const post = yield postsManager_test_1.postsManagerTest.createPost(requestBody, accessToken, http_status_codes_1.StatusCodes.CREATED, createdBlog);
             if (post) {
-                yield postsManager_1.postsManagerTest.getPostById(post.id, http_status_codes_1.StatusCodes.OK);
+                yield postsManager_test_1.postsManagerTest.getPostById(post.id, http_status_codes_1.StatusCodes.OK);
             }
         }
     }));
@@ -199,7 +199,7 @@ describe('posts tests', () => {
                 'content': 'abcd',
                 'blogId': createdBlog.id
             };
-            const post = yield postsManager_1.postsManagerTest.createPost(requestBody, accessToken, http_status_codes_1.StatusCodes.CREATED, createdBlog);
+            const post = yield postsManager_test_1.postsManagerTest.createPost(requestBody, accessToken, http_status_codes_1.StatusCodes.CREATED, createdBlog);
             const requestBody2 = {
                 'title': 'abc',
                 'shortDescription': 'abc',
@@ -207,7 +207,7 @@ describe('posts tests', () => {
                 'blogId': createdBlog.id
             };
             if (post) {
-                yield postsManager_1.postsManagerTest.updatePostById(post.id, accessToken, requestBody2);
+                yield postsManager_test_1.postsManagerTest.updatePostById(post.id, accessToken, requestBody2);
             }
         }
     }));
@@ -215,9 +215,9 @@ describe('posts tests', () => {
     it(`should delete post`, () => __awaiter(void 0, void 0, void 0, function* () {
         let accessToken = yield authManager_test_1.authManagerTest.createAndAuthUser();
         !accessToken ? accessToken = '' : accessToken;
-        const post = yield postsManager_1.postsManagerTest.createPost('default', accessToken);
+        const post = yield postsManager_test_1.postsManagerTest.createPost('default', accessToken);
         if (post) {
-            yield postsManager_1.postsManagerTest.deletePost(post.id, accessToken);
+            yield postsManager_test_1.postsManagerTest.deletePost(post.id, accessToken);
         }
     }));
     afterAll(() => __awaiter(void 0, void 0, void 0, function* () {

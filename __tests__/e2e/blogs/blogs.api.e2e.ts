@@ -29,7 +29,6 @@ describe('blogs tests', () => {
 			.expect('All is running!')
 	})
 
-	//TODO: тесты для get (default pagination + custom) + должен быть пустой массив и пагинация если нет блогов
 	it('should get blogs with default pagination and empty array', async () => {
 		const res = await agent(app)
 			.get(SETTINGS.PATH.BLOGS)

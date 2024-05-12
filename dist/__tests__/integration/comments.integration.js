@@ -14,7 +14,7 @@ const db_1 = require("../../src/db/db");
 const posts_service_1 = require("../../src/service/posts.service");
 const authManager_test_1 = require("../e2e/auth/authManager.test");
 const blogsManager_test_1 = require("../e2e/blogs/blogsManager.test");
-const postsManager_1 = require("../e2e/posts/postsManager");
+const postsManager_test_1 = require("../e2e/posts/postsManager.test");
 const jwt_service_1 = require("../../src/common/adapters/jwt.service");
 const resultStatus_type_1 = require("../../src/common/types/resultStatus.type");
 const comments_service_1 = require("../../src/service/comments.service");
@@ -31,7 +31,7 @@ describe('comments integration tests', () => {
         yield db_1.db.drop();
         accessToken = yield authManager_test_1.authManagerTest.createAndAuthUser();
         blog = yield blogsManager_test_1.blogsManagerTest.createBlog('default', accessToken ? accessToken : ' ');
-        post = yield postsManager_1.postsManagerTest.createPost('default', accessToken ? accessToken : ' ');
+        post = yield postsManager_test_1.postsManagerTest.createPost('default', accessToken ? accessToken : ' ');
     }));
     afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
         yield db_1.db.stop();
@@ -58,7 +58,21 @@ describe('comments integration tests', () => {
             })
         });
     }));
-    //todo: комментарии не должны от другого пользователя обновляться
+    it(`shouldn't update comment with another user`, () => __awaiter(void 0, void 0, void 0, function* () {
+        const body = {
+            content: 'aaabbb'
+        };
+        const userId = jwt_service_1.jwtService.getUserIdByToken(accessToken);
+        const result = yield posts_service_1.postsService.createComment(userId, post.id, body);
+        const newBody = {
+            content: 'ccc'
+        };
+        let isUpdated;
+        if (result.data !== null) {
+            isUpdated = yield comments_service_1.commentsService.updateComment('userId!', result.data.id, newBody);
+        }
+        expect(isUpdated.status).toBe(resultStatus_type_1.ResultStatus.NotFound);
+    }));
     it('should update comment', () => __awaiter(void 0, void 0, void 0, function* () {
         const body = {
             content: 'aaabbb'
@@ -66,7 +80,7 @@ describe('comments integration tests', () => {
         const userId = jwt_service_1.jwtService.getUserIdByToken(accessToken);
         const result = yield posts_service_1.postsService.createComment(userId, post.id, body);
         const newBody = {
-            content: 'aaabbb'
+            content: 'ccc'
         };
         if (result.data !== null) {
             yield comments_service_1.commentsService.updateComment(userId, result.data.id, newBody);
@@ -74,7 +88,18 @@ describe('comments integration tests', () => {
         const updatedComment = yield db_1.db.getCollection().commentsCollection.findOne({ _id: result.data.id });
         expect(updatedComment.content).toBe(newBody.content);
     }));
-    //todo: комментарии не должны от другого пользователя удаляться
+    it(`shouldn't delete comment with another userId`, () => __awaiter(void 0, void 0, void 0, function* () {
+        const body = {
+            content: 'aaabbb'
+        };
+        const userId = jwt_service_1.jwtService.getUserIdByToken(accessToken);
+        const result = yield posts_service_1.postsService.createComment(userId, post.id, body);
+        let isDeleted;
+        if (result.data !== null) {
+            isDeleted = yield comments_service_1.commentsService.deleteComment('userId!', result.data.id);
+        }
+        expect(isDeleted.status).toBe(resultStatus_type_1.ResultStatus.NotFound);
+    }));
     it('should delete comment', () => __awaiter(void 0, void 0, void 0, function* () {
         const body = {
             content: 'aaabbb'

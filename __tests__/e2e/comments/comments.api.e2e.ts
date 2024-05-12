@@ -4,7 +4,7 @@ import {commentsManagerTest} from "./commentsManager.test";
 import {agent} from "supertest";
 import {app} from "../../../src/app";
 import {SETTINGS} from "../../../src/common/config/settings";
-import {postsManagerTest} from "../posts/postsManager";
+import {postsManagerTest} from "../posts/postsManager.test";
 import {IQueryModel} from "../../../src/common/types/query.model";
 import {getCommentView} from "../../../src/common/utils/mappers";
 

@@ -3,7 +3,7 @@ import {db} from "../../src/db/db";
 import {postsService} from "../../src/service/posts.service";
 import {authManagerTest} from "../e2e/auth/authManager.test";
 import {blogsManagerTest} from "../e2e/blogs/blogsManager.test";
-import {postsManagerTest} from "../e2e/posts/postsManager";
+import {postsManagerTest} from "../e2e/posts/postsManager.test";
 import {jwtService} from "../../src/common/adapters/jwt.service";
 import {ResultType} from "../../src/common/types/result.type";
 import {ResultStatus} from "../../src/common/types/resultStatus.type";
@@ -60,7 +60,26 @@ describe('comments integration tests', () => {
     })
 
 
-    //todo: комментарии не должны от другого пользователя обновляться
+    it(`shouldn't update comment with another user`, async () => {
+        const body = {
+            content: 'aaabbb'
+        }
+        const userId = jwtService.getUserIdByToken(accessToken!)
+        const result = await postsService.createComment(
+            userId!, post!.id, body
+        )
+
+        const newBody = {
+            content: 'ccc'
+        }
+        let isUpdated
+        if (result.data !== null) {
+            isUpdated = await commentsService.updateComment('userId!', result.data.id, newBody)
+        }
+
+        expect(isUpdated!.status).toBe(ResultStatus.NotFound)
+    })
+
     it('should update comment', async () => {
         const body = {
             content: 'aaabbb'
@@ -71,7 +90,7 @@ describe('comments integration tests', () => {
         )
 
         const newBody = {
-            content: 'aaabbb'
+            content: 'ccc'
         }
         if (result.data !== null) {
             await commentsService.updateComment(userId!, result.data.id, newBody)
@@ -81,8 +100,22 @@ describe('comments integration tests', () => {
         expect(updatedComment!.content).toBe(newBody.content)
     })
 
+    it(`shouldn't delete comment with another userId`, async () => {
+        const body = {
+            content: 'aaabbb'
+        }
+        const userId = jwtService.getUserIdByToken(accessToken!)
+        const result = await postsService.createComment(
+            userId!, post!.id, body
+        )
+        let isDeleted
+        if (result.data !== null) {
+            isDeleted = await commentsService.deleteComment('userId!', result.data.id)
+        }
 
-    //todo: комментарии не должны от другого пользователя удаляться
+        expect(isDeleted!.status).toBe(ResultStatus.NotFound)
+    })
+
     it('should delete comment', async () => {
         const body = {
             content: 'aaabbb'

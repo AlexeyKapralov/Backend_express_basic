@@ -32,7 +32,6 @@ describe('blogs tests', () => {
             .get('/')
             .expect('All is running!');
     }));
-    //TODO: тесты для get (default pagination + custom) + должен быть пустой массив и пагинация если нет блогов
     it('should get blogs with default pagination and empty array', () => __awaiter(void 0, void 0, void 0, function* () {
         const res = yield (0, supertest_1.agent)(app_1.app)
             .get(settings_1.SETTINGS.PATH.BLOGS);
