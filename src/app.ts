@@ -7,10 +7,12 @@ import { StatusCodes } from 'http-status-codes'
 import {blogsRouter} from "./features/blogs/blogs.router";
 import {postsRouter} from "./features/posts/posts.router";
 import { commentsRouter } from './features/comments/comments.router'
+import cookieParser from "cookie-parser";
 
 export const app = express()
 
 app.use(express.json())
+app.use(cookieParser())
 
 app.get('/', (req: Request, res: Response) => {
 	res.send('All is running!')

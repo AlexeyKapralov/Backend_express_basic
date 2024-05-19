@@ -22,8 +22,10 @@ const http_status_codes_1 = require("http-status-codes");
 const blogs_router_1 = require("./features/blogs/blogs.router");
 const posts_router_1 = require("./features/posts/posts.router");
 const comments_router_1 = require("./features/comments/comments.router");
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
 exports.app = (0, express_1.default)();
 exports.app.use(express_1.default.json());
+exports.app.use((0, cookie_parser_1.default)());
 exports.app.get('/', (req, res) => {
     res.send('All is running!');
 });

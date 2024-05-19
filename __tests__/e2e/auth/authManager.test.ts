@@ -7,6 +7,12 @@ import { userManagerTest } from '../users/userManager.test'
 import { IUserInputModel } from '../../../src/features/users/models/userInput.model'
 
 export const authManagerTest = {
+	/**
+	 * 'login': 'alexx123',
+	 * 'password': '123456',
+	 * 'email': 'asdasdas@e.com'
+	 */
+	//todo стоит переписать с возвратом refresh token и без зависимости от api (сразу работа с базой)
 	async createAndAuthUser(loginData: 'default' | ILoginInputModel | null = 'default', newUserData: 'default' | IUserInputModel = 'default',
 													expectedStatus: StatusCodes = StatusCodes.OK
 	): Promise<string | undefined> {
@@ -74,7 +80,7 @@ export const authManagerTest = {
 
 	async authUser(loginData: 'default' | ILoginInputModel = 'default',
 								 expectedStatus: StatusCodes = StatusCodes.OK
-	): Promise<{ accessToken: string } | undefined> {
+	): Promise<{ accessToken: string, refreshToken: string } | undefined> {
 
 		let res
 		if (loginData === 'default') {
@@ -99,7 +105,8 @@ export const authManagerTest = {
 					'accessToken': res.body.accessToken
 				}
 			)
-			return res.body.accessToken
+			const refreshToken  = res.header['set-cookie'][0].split('; ')[0].replace('refreshToken=', '')
+			return {accessToken: res.body.accessToken, refreshToken}
 		} else {
 			return undefined
 		}

@@ -1,11 +1,12 @@
 import jwt from "jsonwebtoken";
 import {SETTINGS} from "../config/settings";
-import {IUserViewModel} from "../../features/users/models/userView.model";
-
 
 export const jwtService = {
-    createJwt(user: IUserViewModel): string {
-        return jwt.sign({userId: user.id}, SETTINGS.SECRET_JWT, {expiresIn: "1h"});
+    createAccessToken(userId: string): string {
+        return jwt.sign({userId: userId}, SETTINGS.SECRET_JWT, {expiresIn: "10s"});
+    },
+    createRefreshToken(userId: string): string {
+        return jwt.sign({userId: userId}, SETTINGS.SECRET_JWT, {expiresIn: "20s"});
     },
     getUserIdByToken(token: string): string | null {
         try {
@@ -13,6 +14,14 @@ export const jwtService = {
             return result.userId
         } catch (e) {
             return null
+        }
+    },
+    checkRefreshToken(token: string): boolean {
+        try {
+            const result: any = jwt.verify(token, SETTINGS.SECRET_JWT)
+            return true
+        } catch (e) {
+            return false
         }
     }
 }

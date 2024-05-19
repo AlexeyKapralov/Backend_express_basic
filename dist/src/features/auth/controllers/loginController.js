@@ -13,21 +13,16 @@ exports.loginController = void 0;
 const login_service_1 = require("../../../service/login.service");
 const http_status_codes_1 = require("http-status-codes");
 const resultStatus_type_1 = require("../../../common/types/resultStatus.type");
-const jwt_service_1 = require("../../../common/adapters/jwt.service");
-const mappers_1 = require("../../../common/utils/mappers");
-const usersQuery_repository_1 = require("../../../repositories/users/usersQuery.repository");
-// export interface
+const date_fns_1 = require("date-fns");
 const loginController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield login_service_1.loginService.loginUser(req.body);
-    let accessToken;
-    if (result.status === resultStatus_type_1.ResultStatus.Success) {
-        const result = yield usersQuery_repository_1.usersQueryRepository.findUserByLoginOrEmail(req.body.loginOrEmail);
-        accessToken = jwt_service_1.jwtService.createJwt((0, mappers_1.getUserViewModel)(result));
-    }
     result.status === resultStatus_type_1.ResultStatus.Success
-        ? res.status(http_status_codes_1.StatusCodes.OK).json({
-            accessToken: accessToken
+        ? res
+            .cookie('refreshToken', result.data.refreshToken, { httpOnly: true, secure: true, expires: (0, date_fns_1.addSeconds)(new Date(), 20) })
+            .status(http_status_codes_1.StatusCodes.OK).json({
+            accessToken: result.data.accessToken
         })
-        : res.status(http_status_codes_1.StatusCodes.UNAUTHORIZED).send();
+        : res
+            .status(http_status_codes_1.StatusCodes.UNAUTHORIZED).send();
 });
 exports.loginController = loginController;

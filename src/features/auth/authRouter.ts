@@ -13,6 +13,8 @@ import { inputValidationMiddleware } from '../../middlewares/inputValidation.mid
 import { registrationController } from './controllers/registration.controller'
 import { registrationConfirmationController } from './controllers/registrationConfirmation.controller'
 import { emailResendingController } from './controllers/emailResending.controller'
+import {refreshTokenController} from "./controllers/refreshToken.controller";
+import {logoutController} from "./controllers/logout.controller";
 
 export const authRouter = Router({})
 
@@ -20,7 +22,16 @@ authRouter.post('/login',
 	loginOrEmailValidation,
 	passwordValidation,
 	inputValidationMiddleware,
-	loginController)
+	loginController
+)
+
+authRouter.post('/logout',
+	logoutController
+)
+
+authRouter.post('/refresh-token',
+	refreshTokenController
+)
 
 authRouter.post('/registration',
 	loginValidation,

@@ -19,6 +19,8 @@ const uuid_1 = require("uuid");
 const date_fns_1 = require("date-fns");
 const settings_1 = require("../common/config/settings");
 const usersQuery_repository_1 = require("../repositories/users/usersQuery.repository");
+const jwt_service_1 = require("../common/adapters/jwt.service");
+const blockList_repository_1 = require("../repositories/blockList/blockList.repository");
 exports.loginService = {
     registrationUser(data) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -65,7 +67,9 @@ exports.loginService = {
             if (user) {
                 const code = (0, uuid_1.v4)();
                 const confirmationCodeExpiredNew = (0, date_fns_1.add)(new Date(), settings_1.SETTINGS.EXPIRED_LIFE);
-                yield db_1.db.getCollection().usersCollection.updateOne({ _id: user._id }, { $set: { confirmationCode: code,
+                yield db_1.db.getCollection().usersCollection.updateOne({ _id: user._id }, {
+                    $set: {
+                        confirmationCode: code,
                         confirmationCodeExpired: confirmationCodeExpiredNew
                     }
                 });
@@ -104,11 +108,78 @@ exports.loginService = {
             }
             else {
                 const isTrueHash = yield bcrypt_service_1.bcryptService.comparePasswordsHash(data.password, user.password);
+                const accessToken = jwt_service_1.jwtService.createAccessToken(user._id);
+                const refreshToken = jwt_service_1.jwtService.createRefreshToken(user._id);
                 return {
                     status: isTrueHash ? resultStatus_type_1.ResultStatus.Success : resultStatus_type_1.ResultStatus.BadRequest,
+                    data: isTrueHash ? { accessToken, refreshToken } : null
+                };
+            }
+        });
+    },
+    logout(refreshToken) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const isValidToken = jwt_service_1.jwtService.checkRefreshToken(refreshToken);
+            const userId = jwt_service_1.jwtService.getUserIdByToken(refreshToken);
+            const isBlocked = yield blockList_repository_1.blockListRepository.checkTokenIsBlocked(refreshToken);
+            if (isValidToken && !isBlocked) {
+                const isAddInBlock = yield blockList_repository_1.blockListRepository.addRefreshTokenInBlackList(refreshToken);
+                return isAddInBlock
+                    ? {
+                        status: resultStatus_type_1.ResultStatus.Success,
+                        data: null
+                    }
+                    : {
+                        status: resultStatus_type_1.ResultStatus.BadRequest,
+                        data: null
+                    };
+            }
+            return {
+                status: resultStatus_type_1.ResultStatus.NotFound,
+                data: null
+            };
+        });
+    },
+    refreshToken(refreshToken) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const isValidToken = jwt_service_1.jwtService.checkRefreshToken(refreshToken);
+            const BlockList = yield db_1.db.getCollection().blockListCollection.find({ refreshToken: refreshToken }).toArray();
+            if (BlockList.length > 0) {
+                return {
+                    status: resultStatus_type_1.ResultStatus.Forbidden,
                     data: null
                 };
             }
+            if (!isValidToken) {
+                const result = yield db_1.db.getCollection().blockListCollection.insertOne({ refreshToken: refreshToken });
+                if (result.acknowledged) {
+                    return {
+                        status: resultStatus_type_1.ResultStatus.Unauthorized,
+                        data: null
+                    };
+                }
+                else {
+                    return {
+                        status: resultStatus_type_1.ResultStatus.BadRequest,
+                        errorMessage: 'problem with add token in document',
+                        data: null
+                    };
+                }
+            }
+            const userId = jwt_service_1.jwtService.getUserIdByToken(refreshToken);
+            if (!userId) {
+                return {
+                    status: resultStatus_type_1.ResultStatus.NotFound,
+                    data: null
+                };
+            }
+            const result = yield db_1.db.getCollection().blockListCollection.insertOne({ refreshToken: refreshToken });
+            const newAccessToken = jwt_service_1.jwtService.createAccessToken(userId);
+            const newRefreshToken = jwt_service_1.jwtService.createRefreshToken(userId);
+            return {
+                status: resultStatus_type_1.ResultStatus.Success,
+                data: { accessToken: newAccessToken, refreshToken: newRefreshToken }
+            };
         });
     }
 };

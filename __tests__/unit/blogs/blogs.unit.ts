@@ -1,8 +1,8 @@
 // Mock-объект для blogsRepository, чтобы заменить его на управляемый тестами
 import {expect, jest} from '@jest/globals';
-import {blogsRepository} from "../../src/repositories/blogs/blogs.repository";
-import {blogsService} from "../../src/service/blogs.service";
-import { ResultStatus } from '../../src/common/types/resultStatus.type'
+import {blogsRepository} from "../../../src/repositories/blogs/blogs.repository";
+import {blogsService} from "../../../src/service/blogs.service";
+import { ResultStatus } from '../../../src/common/types/resultStatus.type'
 
 describe('Test for createBlog method in blogsService', () => {
     afterEach(() => {

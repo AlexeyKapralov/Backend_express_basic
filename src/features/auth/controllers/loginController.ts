@@ -8,26 +8,22 @@ import {jwtService} from "../../../common/adapters/jwt.service";
 import {ILoginSuccessViewModel} from "../../../common/types/loginSuccessView.model";
 import { getUserViewModel } from '../../../common/utils/mappers'
 import { usersQueryRepository } from '../../../repositories/users/usersQuery.repository'
-
-// export interface
+import {addSeconds} from "date-fns";
 
 export const loginController = async (
     req: Request<{}, {}, ILoginInputModel>,
     res: Response<ILoginSuccessViewModel>
 ) => {
-    const result: ResultType = await loginService.loginUser(req.body)
-
-    let accessToken
-    if (result.status === ResultStatus.Success) {
-        const result = await usersQueryRepository.findUserByLoginOrEmail(req.body.loginOrEmail)
-        accessToken = jwtService.createJwt(getUserViewModel(result!))
-    }
+    const result: ResultType<{ accessToken: string; refreshToken: string } | null> = await loginService.loginUser(req.body)
 
     result.status === ResultStatus.Success
-        ? res.status(StatusCodes.OK).json(
+        ? res
+            .cookie('refreshToken',  result.data!.refreshToken, {httpOnly: true, secure: true, expires : addSeconds( new Date(), 20 )})
+            .status(StatusCodes.OK).json(
             {
-                accessToken: accessToken!
-            }
-        )
-        : res.status(StatusCodes.UNAUTHORIZED).send()
+                accessToken: result.data!.accessToken
+            })
+
+        : res
+            .status(StatusCodes.UNAUTHORIZED).send()
 }

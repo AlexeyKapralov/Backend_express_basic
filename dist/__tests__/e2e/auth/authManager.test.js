@@ -16,6 +16,12 @@ const settings_1 = require("../../../src/common/config/settings");
 const http_status_codes_1 = require("http-status-codes");
 const userManager_test_1 = require("../users/userManager.test");
 exports.authManagerTest = {
+    /**
+     * 'login': 'alexx123',
+     * 'password': '123456',
+     * 'email': 'asdasdas@e.com'
+     */
+    //todo стоит переписать с возвратом refresh token и без зависимости от api (сразу работа с базой)
     createAndAuthUser() {
         return __awaiter(this, arguments, void 0, function* (loginData = 'default', newUserData = 'default', expectedStatus = http_status_codes_1.StatusCodes.OK) {
             if (newUserData === 'default') {
@@ -95,7 +101,8 @@ exports.authManagerTest = {
                 expect(res.body).toEqual({
                     'accessToken': res.body.accessToken
                 });
-                return res.body.accessToken;
+                const refreshToken = res.header['set-cookie'][0].split('; ')[0].replace('refreshToken=', '');
+                return { accessToken: res.body.accessToken, refreshToken };
             }
             else {
                 return undefined;
