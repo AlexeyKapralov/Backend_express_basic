@@ -45,7 +45,8 @@ export const db = {
 			blogsCollection: this.getDbName().collection<IBlogDbModel>('blogs'),
 			postsCollection: this.getDbName().collection<IPostDbModel>('posts'),
 			commentsCollection: this.getDbName().collection<ICommentDbModel>('comments'),
-			blockListCollection: this.getDbName().collection<BlockListModel>('blockList')
+			blockListCollection: this.getDbName().collection<BlockListModel>('blockList'),
+			rateLimitCollection: this.getDbName().collection<IRateLimit>('rateLimit')
 		}
 	}
 }

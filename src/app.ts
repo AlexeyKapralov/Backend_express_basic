@@ -1,25 +1,27 @@
-import express, { Request, Response } from 'express'
-import { SETTINGS } from './common/config/settings'
-import { usersRouter } from './features/users/users.router'
-import { authRouter } from './features/auth/authRouter'
-import { db } from './db/db'
-import { StatusCodes } from 'http-status-codes'
+import express, {Request, Response} from 'express'
+import {SETTINGS} from './common/config/settings'
+import {usersRouter} from './features/users/users.router'
+import {authRouter} from './features/auth/authRouter'
+import {db} from './db/db'
+import {StatusCodes} from 'http-status-codes'
 import {blogsRouter} from "./features/blogs/blogs.router";
 import {postsRouter} from "./features/posts/posts.router";
-import { commentsRouter } from './features/comments/comments.router'
+import {commentsRouter} from './features/comments/comments.router'
 import cookieParser from "cookie-parser";
 
 export const app = express()
 
+app.set('trust proxy', true)
 app.use(express.json())
 app.use(cookieParser())
 
+
 app.get('/', (req: Request, res: Response) => {
-	res.send('All is running!')
+    res.send('All is running!')
 })
 app.delete(SETTINGS.PATH.TESTING, async (req: Request, res: Response) => {
-	await db.drop()
-	res.status(StatusCodes.NO_CONTENT).send()
+    await db.drop()
+    res.status(StatusCodes.NO_CONTENT).send()
 })
 
 app.use(SETTINGS.PATH.USERS, usersRouter)

@@ -24,6 +24,7 @@ const posts_router_1 = require("./features/posts/posts.router");
 const comments_router_1 = require("./features/comments/comments.router");
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 exports.app = (0, express_1.default)();
+exports.app.set('trust proxy', true);
 exports.app.use(express_1.default.json());
 exports.app.use((0, cookie_parser_1.default)());
 exports.app.get('/', (req, res) => {

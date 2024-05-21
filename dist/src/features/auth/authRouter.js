@@ -12,8 +12,9 @@ const registrationConfirmation_controller_1 = require("./controllers/registratio
 const emailResending_controller_1 = require("./controllers/emailResending.controller");
 const refreshToken_controller_1 = require("./controllers/refreshToken.controller");
 const logout_controller_1 = require("./controllers/logout.controller");
+const rateLimit_middleware_1 = require("../../middlewares/rateLimit.middleware");
 exports.authRouter = (0, express_1.Router)({});
-exports.authRouter.post('/login', express_validation_1.loginOrEmailValidation, express_validation_1.passwordValidation, inputValidation_middleware_1.inputValidationMiddleware, loginController_1.loginController);
+exports.authRouter.post('/login', rateLimit_middleware_1.rateLimitMiddleware, express_validation_1.loginOrEmailValidation, express_validation_1.passwordValidation, inputValidation_middleware_1.inputValidationMiddleware, loginController_1.loginController);
 exports.authRouter.post('/logout', logout_controller_1.logoutController);
 exports.authRouter.post('/refresh-token', refreshToken_controller_1.refreshTokenController);
 exports.authRouter.post('/registration', express_validation_1.loginValidation, express_validation_1.passwordValidation, express_validation_1.emailValidationForRegistration, inputValidation_middleware_1.inputValidationMiddleware, registration_controller_1.registrationController);

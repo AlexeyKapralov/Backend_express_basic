@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="26bf12fa-1c19-43fd-bd80-8f598efb16f4" name="Changes" comment="add logout and refresh token endpoints and tests for these endpoints, also add fake timers for tests">
+      <change afterPath="$PROJECT_DIR$/__tests__/integration/auth/rateLimit.integration.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/common/types/rateLimit.model.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/middlewares/rateLimit.middleware.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/db/db.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/db/db.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/features/auth/authRouter.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/auth/authRouter.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/db/db.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/db/db.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/auth/authRouter.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/auth/authRouter.ts" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="TypeScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;AlexeyKapralov&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;git@github.com:AlexeyKapralov/Backend_express_basic.git&quot;,
+    &quot;accountId&quot;: &quot;82fae487-a8c9-4bc6-bae2-860aee87b44c&quot;
+  }
+}</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 3
+}</component>
+  <component name="ProjectId" id="2gMslTgPGDVAl7NZJQIqO1ifamS" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Jest.Authentication User.executor": "Run",
+    "Jest.Authentication User.should register user (add in db with confirmation code.executor": "Run",
+    "Jest.Authentication User.should update refresh token.executor": "Run",
+    "Jest.Authentication User.shouldn't update refresh token.executor": "Run",
+    "Jest.auth test.should auth.executor": "Debug",
+    "Jest.comments integration tests.shouldn't delete comment with another userId.executor": "Run",
+    "Jest.comments integration tests.shouldn't update comment with another user.executor": "Run",
+    "Jest.logout user integration test.executor": "Run",
+    "Jest.logout user integration test.shouldn't logout user with incorrect token.executor": "Run",
+    "Jest.refresh token test.should refresh token.executor": "Run",
+    "Jest.show-delayed-banner.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "D:/Projects/IT_Incubator_Projects/Social_network_backend/src/middlewares",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs.jest.jest_package": "D:/Projects/IT_Incubator_Projects/Social_network_backend/node_modules/jest",
+    "nodejs_package_manager_path": "npm",
+    "npm.dev.executor": "Run",
+    "npm.test coverage.executor": "Run",
+    "npm.test:e2e.executor": "Run",
+    "npm.test:integration.executor": "Run",
+    "npm.watch.executor": "Run",
+    "ts.external.directory.path": "D:\\Projects\\IT_Incubator_Projects\\Social_network_backend\\node_modules\\typescript\\lib",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Projects\IT_Incubator_Projects\Social_network_backend\src\middlewares" />
+      <recent name="D:\Projects\IT_Incubator_Projects\Social_network_backend\__tests__\integration\auth" />
+      <recent name="D:\Projects\IT_Incubator_Projects\Social_network_backend" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Projects\IT_Incubator_Projects\Social_network_backend\__tests__\unit\blogs" />
+      <recent name="D:\Projects\IT_Incubator_Projects\Social_network_backend\__tests__\integration\comments" />
+      <recent name="D:\Projects\IT_Incubator_Projects\Social_network_backend\__tests__\integration\blogs" />
+      <recent name="D:\Projects\IT_Incubator_Projects\Social_network_backend\__tests__\integration\auth" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Jest.logout user integration test.shouldn't logout user with incorrect token">
+    <configuration name="logout user integration test.shouldn't logout user with incorrect token" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="TEST" />
+      <test-file value="$PROJECT_DIR$/__tests__/integration/auth/logoutUser.integration.ts" />
+      <test-names>
+        <test-name value="logout user integration test" />
+        <test-name value="shouldn't logout user with incorrect token" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="test:e2e" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="test:e2e" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="test:integration" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="test:integration" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="watch" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="watch" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="npm.dev" />
+        <item itemvalue="npm.watch" />
+        <item itemvalue="npm.test:integration" />
+        <item itemvalue="npm.test:e2e" />
+        <item itemvalue="Jest.logout user integration test.shouldn't logout user with incorrect token" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-1d06a55b98c1-91d5c284f522-JavaScript-WS-241.15989.105" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="26bf12fa-1c19-43fd-bd80-8f598efb16f4" name="Changes" comment="" />
+      <created>1715518933593</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1715518933593</updated>
+      <workItem from="1715518935548" duration="3791000" />
+      <workItem from="1715629308315" duration="11000" />
+      <workItem from="1715629396450" duration="1513000" />
+      <workItem from="1715663040945" duration="23984000" />
+      <workItem from="1716014567588" duration="35349000" />
+      <workItem from="1716268615446" duration="6920000" />
+    </task>
+    <task id="LOCAL-00001" summary="small fixes">
+      <option name="closed" value="true" />
+      <created>1715522020569</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1715522020569</updated>
+    </task>
+    <task id="LOCAL-00002" summary="add logout and refresh token endpoints and tests for these endpoints, also add fake timers for tests">
+      <option name="closed" value="true" />
+      <created>1716116099381</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1716116099381</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="small fixes" />
+    <MESSAGE value="add logout and refresh token endpoints and tests for these endpoints, also add fake timers for tests" />
+    <option name="LAST_COMMIT_MESSAGE" value="add logout and refresh token endpoints and tests for these endpoints, also add fake timers for tests" />
+  </component>
+</project>

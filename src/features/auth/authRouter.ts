@@ -15,10 +15,12 @@ import { registrationConfirmationController } from './controllers/registrationCo
 import { emailResendingController } from './controllers/emailResending.controller'
 import {refreshTokenController} from "./controllers/refreshToken.controller";
 import {logoutController} from "./controllers/logout.controller";
+import {rateLimitMiddleware} from "../../middlewares/rateLimit.middleware";
 
 export const authRouter = Router({})
 
 authRouter.post('/login',
+	rateLimitMiddleware,
 	loginOrEmailValidation,
 	passwordValidation,
 	inputValidationMiddleware,
