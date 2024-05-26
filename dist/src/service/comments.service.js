@@ -11,21 +11,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.commentsService = void 0;
 const resultStatus_type_1 = require("../common/types/resultStatus.type");
-const usersQuery_repository_1 = require("../repositories/users/usersQuery.repository");
-const commentsQuery_repository_1 = require("../repositories/comments/commentsQuery.repository");
 const comments_repository_1 = require("../repositories/comments/comments.repository");
+const users_repository_1 = require("../repositories/users/users.repository");
 exports.commentsService = {
     updateComment(userId, commentId, data) {
         return __awaiter(this, void 0, void 0, function* () {
-            const user = yield usersQuery_repository_1.usersQueryRepository.findUserById(userId);
-            const comment = yield commentsQuery_repository_1.commentsQueryRepository.getCommentById(commentId);
+            const user = yield users_repository_1.usersRepository.findUserById(userId);
+            const comment = yield comments_repository_1.commentsRepository.getCommentById(commentId);
             if (!comment || !user) {
                 return {
                     status: resultStatus_type_1.ResultStatus.NotFound,
                     data: null
                 };
             }
-            if (comment.commentatorInfo.userId !== user.id) {
+            if (comment.commentatorInfo.userId !== user._id) {
                 return {
                     status: resultStatus_type_1.ResultStatus.Forbidden,
                     data: null
@@ -48,15 +47,15 @@ exports.commentsService = {
     },
     deleteComment(userId, commentId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const user = yield usersQuery_repository_1.usersQueryRepository.findUserById(userId);
-            const comment = yield commentsQuery_repository_1.commentsQueryRepository.getCommentById(commentId);
+            const user = yield users_repository_1.usersRepository.findUserById(userId);
+            const comment = yield comments_repository_1.commentsRepository.getCommentById(commentId);
             if (!comment || !user) {
                 return {
                     status: resultStatus_type_1.ResultStatus.NotFound,
                     data: null
                 };
             }
-            if (comment.commentatorInfo.userId !== user.id) {
+            if (comment.commentatorInfo.userId !== user._id) {
                 return {
                     status: resultStatus_type_1.ResultStatus.Forbidden,
                     data: null

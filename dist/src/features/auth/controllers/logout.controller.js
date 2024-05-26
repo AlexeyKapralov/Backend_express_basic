@@ -15,7 +15,19 @@ const resultStatus_type_1 = require("../../../common/types/resultStatus.type");
 const http_status_codes_1 = require("http-status-codes");
 const logoutController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const refreshToken = req.cookies.refreshToken;
+    if (!refreshToken) {
+        res.status(http_status_codes_1.StatusCodes.UNAUTHORIZED).send();
+        return;
+    }
     const result = yield login_service_1.loginService.logout(refreshToken);
-    result.status === resultStatus_type_1.ResultStatus.Success ? res.status(http_status_codes_1.StatusCodes.NO_CONTENT).json() : res.status(http_status_codes_1.StatusCodes.UNAUTHORIZED).json();
+    if (result.status === resultStatus_type_1.ResultStatus.Success) {
+        res.status(http_status_codes_1.StatusCodes.NO_CONTENT).json();
+    }
+    if (result.status === resultStatus_type_1.ResultStatus.BadRequest) {
+        res.status(http_status_codes_1.StatusCodes.UNAUTHORIZED).json();
+    }
+    if (result.status === resultStatus_type_1.ResultStatus.Unauthorized) {
+        res.status(http_status_codes_1.StatusCodes.UNAUTHORIZED).json(result.errorMessage);
+    }
 });
 exports.logoutController = logoutController;

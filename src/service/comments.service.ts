@@ -2,15 +2,15 @@ import { ICommentViewModel } from '../features/comments/models/commentView.model
 import { ResultType } from '../common/types/result.type'
 import { ResultStatus } from '../common/types/resultStatus.type'
 import { ICommentInputModel } from '../features/comments/models/commentInput.model'
-import { usersQueryRepository } from '../repositories/users/usersQuery.repository'
-import { commentsQueryRepository } from '../repositories/comments/commentsQuery.repository'
 import { commentsRepository } from '../repositories/comments/comments.repository'
+import {usersRepository} from "../repositories/users/users.repository";
 
 export const commentsService = {
 
 	async updateComment(userId: string, commentId: string, data: ICommentInputModel): Promise<ResultType<ICommentViewModel | null>> {
-		const user = await usersQueryRepository.findUserById(userId)
-		const comment = await commentsQueryRepository.getCommentById(commentId)
+
+		const user = await usersRepository.findUserById(userId)
+		const comment = await commentsRepository.getCommentById(commentId)
 
 		if (!comment || !user) {
 			return {
@@ -19,7 +19,7 @@ export const commentsService = {
 			}
 		}
 
-		if (comment.commentatorInfo.userId !== user.id) {
+		if (comment.commentatorInfo.userId !== user._id) {
 			return {
 				status: ResultStatus.Forbidden,
 				data: null
@@ -41,8 +41,9 @@ export const commentsService = {
 		}
 	},
 	async deleteComment(userId: string, commentId: string): Promise<ResultType> {
-		const user = await usersQueryRepository.findUserById(userId)
-		const comment = await commentsQueryRepository.getCommentById(commentId)
+
+		const user = await usersRepository.findUserById(userId)
+		const comment = await commentsRepository.getCommentById(commentId)
 
 		if (!comment || !user) {
 			return {
@@ -51,7 +52,7 @@ export const commentsService = {
 			}
 		}
 
-		if (comment.commentatorInfo.userId !== user.id) {
+		if (comment.commentatorInfo.userId !== user._id) {
 			return {
 				status: ResultStatus.Forbidden,
 				data: null

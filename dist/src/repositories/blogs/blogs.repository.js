@@ -37,5 +37,13 @@ exports.blogsRepository = {
             const result = yield db_1.db.getCollection().blogsCollection.deleteOne({ _id: id });
             return result.deletedCount > 0;
         });
-    }
+    },
+    getBlogByID(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = yield db_1.db.getCollection().blogsCollection.findOne({
+                _id: id
+            });
+            return result ? result : undefined;
+        });
+    },
 };

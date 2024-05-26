@@ -21,7 +21,7 @@ export const inputValidationMiddleware = (
 	if (!errors.isEmpty()) {
 		res
 			.status(StatusCodes.BAD_REQUEST)
-			.json({ errorsMessages: errors.array({ onlyFirstError: true }) })
+			.send({ errorsMessages: errors.array({ onlyFirstError: true }) })
 	} else {
 		next()
 	}

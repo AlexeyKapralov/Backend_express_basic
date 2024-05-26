@@ -12,14 +12,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongodb_memory_server_1 = require("mongodb-memory-server");
 const db_1 = require("../../../src/db/db");
 const login_service_1 = require("../../../src/service/login.service");
-const usersQuery_repository_1 = require("../../../src/repositories/users/usersQuery.repository");
 const globals_1 = require("@jest/globals");
 const bcrypt_service_1 = require("../../../src/common/adapters/bcrypt.service");
 const userManager_test_1 = require("../../e2e/users/userManager.test");
 const authManager_test_1 = require("../../e2e/auth/authManager.test");
-const mongodb_1 = require("mongodb");
 const settings_1 = require("../../../src/common/config/settings");
 const resultStatus_type_1 = require("../../../src/common/types/resultStatus.type");
+const users_repository_1 = require("../../../src/repositories/users/users.repository");
 describe('Authentication User', () => {
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
         const mongod = yield mongodb_memory_server_1.MongoMemoryServer.create();
@@ -29,6 +28,9 @@ describe('Authentication User', () => {
     beforeEach(() => __awaiter(void 0, void 0, void 0, function* () {
         yield db_1.db.drop();
     }));
+    afterEach(() => __awaiter(void 0, void 0, void 0, function* () {
+        globals_1.jest.useRealTimers();
+    }));
     afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
         yield db_1.db.stop();
     }));
@@ -36,7 +38,7 @@ describe('Authentication User', () => {
         done();
     });
     it('should login user', () => __awaiter(void 0, void 0, void 0, function* () {
-        usersQuery_repository_1.usersQueryRepository.findUserWithPass = globals_1.jest.fn().mockImplementation(() => __awaiter(void 0, void 0, void 0, function* () {
+        users_repository_1.usersRepository.findUserWithPass = globals_1.jest.fn().mockImplementation(() => __awaiter(void 0, void 0, void 0, function* () {
             return {
                 _id: 'id',
                 login: 'login',
@@ -48,12 +50,13 @@ describe('Authentication User', () => {
                 isConfirmed: true
             };
         }));
-        bcrypt_service_1.bcryptService.comparePasswordsHash = globals_1.jest.fn().mockImplementation((reqPassPlainText, dbPassHash) => __awaiter(void 0, void 0, void 0, function* () {
+        bcrypt_service_1.bcryptService.comparePasswordsHash = globals_1.jest.fn()
+            .mockImplementation((reqPassPlainText, dbPassHash) => __awaiter(void 0, void 0, void 0, function* () {
             return true;
         }));
-        const result = yield login_service_1.loginService.loginUser({ loginOrEmail: 'login', password: '123' });
-        expect(usersQuery_repository_1.usersQueryRepository.findUserWithPass).toHaveBeenCalled();
-        expect(usersQuery_repository_1.usersQueryRepository.findUserWithPass).toHaveBeenCalledTimes(1);
+        const result = yield login_service_1.loginService.loginUser({ loginOrEmail: 'login', password: '123' }, 'Chrome', '0.0.0.1');
+        expect(users_repository_1.usersRepository.findUserWithPass).toHaveBeenCalled();
+        expect(users_repository_1.usersRepository.findUserWithPass).toHaveBeenCalledTimes(1);
         expect(result.data).toEqual({
             accessToken: expect.stringMatching(/^([A-Za-z0-9-_]+)\.([A-Za-z0-9-_]+)\.([A-Za-z0-9-_]+)$/),
             refreshToken: expect.stringMatching(/^([A-Za-z0-9-_]+)\.([A-Za-z0-9-_]+)\.([A-Za-z0-9-_]+)$/)
@@ -73,9 +76,7 @@ describe('Authentication User', () => {
         const tokens = yield authManager_test_1.authManagerTest.authUser(loginInputData);
         yield new Promise(resolve => setTimeout(resolve, 1000));
         const result = yield login_service_1.loginService.refreshToken(tokens.refreshToken);
-        const isBlocked = yield db_1.db.getCollection().blockListCollection.findOne({ refreshToken: tokens.refreshToken });
         expect(tokens.refreshToken).not.toBe(result.data.refreshToken);
-        expect(isBlocked).toEqual({ _id: expect.any(mongodb_1.ObjectId), refreshToken: tokens.refreshToken });
     }));
     it(`shouldn't update refresh token after expired time`, () => __awaiter(void 0, void 0, void 0, function* () {
         const user = {
@@ -91,13 +92,13 @@ describe('Authentication User', () => {
         const tokens = yield authManager_test_1.authManagerTest.authUser(loginInputData);
         globals_1.jest.useFakeTimers();
         let result;
-        setTimeout(() => __awaiter(void 0, void 0, void 0, function* () {
-            result = yield login_service_1.loginService.refreshToken(tokens.refreshToken);
-        }), 25000);
-        globals_1.jest.advanceTimersByTime(25000);
-        globals_1.jest.useRealTimers();
-        const isBlocked = yield db_1.db.getCollection().blockListCollection.findOne({ refreshToken: tokens.refreshToken });
+        yield new Promise(res => {
+            setTimeout(() => __awaiter(void 0, void 0, void 0, function* () {
+                result = yield login_service_1.loginService.refreshToken(tokens.refreshToken);
+                res(result);
+            }), 30000);
+            globals_1.jest.advanceTimersByTime(30000);
+        });
         expect(result.status).toBe(resultStatus_type_1.ResultStatus.Unauthorized);
-        expect(isBlocked).toEqual({ _id: expect.any(mongodb_1.ObjectId), refreshToken: tokens.refreshToken });
     }));
 });

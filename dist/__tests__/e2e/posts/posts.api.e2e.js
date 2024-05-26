@@ -121,7 +121,7 @@ describe('posts tests', () => {
         const accessToken = yield authManager_test_1.authManagerTest.createAndAuthUser();
         const res = yield (0, supertest_1.agent)(app_1.app)
             .post(settings_1.SETTINGS.PATH.POSTS)
-            .set({ authorization: `Bearer ${accessToken}` })
+            .set({ authorization: `Bearer ${accessToken.accessToken}` })
             .expect(http_status_codes_1.StatusCodes.BAD_REQUEST);
         expect(res.body).toEqual({
             'errorsMessages': [
@@ -145,7 +145,9 @@ describe('posts tests', () => {
         });
     }));
     it(`should create post with correct request body and bearer token`, () => __awaiter(void 0, void 0, void 0, function* () {
-        const accessToken = yield authManager_test_1.authManagerTest.createAndAuthUser();
+        const tokens = yield authManager_test_1.authManagerTest.createAndAuthUser();
+        let accessToken;
+        tokens ? accessToken = tokens.accessToken : accessToken = '';
         const createdBlog = yield blogsManager_test_1.blogsManagerTest.createBlog('default', accessToken);
         if (createdBlog) {
             const requestBody = {
@@ -158,7 +160,9 @@ describe('posts tests', () => {
         }
     }));
     it(`shouldn't get post by id with incorrect id`, () => __awaiter(void 0, void 0, void 0, function* () {
-        const accessToken = yield authManager_test_1.authManagerTest.createAndAuthUser();
+        const tokens = yield authManager_test_1.authManagerTest.createAndAuthUser();
+        let accessToken;
+        tokens ? accessToken = tokens.accessToken : accessToken = '';
         const createdBlog = yield blogsManager_test_1.blogsManagerTest.createBlog('default', accessToken);
         if (createdBlog) {
             const requestBody = {
@@ -174,7 +178,9 @@ describe('posts tests', () => {
         }
     }));
     it(`should get post by id`, () => __awaiter(void 0, void 0, void 0, function* () {
-        const accessToken = yield authManager_test_1.authManagerTest.createAndAuthUser();
+        const tokens = yield authManager_test_1.authManagerTest.createAndAuthUser();
+        let accessToken;
+        tokens ? accessToken = tokens.accessToken : accessToken = '';
         const createdBlog = yield blogsManager_test_1.blogsManagerTest.createBlog('default', accessToken);
         if (createdBlog) {
             const requestBody = {
@@ -190,7 +196,9 @@ describe('posts tests', () => {
         }
     }));
     it(`should update post by id`, () => __awaiter(void 0, void 0, void 0, function* () {
-        const accessToken = yield authManager_test_1.authManagerTest.createAndAuthUser();
+        const tokens = yield authManager_test_1.authManagerTest.createAndAuthUser();
+        let accessToken;
+        tokens ? accessToken = tokens.accessToken : accessToken = '';
         const createdBlog = yield blogsManager_test_1.blogsManagerTest.createBlog('default', accessToken);
         if (createdBlog) {
             const requestBody = {
@@ -213,8 +221,9 @@ describe('posts tests', () => {
     }));
     //тесты для delete post by id
     it(`should delete post`, () => __awaiter(void 0, void 0, void 0, function* () {
-        let accessToken = yield authManager_test_1.authManagerTest.createAndAuthUser();
-        !accessToken ? accessToken = '' : accessToken;
+        const tokens = yield authManager_test_1.authManagerTest.createAndAuthUser();
+        let accessToken;
+        (tokens) ? accessToken = tokens.accessToken : accessToken = '';
         const post = yield postsManager_test_1.postsManagerTest.createPost('default', accessToken);
         if (post) {
             yield postsManager_test_1.postsManagerTest.deletePost(post.id, accessToken);

@@ -10,14 +10,14 @@ export const rateLimitMiddleware = async (
 ) => {
 
     const ip = req.ip || ''
-    const url = req.baseUrl
+    const url = req.url
     const dateRequest = addSeconds(new Date(), -10)
-
 
     const limitRequest = await db.getCollection().rateLimitCollection.find({ip, url, date: {$gt: dateRequest}}).toArray()
 
-    if (limitRequest.length > 5) {
-        res.status(StatusCodes.TOO_MANY_REQUESTS).json()
+    if (limitRequest.length >= 5) {
+        res.status(StatusCodes.TOO_MANY_REQUESTS).send()
+        return
     }
     await db.getCollection().rateLimitCollection.insertOne({ip, url, date: new Date()})
     next()

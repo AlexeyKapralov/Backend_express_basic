@@ -17,7 +17,7 @@ const inputValidationMiddleware = (req, res, next) => {
     if (!errors.isEmpty()) {
         res
             .status(http_status_codes_1.StatusCodes.BAD_REQUEST)
-            .json({ errorsMessages: errors.array({ onlyFirstError: true }) });
+            .send({ errorsMessages: errors.array({ onlyFirstError: true }) });
     }
     else {
         next();

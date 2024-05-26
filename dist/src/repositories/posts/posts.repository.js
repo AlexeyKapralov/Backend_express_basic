@@ -11,13 +11,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.postsRepository = void 0;
 const mongodb_1 = require("mongodb");
-const blogsQuery_repository_1 = require("../blogs/blogsQuery.repository");
 const db_1 = require("../../db/db");
 const mappers_1 = require("../../common/utils/mappers");
+const blogs_repository_1 = require("../blogs/blogs.repository");
 exports.postsRepository = {
+    getPostById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = yield db_1.db.getCollection().postsCollection.findOne({
+                _id: id
+            });
+            return result ? result : undefined;
+        });
+    },
     createPost(body) {
         return __awaiter(this, void 0, void 0, function* () {
-            const foundBlog = yield blogsQuery_repository_1.blogsQueryRepository.getBlogByID(body.blogId);
+            const foundBlog = yield blogs_repository_1.blogsRepository.getBlogByID(body.blogId);
             if (foundBlog) {
                 const newPost = {
                     _id: new mongodb_1.ObjectId().toString(),
@@ -35,8 +43,7 @@ exports.postsRepository = {
     },
     updatePost(id, body) {
         return __awaiter(this, void 0, void 0, function* () {
-            //todo: здесь правильно ли что я обращаюсь к query репозиторию
-            const foundBlog = yield blogsQuery_repository_1.blogsQueryRepository.getBlogByID(body.blogId);
+            const foundBlog = yield blogs_repository_1.blogsRepository.getBlogByID(body.blogId);
             if (foundBlog) {
                 const result = yield db_1.db.getCollection().postsCollection.updateOne({
                     _id: id

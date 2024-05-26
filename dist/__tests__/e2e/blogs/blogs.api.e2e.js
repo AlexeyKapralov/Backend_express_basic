@@ -86,7 +86,9 @@ describe('blogs tests', () => {
         yield blogsManager_test_1.blogsManagerTest.createBlog('default', 'accessToken', http_status_codes_1.StatusCodes.UNAUTHORIZED);
     }));
     it(`shouldn't create blog with no correct data`, () => __awaiter(void 0, void 0, void 0, function* () {
-        const accessToken = yield authManager_test_1.authManagerTest.createAndAuthUser();
+        const tokens = yield authManager_test_1.authManagerTest.createAndAuthUser();
+        let accessToken;
+        tokens ? accessToken = tokens.accessToken : accessToken = '';
         const data = {
             'name': '',
             'description': '',
@@ -105,7 +107,9 @@ describe('blogs tests', () => {
         }
     }));
     it(`should create blog`, () => __awaiter(void 0, void 0, void 0, function* () {
-        const accessToken = yield authManager_test_1.authManagerTest.createAndAuthUser();
+        const tokens = yield authManager_test_1.authManagerTest.createAndAuthUser();
+        let accessToken;
+        tokens ? accessToken = tokens.accessToken : accessToken = '';
         const data = {
             'name': 'timma',
             'description': 'bbbbb',

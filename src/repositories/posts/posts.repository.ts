@@ -1,14 +1,21 @@
 import {IPostInputModel} from "../../features/posts/models/postInput.model";
 import {ObjectId} from "mongodb";
 import {IPostDbModel} from "../../features/posts/models/postDb.model";
-import {blogsQueryRepository} from "../blogs/blogsQuery.repository";
 import {db} from "../../db/db";
 import {getPostViewModel} from "../../common/utils/mappers";
 import {IPostViewModel} from "../../features/posts/models/postView.model";
+import {blogsRepository} from "../blogs/blogs.repository";
 
 export const postsRepository = {
+    async getPostById(id: string): Promise<IPostDbModel | undefined> {
+        const result = await db.getCollection().postsCollection.findOne({
+            _id: id
+        })
+        return result ? result : undefined
+    },
     async createPost(body: IPostInputModel): Promise<IPostViewModel | undefined> {
-        const foundBlog = await blogsQueryRepository.getBlogByID(body.blogId)
+
+        const foundBlog = await blogsRepository.getBlogByID(body.blogId)
 
         if (foundBlog) {
             const newPost: IPostDbModel = {
@@ -26,8 +33,7 @@ export const postsRepository = {
     },
     async updatePost(id: string, body: IPostInputModel): Promise<boolean> {
 
-        //todo: здесь правильно ли что я обращаюсь к query репозиторию
-        const foundBlog = await blogsQueryRepository.getBlogByID(body.blogId)
+        const foundBlog = await blogsRepository.getBlogByID(body.blogId)
 
         if (foundBlog) {
 

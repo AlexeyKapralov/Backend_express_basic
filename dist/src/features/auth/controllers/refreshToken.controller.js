@@ -16,6 +16,10 @@ const http_status_codes_1 = require("http-status-codes");
 const date_fns_1 = require("date-fns");
 const refreshTokenController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const refreshToken = req.cookies.refreshToken;
+    if (!refreshToken) {
+        res.status(http_status_codes_1.StatusCodes.UNAUTHORIZED).send();
+        return;
+    }
     const result = yield login_service_1.loginService.refreshToken(refreshToken);
     if (result.status === resultStatus_type_1.ResultStatus.Success) {
         res.status(http_status_codes_1.StatusCodes.OK)

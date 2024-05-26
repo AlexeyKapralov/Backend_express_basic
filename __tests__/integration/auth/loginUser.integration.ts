@@ -1,16 +1,15 @@
 import {MongoMemoryServer} from 'mongodb-memory-server'
 import {db} from '../../../src/db/db'
 import {loginService} from '../../../src/service/login.service'
-import {usersQueryRepository} from "../../../src/repositories/users/usersQuery.repository";
 import {jest} from "@jest/globals";
 import {bcryptService} from "../../../src/common/adapters/bcrypt.service";
 import {userManagerTest} from "../../e2e/users/userManager.test";
 import {authManagerTest} from "../../e2e/auth/authManager.test";
-import {ObjectId} from "mongodb";
 import {SETTINGS} from "../../../src/common/config/settings";
 import {ResultStatus} from "../../../src/common/types/resultStatus.type";
+import {usersRepository} from "../../../src/repositories/users/users.repository";
 
-describe('Authentication User', () => {
+describe('Login User', () => {
     beforeAll(async () => {
         const mongod = await MongoMemoryServer.create()
         const uri = mongod.getUri()
@@ -19,6 +18,10 @@ describe('Authentication User', () => {
 
     beforeEach(async () => {
         await db.drop()
+    })
+
+    afterEach(async () => {
+        jest.useRealTimers()
     })
 
     afterAll(async () => {
@@ -30,7 +33,7 @@ describe('Authentication User', () => {
     })
 
     it('should login user', async () => {
-        usersQueryRepository.findUserWithPass = jest.fn<typeof usersQueryRepository.findUserWithPass>().mockImplementation(async () => {
+        usersRepository.findUserWithPass = jest.fn<typeof usersRepository.findUserWithPass>().mockImplementation(async () => {
             return {
                 _id: 'id',
                 login: 'login',
@@ -43,15 +46,16 @@ describe('Authentication User', () => {
             }
         })
 
-        bcryptService.comparePasswordsHash = jest.fn<typeof bcryptService.comparePasswordsHash>().mockImplementation(async (reqPassPlainText: string, dbPassHash: string) => {
-            return true
+        bcryptService.comparePasswordsHash = jest.fn<typeof bcryptService.comparePasswordsHash>()
+            .mockImplementation(async (reqPassPlainText: string, dbPassHash: string) => {
+                return true
         })
 
-        const result = await loginService.loginUser({loginOrEmail: 'login', password: '123'})
+        const result = await loginService.loginUser({loginOrEmail: 'login', password: '123'}, 'Chrome', '0.0.0.1')
 
-        expect(usersQueryRepository.findUserWithPass).toHaveBeenCalled()
+        expect(usersRepository.findUserWithPass).toHaveBeenCalled()
 
-        expect(usersQueryRepository.findUserWithPass).toHaveBeenCalledTimes(1)
+        expect(usersRepository.findUserWithPass).toHaveBeenCalledTimes(1)
 
 
         expect(result.data).toEqual({
@@ -81,10 +85,7 @@ describe('Authentication User', () => {
         await new Promise(resolve => setTimeout(resolve, 1000))
         const result = await loginService.refreshToken(tokens!.refreshToken)
 
-        const isBlocked = await db.getCollection().blockListCollection.findOne({refreshToken: tokens!.refreshToken})
-
         expect(tokens!.refreshToken).not.toBe(result.data!.refreshToken)
-        expect(isBlocked).toEqual({_id: expect.any(ObjectId), refreshToken: tokens!.refreshToken})
 
     })
 
@@ -106,20 +107,16 @@ describe('Authentication User', () => {
         const tokens = await authManagerTest.authUser(loginInputData)
 
         jest.useFakeTimers()
-
         let result
-        setTimeout(async () => {
-            result = await loginService.refreshToken(tokens!.refreshToken)
-        }, 25000)
-
-        jest.advanceTimersByTime(25000)
-        jest.useRealTimers()
-
-
-        const isBlocked = await db.getCollection().blockListCollection.findOne({refreshToken: tokens!.refreshToken})
+        await new Promise(res => {
+            setTimeout(async () => {
+                result = await loginService.refreshToken(tokens!.refreshToken)
+                res(result)
+            }, 30000)
+            jest.advanceTimersByTime(30000)
+        })
 
         expect(result!.status).toBe(ResultStatus.Unauthorized)
-        expect(isBlocked).toEqual({_id: expect.any(ObjectId), refreshToken: tokens!.refreshToken})
 
     })
 })

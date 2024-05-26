@@ -13,17 +13,23 @@ exports.commentsRepository = void 0;
 const mongodb_1 = require("mongodb");
 const db_1 = require("../../db/db");
 exports.commentsRepository = {
+    getCommentById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = yield db_1.db.getCollection().commentsCollection.findOne({ _id: id });
+            return result ? result : undefined;
+        });
+    },
     createComment(user, post, data) {
         return __awaiter(this, void 0, void 0, function* () {
             const newComment = {
                 _id: new mongodb_1.ObjectId().toString(),
                 content: data.content,
                 commentatorInfo: {
-                    userId: user.id,
+                    userId: user._id,
                     userLogin: user.login
                 },
                 createdAt: new Date().toISOString(),
-                postId: post.id
+                postId: post._id
             };
             const result = yield db_1.db.getCollection().commentsCollection.insertOne(newComment);
             return result.acknowledged ? newComment : undefined;
@@ -32,9 +38,11 @@ exports.commentsRepository = {
     updateComment(commentId, data) {
         return __awaiter(this, void 0, void 0, function* () {
             const isUpdatedComment = yield db_1.db.getCollection().commentsCollection
-                .updateOne({ _id: commentId }, { $set: {
+                .updateOne({ _id: commentId }, {
+                $set: {
                     content: data.content
-                } });
+                }
+            });
             return isUpdatedComment.modifiedCount > 0;
         });
     },

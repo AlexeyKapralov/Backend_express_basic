@@ -16,6 +16,29 @@ const uuid_1 = require("uuid");
 const date_fns_1 = require("date-fns");
 const settings_1 = require("../../common/config/settings");
 exports.usersRepository = {
+    findUserWithPass(loginOrEmail) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = yield db_1.db.getCollection().usersCollection.findOne({
+                $or: [{ login: loginOrEmail }, { email: loginOrEmail }]
+            });
+            return result !== null ? result : undefined;
+        });
+    },
+    findUserByLoginOrEmail(loginOrEmail) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = yield db_1.db.getCollection().usersCollection.findOne({
+                $or: [{ login: loginOrEmail }, { email: loginOrEmail }]
+            });
+            return result !== null ? result : undefined;
+        });
+    },
+    findUserById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const res = yield db_1.db.getCollection().usersCollection
+                .findOne({ _id: id });
+            return res ? res : undefined;
+        });
+    },
     createUser(data_1, hash_1) {
         return __awaiter(this, arguments, void 0, function* (data, hash, admin = 'noAdmin') {
             const user = {

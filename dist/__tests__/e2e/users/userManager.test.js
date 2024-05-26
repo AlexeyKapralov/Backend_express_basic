@@ -23,13 +23,17 @@ const getRandomName = () => {
     return names[randomIndex];
 };
 exports.userManagerTest = {
+    /**
+     * login: 'login' password: 'qwert1234' email: 'asdf@mail.ru'
+     *
+     * **/
     createUser() {
         return __awaiter(this, arguments, void 0, function* (data = 'default', auth = '', expected_status = http_status_codes_1.StatusCodes.CREATED) {
             if (data === 'default') {
                 data = {
                     login: 'login',
                     password: 'qwert1234',
-                    email: 'asdf@mail.ru'
+                    email: 'as@mail.ru'
                 };
             }
             const buff = Buffer.from(auth, 'utf-8');

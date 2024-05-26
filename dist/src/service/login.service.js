@@ -18,9 +18,9 @@ const db_1 = require("../db/db");
 const uuid_1 = require("uuid");
 const date_fns_1 = require("date-fns");
 const settings_1 = require("../common/config/settings");
-const usersQuery_repository_1 = require("../repositories/users/usersQuery.repository");
 const jwt_service_1 = require("../common/adapters/jwt.service");
-const blockList_repository_1 = require("../repositories/blockList/blockList.repository");
+const devices_repository_1 = require("../repositories/devices/devices.repository");
+const devicesService_1 = require("./devicesService");
 exports.loginService = {
     registrationUser(data) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -63,7 +63,7 @@ exports.loginService = {
     },
     resendConfirmationCode(email) {
         return __awaiter(this, void 0, void 0, function* () {
-            const user = yield usersQuery_repository_1.usersQueryRepository.findUserByLoginOrEmail(email);
+            const user = yield users_repository_1.usersRepository.findUserByLoginOrEmail(email);
             if (user) {
                 const code = (0, uuid_1.v4)();
                 const confirmationCodeExpiredNew = (0, date_fns_1.add)(new Date(), settings_1.SETTINGS.EXPIRED_LIFE);
@@ -97,9 +97,9 @@ exports.loginService = {
                 };
         });
     },
-    loginUser(data) {
+    loginUser(data, deviceName, ip) {
         return __awaiter(this, void 0, void 0, function* () {
-            const user = yield usersQuery_repository_1.usersQueryRepository.findUserWithPass(data.loginOrEmail);
+            const user = yield users_repository_1.usersRepository.findUserWithPass(data.loginOrEmail);
             if (!user) {
                 return {
                     data: null,
@@ -108,77 +108,112 @@ exports.loginService = {
             }
             else {
                 const isTrueHash = yield bcrypt_service_1.bcryptService.comparePasswordsHash(data.password, user.password);
-                const accessToken = jwt_service_1.jwtService.createAccessToken(user._id);
-                const refreshToken = jwt_service_1.jwtService.createRefreshToken(user._id);
-                return {
-                    status: isTrueHash ? resultStatus_type_1.ResultStatus.Success : resultStatus_type_1.ResultStatus.BadRequest,
-                    data: isTrueHash ? { accessToken, refreshToken } : null
+                const deviceId = yield devices_repository_1.devicesRepository.findDeviceId(user._id, ip, deviceName);
+                const device = {
+                    userId: user._id,
+                    deviceId: deviceId === null ? (0, uuid_1.v4)() : deviceId,
+                    deviceName: deviceName,
+                    ip: ip
                 };
+                const accessToken = jwt_service_1.jwtService.createAccessToken(user._id);
+                const refreshToken = jwt_service_1.jwtService.createRefreshToken(device);
+                if (isTrueHash) {
+                    const refreshTokenPayload = jwt_service_1.jwtService.getPayloadFromRefreshToken(refreshToken);
+                    if (yield devices_repository_1.devicesRepository.createOrUpdateDevice(refreshTokenPayload)) {
+                        return {
+                            status: resultStatus_type_1.ResultStatus.Success,
+                            data: { accessToken, refreshToken }
+                        };
+                    }
+                    else {
+                        return {
+                            status: resultStatus_type_1.ResultStatus.BadRequest,
+                            data: null
+                        };
+                    }
+                }
+                else {
+                    return {
+                        status: resultStatus_type_1.ResultStatus.BadRequest,
+                        data: null
+                    };
+                }
             }
         });
     },
     logout(refreshToken) {
         return __awaiter(this, void 0, void 0, function* () {
-            const isValidToken = jwt_service_1.jwtService.checkRefreshToken(refreshToken);
-            const userId = jwt_service_1.jwtService.getUserIdByToken(refreshToken);
-            const isBlocked = yield blockList_repository_1.blockListRepository.checkTokenIsBlocked(refreshToken);
-            if (isValidToken && !isBlocked) {
-                const isAddInBlock = yield blockList_repository_1.blockListRepository.addRefreshTokenInBlackList(refreshToken);
-                return isAddInBlock
-                    ? {
-                        status: resultStatus_type_1.ResultStatus.Success,
-                        data: null
-                    }
-                    : {
-                        status: resultStatus_type_1.ResultStatus.BadRequest,
-                        data: null
-                    };
+            const deviceData = jwt_service_1.jwtService.getPayloadFromRefreshToken(refreshToken);
+            if (!deviceData) {
+                return {
+                    status: resultStatus_type_1.ResultStatus.Unauthorized,
+                    errorMessage: 'invalid refresh token',
+                    data: null
+                };
             }
-            return {
-                status: resultStatus_type_1.ResultStatus.NotFound,
-                data: null
-            };
+            const currentDevice = yield devicesService_1.devicesService.getDevice(deviceData);
+            if (!deviceData || currentDevice.status === resultStatus_type_1.ResultStatus.NotFound) {
+                return {
+                    status: resultStatus_type_1.ResultStatus.Unauthorized,
+                    errorMessage: 'invalid refresh token',
+                    data: null
+                };
+            }
+            const isDeleted = yield devices_repository_1.devicesRepository.deleteDeviceById(deviceData.deviceId);
+            return isDeleted
+                ? {
+                    status: resultStatus_type_1.ResultStatus.Success,
+                    data: null
+                }
+                : {
+                    status: resultStatus_type_1.ResultStatus.BadRequest,
+                    data: null
+                };
         });
     },
     refreshToken(refreshToken) {
         return __awaiter(this, void 0, void 0, function* () {
-            const isValidToken = jwt_service_1.jwtService.checkRefreshToken(refreshToken);
-            const BlockList = yield db_1.db.getCollection().blockListCollection.find({ refreshToken: refreshToken }).toArray();
-            if (BlockList.length > 0) {
+            const deviceInfo = jwt_service_1.jwtService.getPayloadFromRefreshToken(refreshToken);
+            if (!deviceInfo) {
                 return {
-                    status: resultStatus_type_1.ResultStatus.Forbidden,
+                    status: resultStatus_type_1.ResultStatus.Unauthorized,
                     data: null
                 };
             }
-            if (!isValidToken) {
-                const result = yield db_1.db.getCollection().blockListCollection.insertOne({ refreshToken: refreshToken });
-                if (result.acknowledged) {
-                    return {
-                        status: resultStatus_type_1.ResultStatus.Unauthorized,
-                        data: null
-                    };
-                }
-                else {
-                    return {
-                        status: resultStatus_type_1.ResultStatus.BadRequest,
-                        errorMessage: 'problem with add token in document',
-                        data: null
-                    };
-                }
-            }
-            const userId = jwt_service_1.jwtService.getUserIdByToken(refreshToken);
-            if (!userId) {
+            let device = yield devices_repository_1.devicesRepository.findDevice(deviceInfo);
+            if (!device) {
                 return {
-                    status: resultStatus_type_1.ResultStatus.NotFound,
+                    status: resultStatus_type_1.ResultStatus.Unauthorized,
                     data: null
                 };
             }
-            const result = yield db_1.db.getCollection().blockListCollection.insertOne({ refreshToken: refreshToken });
-            const newAccessToken = jwt_service_1.jwtService.createAccessToken(userId);
-            const newRefreshToken = jwt_service_1.jwtService.createRefreshToken(userId);
+            if (deviceInfo) {
+                device = yield db_1.db.getCollection().devices.findOne({
+                    deviceId: deviceInfo.deviceId,
+                    ip: deviceInfo.ip,
+                    iat: deviceInfo.iat,
+                    expirationDate: deviceInfo.expirationDate,
+                    userId: deviceInfo.userId
+                });
+            }
+            if (device) {
+                const newAccessToken = jwt_service_1.jwtService.createAccessToken(device.userId);
+                const newRefreshToken = jwt_service_1.jwtService.createRefreshToken({
+                    userId: device.userId,
+                    deviceName: device.deviceName,
+                    deviceId: device.deviceId,
+                    ip: device.ip
+                });
+                const newDevice = jwt_service_1.jwtService.getPayloadFromRefreshToken(newRefreshToken);
+                yield devices_repository_1.devicesRepository.createOrUpdateDevice(newDevice);
+                return {
+                    status: resultStatus_type_1.ResultStatus.Success,
+                    data: { accessToken: newAccessToken, refreshToken: newRefreshToken }
+                };
+            }
             return {
-                status: resultStatus_type_1.ResultStatus.Success,
-                data: { accessToken: newAccessToken, refreshToken: newRefreshToken }
+                status: resultStatus_type_1.ResultStatus.Unauthorized,
+                data: null
             };
         });
     }

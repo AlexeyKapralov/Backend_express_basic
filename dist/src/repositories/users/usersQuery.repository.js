@@ -51,27 +51,5 @@ exports.usersQueryRepository = {
                 .findOne({ _id: id });
             return res ? (0, mappers_1.getUserViewModel)(res) : undefined;
         });
-    },
-    findUserByConfirmationCode(code) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const user = yield db_1.db.getCollection().usersCollection.findOne({ confirmationCode: code });
-            return user ? user : undefined;
-        });
-    },
-    findUserByLoginOrEmail(loginOrEmail) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const result = yield db_1.db.getCollection().usersCollection.findOne({
-                $or: [{ login: loginOrEmail }, { email: loginOrEmail }]
-            });
-            return result !== null ? result : undefined;
-        });
-    },
-    findUserWithPass(loginOrEmail) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const result = yield db_1.db.getCollection().usersCollection.findOne({
-                $or: [{ login: loginOrEmail }, { email: loginOrEmail }]
-            });
-            return result !== null ? result : undefined;
-        });
     }
 };

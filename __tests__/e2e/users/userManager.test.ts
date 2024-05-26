@@ -16,6 +16,11 @@ const getRandomName = () => {
 }
 
 export const userManagerTest = {
+
+    /**
+     * login: 'login' password: 'qwert1234' email: 'asdf@mail.ru'
+     *
+     * **/
     async createUser(
         data: IUserInputModel | 'default' = 'default',
         auth: string = '',
@@ -25,7 +30,7 @@ export const userManagerTest = {
             data = {
                 login: 'login',
                 password: 'qwert1234',
-                email: 'asdf@mail.ru'
+                email: 'as@mail.ru'
             }
         }
         const buff = Buffer.from(auth, 'utf-8')

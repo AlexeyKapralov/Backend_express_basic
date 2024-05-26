@@ -94,7 +94,9 @@ describe('blogs tests', () => {
 	})
 
 	it(`shouldn't create blog with no correct data`, async () => {
-		const accessToken = await authManagerTest.createAndAuthUser()
+		const tokens = await authManagerTest.createAndAuthUser()
+		let accessToken
+		tokens ?  accessToken = tokens.accessToken : accessToken = ''
 		const data: IBlogInputModel = {
 			'name': '',
 			'description': '',
@@ -115,7 +117,9 @@ describe('blogs tests', () => {
 		}
 	})
 	it(`should create blog`, async () => {
-		const accessToken = await authManagerTest.createAndAuthUser()
+		const tokens = await authManagerTest.createAndAuthUser()
+		let accessToken
+		tokens ?  accessToken = tokens.accessToken : accessToken = ''
 		const data: IBlogInputModel = {
 			'name': 'timma',
 			'description': 'bbbbb',

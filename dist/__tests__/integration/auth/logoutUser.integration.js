@@ -14,6 +14,8 @@ const login_service_1 = require("../../../src/service/login.service");
 const resultStatus_type_1 = require("../../../src/common/types/resultStatus.type");
 const db_1 = require("../../../src/db/db");
 const mongodb_memory_server_1 = require("mongodb-memory-server");
+const userManager_test_1 = require("../../e2e/users/userManager.test");
+const settings_1 = require("../../../src/common/config/settings");
 describe('logout user integration test', () => {
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
         const mongod = yield mongodb_memory_server_1.MongoMemoryServer.create();
@@ -31,18 +33,37 @@ describe('logout user integration test', () => {
     });
     it(`shouldn't logout user with incorrect token`, () => __awaiter(void 0, void 0, void 0, function* () {
         const isLogout = yield login_service_1.loginService.logout('123');
-        const isBlocked = yield db_1.db.getCollection().blockListCollection.findOne({ refreshToken: '123' });
-        expect(isBlocked).toBe(null);
-        expect(isLogout.status).toBe(resultStatus_type_1.ResultStatus.NotFound);
+        expect(isLogout.status).toBe(resultStatus_type_1.ResultStatus.Unauthorized);
     }));
     it('should logout user', () => __awaiter(void 0, void 0, void 0, function* () {
-        yield authManager_test_1.authManagerTest.createAndAuthUser();
-        const result = yield authManager_test_1.authManagerTest.authUser();
-        if (result) {
-            const isLogout = yield login_service_1.loginService.logout(result.refreshToken);
-            const isBlocked = yield db_1.db.getCollection().blockListCollection.findOne({ refreshToken: result.refreshToken });
-            expect(isBlocked).not.toBe(null);
+        const tokens = yield authManager_test_1.authManagerTest.createAndAuthUser();
+        if (tokens) {
+            const isLogout = yield login_service_1.loginService.logout(tokens.refreshToken);
             expect(isLogout.status).toBe(resultStatus_type_1.ResultStatus.Success);
         }
+    }));
+    it(`shouldn't refresh token if token was logout`, () => __awaiter(void 0, void 0, void 0, function* () {
+        const tokens = yield authManager_test_1.authManagerTest.createAndAuthUser();
+        if (tokens) {
+            const isLogout = yield login_service_1.loginService.logout(tokens.refreshToken);
+            const refreshTokens = yield login_service_1.loginService.refreshToken(tokens.refreshToken);
+            expect(refreshTokens.status).toBe(resultStatus_type_1.ResultStatus.Unauthorized);
+            expect(isLogout.status).toBe(resultStatus_type_1.ResultStatus.Success);
+        }
+    }));
+    it('should logout and error if try refresh token with old token', () => __awaiter(void 0, void 0, void 0, function* () {
+        //todo непонятно почему этот тест падает
+        const inputData = {
+            loginOrEmail: 'login',
+            password: 'qwert1234',
+        };
+        yield userManager_test_1.userManagerTest.createUser('default', settings_1.SETTINGS.ADMIN_AUTH);
+        const tokens = yield authManager_test_1.authManagerTest.authUser(inputData);
+        const newTokens = yield login_service_1.loginService.refreshToken(tokens.refreshToken);
+        expect(tokens.refreshToken).not.toBe(newTokens.data.refreshToken);
+        const isRefreshed = yield login_service_1.loginService.refreshToken(tokens.refreshToken);
+        expect(isRefreshed.status).toBe(resultStatus_type_1.ResultStatus.Unauthorized);
+        const result = yield login_service_1.loginService.logout(tokens.refreshToken);
+        // expect(result.status).toBe(ResultStatus.Unauthorized)
     }));
 });

@@ -21,9 +21,9 @@ exports.authManagerTest = {
      * 'password': '123456',
      * 'email': 'asdasdas@e.com'
      */
-    //todo стоит переписать с возвратом refresh token и без зависимости от api (сразу работа с базой)
+    //todo стоит переписать без зависимости от api (сразу работа с базой)
     createAndAuthUser() {
-        return __awaiter(this, arguments, void 0, function* (loginData = 'default', newUserData = 'default', expectedStatus = http_status_codes_1.StatusCodes.OK) {
+        return __awaiter(this, arguments, void 0, function* (loginData = 'default', newUserData = 'default', expectedStatus = http_status_codes_1.StatusCodes.OK, userAgent = '') {
             if (newUserData === 'default') {
                 newUserData = {
                     'login': 'alexx123',
@@ -41,6 +41,7 @@ exports.authManagerTest = {
                     };
                     res = yield (0, supertest_1.agent)(app_1.app)
                         .post(`${settings_1.SETTINGS.PATH.AUTH}/login`)
+                        .set('User-Agent', userAgent)
                         .send(loginData)
                         .expect(expectedStatus);
                     break;
@@ -48,12 +49,14 @@ exports.authManagerTest = {
                 case null: {
                     res = yield (0, supertest_1.agent)(app_1.app)
                         .post(`${settings_1.SETTINGS.PATH.AUTH}/login`)
+                        .set('User-Agent', userAgent)
                         .expect(expectedStatus);
                     break;
                 }
                 default: {
                     res = yield (0, supertest_1.agent)(app_1.app)
                         .post(`${settings_1.SETTINGS.PATH.AUTH}/login`)
+                        .set('User-Agent', userAgent)
                         .send(loginData)
                         .expect(expectedStatus);
                 }
@@ -64,14 +67,16 @@ exports.authManagerTest = {
                 });
                 const getUserByToken = yield (0, supertest_1.agent)(app_1.app)
                     .get(`${settings_1.SETTINGS.PATH.AUTH}/me`)
-                    .set({ authorization: `Bearer ${res.body.accessToken}`
-                });
+                    .set({ authorization: `Bearer ${res.body.accessToken}` });
                 expect(getUserByToken.body).toEqual({
                     'email': newUserData.email,
                     'login': newUserData.login,
                     'userId': expect.any(String)
                 });
-                return res.body.accessToken;
+                return {
+                    refreshToken: res.header['set-cookie'][0].split('; ')[0].replace('refreshToken=', ''),
+                    accessToken: res.body.accessToken
+                };
             }
             else {
                 return undefined;
@@ -79,7 +84,7 @@ exports.authManagerTest = {
         });
     },
     authUser() {
-        return __awaiter(this, arguments, void 0, function* (loginData = 'default', expectedStatus = http_status_codes_1.StatusCodes.OK) {
+        return __awaiter(this, arguments, void 0, function* (loginData = 'default', expectedStatus = http_status_codes_1.StatusCodes.OK, userAgent = '') {
             let res;
             if (loginData === 'default') {
                 loginData = {
@@ -88,12 +93,14 @@ exports.authManagerTest = {
                 };
                 res = yield (0, supertest_1.agent)(app_1.app)
                     .post(`${settings_1.SETTINGS.PATH.AUTH}/login`)
+                    .set('User-Agent', userAgent)
                     .send(loginData)
                     .expect(expectedStatus);
             }
             else {
                 res = yield (0, supertest_1.agent)(app_1.app)
                     .post(`${settings_1.SETTINGS.PATH.AUTH}/login`)
+                    .set('User-Agent', userAgent)
                     .send(loginData)
                     .expect(expectedStatus);
             }

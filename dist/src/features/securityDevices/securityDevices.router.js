@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.securityDevicesRouter = void 0;
+const express_1 = require("express");
+const getSecurityDevices_controller_1 = require("./controllers/getSecurityDevices.controller");
+const deleteSecurityDevices_controller_1 = require("./controllers/deleteSecurityDevices.controller");
+const deleteSecurityDeviceById_controller_1 = require("./controllers/deleteSecurityDeviceById.controller");
+exports.securityDevicesRouter = (0, express_1.Router)({});
+exports.securityDevicesRouter.get(`/devices`, getSecurityDevices_controller_1.getSecurityDevicesController);
+exports.securityDevicesRouter.delete(`/devices`, deleteSecurityDevices_controller_1.deleteSecurityDevicesController);
+exports.securityDevicesRouter.delete(`/devices/:deviceId`, deleteSecurityDeviceById_controller_1.deleteSecurityDeviceByIdController);

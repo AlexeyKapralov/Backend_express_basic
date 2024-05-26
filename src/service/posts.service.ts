@@ -3,12 +3,11 @@ import { postsRepository } from '../repositories/posts/posts.repository'
 import { ICommentInputModel } from '../features/comments/models/commentInput.model'
 import { ResultType } from '../common/types/result.type'
 import { ICommentViewModel } from '../features/comments/models/commentView.model'
-import { postsQueryRepository } from '../repositories/posts/postsQuery.repository'
 import { commentsRepository } from '../repositories/comments/comments.repository'
 import { ResultStatus } from '../common/types/resultStatus.type'
-import { usersQueryRepository } from '../repositories/users/usersQuery.repository'
 import { getCommentView } from '../common/utils/mappers'
 import { IPostViewModel } from '../features/posts/models/postView.model'
+import {usersRepository} from "../repositories/users/users.repository";
 
 export const postsService = {
 	async createPost(body: IPostInputModel): Promise<ResultType<IPostViewModel | null>> {
@@ -46,8 +45,8 @@ export const postsService = {
 			}
 	},
 	async createComment(userId: string, postId: string, body: ICommentInputModel): Promise<ResultType<ICommentViewModel | null>> {
-		const post = await postsQueryRepository.getPostById(postId)
-		const user = await usersQueryRepository.findUserById(userId)
+		const post = await postsRepository.getPostById(postId)
+		const user = await usersRepository.findUserById(userId)
 
 		if (post && user) {
 			const res = await commentsRepository.createComment(user, post, body)

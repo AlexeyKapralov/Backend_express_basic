@@ -57,8 +57,8 @@ exports.db = {
             blogsCollection: this.getDbName().collection('blogs'),
             postsCollection: this.getDbName().collection('posts'),
             commentsCollection: this.getDbName().collection('comments'),
-            blockListCollection: this.getDbName().collection('blockList'),
-            rateLimitCollection: this.getDbName().collection('rateLimit')
+            rateLimitCollection: this.getDbName().collection('rateLimit'),
+            devices: this.getDbName().collection('devices')
         };
     }
 };

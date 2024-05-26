@@ -19,7 +19,7 @@ const jwt_service_1 = require("../../../src/common/adapters/jwt.service");
 const resultStatus_type_1 = require("../../../src/common/types/resultStatus.type");
 const comments_service_1 = require("../../../src/service/comments.service");
 describe('comments integration tests', () => {
-    let accessToken;
+    let tokens;
     let blog;
     let post;
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
@@ -29,9 +29,9 @@ describe('comments integration tests', () => {
     }));
     beforeEach(() => __awaiter(void 0, void 0, void 0, function* () {
         yield db_1.db.drop();
-        accessToken = yield authManager_test_1.authManagerTest.createAndAuthUser();
-        blog = yield blogsManager_test_1.blogsManagerTest.createBlog('default', accessToken ? accessToken : ' ');
-        post = yield postsManager_test_1.postsManagerTest.createPost('default', accessToken ? accessToken : ' ');
+        tokens = yield authManager_test_1.authManagerTest.createAndAuthUser();
+        blog = yield blogsManager_test_1.blogsManagerTest.createBlog('default', tokens.accessToken ? tokens.accessToken : ' ');
+        post = yield postsManager_test_1.postsManagerTest.createPost('default', tokens.accessToken ? tokens.accessToken : ' ');
     }));
     afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
         yield db_1.db.stop();
@@ -43,7 +43,7 @@ describe('comments integration tests', () => {
         const body = {
             content: 'aaaa'
         };
-        const userId = jwt_service_1.jwtService.getUserIdByToken(accessToken);
+        const userId = jwt_service_1.jwtService.getUserIdByToken(tokens.accessToken);
         const result = yield posts_service_1.postsService.createComment(userId, post.id, body);
         expect(result).toEqual({
             status: resultStatus_type_1.ResultStatus.Success,
@@ -62,7 +62,7 @@ describe('comments integration tests', () => {
         const body = {
             content: 'aaabbb'
         };
-        const userId = jwt_service_1.jwtService.getUserIdByToken(accessToken);
+        const userId = jwt_service_1.jwtService.getUserIdByToken(tokens.accessToken);
         const result = yield posts_service_1.postsService.createComment(userId, post.id, body);
         const newBody = {
             content: 'ccc'
@@ -77,7 +77,7 @@ describe('comments integration tests', () => {
         const body = {
             content: 'aaabbb'
         };
-        const userId = jwt_service_1.jwtService.getUserIdByToken(accessToken);
+        const userId = jwt_service_1.jwtService.getUserIdByToken(tokens.accessToken);
         const result = yield posts_service_1.postsService.createComment(userId, post.id, body);
         const newBody = {
             content: 'ccc'
@@ -92,7 +92,7 @@ describe('comments integration tests', () => {
         const body = {
             content: 'aaabbb'
         };
-        const userId = jwt_service_1.jwtService.getUserIdByToken(accessToken);
+        const userId = jwt_service_1.jwtService.getUserIdByToken(tokens.accessToken);
         const result = yield posts_service_1.postsService.createComment(userId, post.id, body);
         let isDeleted;
         if (result.data !== null) {
@@ -104,7 +104,7 @@ describe('comments integration tests', () => {
         const body = {
             content: 'aaabbb'
         };
-        const userId = jwt_service_1.jwtService.getUserIdByToken(accessToken);
+        const userId = jwt_service_1.jwtService.getUserIdByToken(tokens.accessToken);
         const result = yield posts_service_1.postsService.createComment(userId, post.id, body);
         if (result.data !== null) {
             yield comments_service_1.commentsService.deleteComment(userId, result.data.id);

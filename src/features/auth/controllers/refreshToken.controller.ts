@@ -7,6 +7,11 @@ import {addSeconds} from "date-fns";
 export const refreshTokenController = async (req: Request, res: Response) => {
     const refreshToken = req.cookies.refreshToken
 
+    if (!refreshToken) {
+        res.status(StatusCodes.UNAUTHORIZED).send()
+        return
+    }
+
     const result = await loginService.refreshToken(refreshToken)
     if (result.status === ResultStatus.Success) {
         res.status(StatusCodes.OK)

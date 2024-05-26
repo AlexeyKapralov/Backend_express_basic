@@ -7,6 +7,25 @@ import { add } from 'date-fns'
 import { SETTINGS } from '../../common/config/settings'
 
 export const usersRepository = {
+	async findUserWithPass(loginOrEmail: string): Promise<IUserDbModel | undefined> {
+		const result = await db.getCollection().usersCollection.findOne({
+				$or: [{ login: loginOrEmail }, { email: loginOrEmail }]
+			}
+		)
+		return result !== null ? result : undefined
+	},
+	async findUserByLoginOrEmail(loginOrEmail: string): Promise<IUserDbModel | undefined> {
+		const result = await db.getCollection().usersCollection.findOne({
+				$or: [{ login: loginOrEmail }, { email: loginOrEmail }]
+			}
+		)
+		return result !== null ? result : undefined
+	},
+	async findUserById(id: string): Promise<IUserDbModel | undefined> {
+		const res = await db.getCollection().usersCollection
+			.findOne({ _id: id })
+		return res ? res : undefined
+	},
 	async createUser(data: IUserInputModel, hash: string, admin: 'admin' | 'noAdmin' = 'noAdmin') {
 		const user: IUserDbModel = {
 			_id: new ObjectId().toString(),

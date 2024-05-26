@@ -24,8 +24,7 @@ exports.loginValidation = (0, express_validator_1.body)(['login'])
 }));
 exports.loginOrEmailValidation = (0, express_validator_1.body)(['loginOrEmail'])
     .trim()
-    .isLength({ min: 3, max: 10 })
-    .matches('^[a-zA-Z0-9_-]*$')
+    .isLength({ min: 3, max: 20 })
     .exists();
 exports.passwordValidation = (0, express_validator_1.body)('password')
     .trim()

@@ -6,7 +6,20 @@ import {StatusCodes} from "http-status-codes";
 export const logoutController = async (req: Request, res: Response) => {
     const refreshToken = req.cookies.refreshToken
 
+    if (!refreshToken) {
+        res.status(StatusCodes.UNAUTHORIZED).send()
+        return
+    }
+
     const result = await loginService.logout(refreshToken)
 
-    result.status === ResultStatus.Success ? res.status(StatusCodes.NO_CONTENT).json() : res.status(StatusCodes.UNAUTHORIZED).json()
+    if (result.status === ResultStatus.Success) {
+        res.status(StatusCodes.NO_CONTENT).json()
+    }
+    if (result.status === ResultStatus.BadRequest) {
+        res.status(StatusCodes.UNAUTHORIZED).json()
+    }
+    if (result.status === ResultStatus.Unauthorized) {
+        res.status(StatusCodes.UNAUTHORIZED).json(result.errorMessage)
+    }
 }

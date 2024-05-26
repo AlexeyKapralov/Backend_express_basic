@@ -5,7 +5,6 @@ import { usersRepository } from '../repositories/users/users.repository'
 import { getUserViewModel } from '../common/utils/mappers'
 import { ResultType } from '../common/types/result.type'
 import { ResultStatus } from '../common/types/resultStatus.type'
-import {usersQueryRepository} from "../repositories/users/usersQuery.repository";
 
 export const usersService = {
 		async createUser(
@@ -24,7 +23,8 @@ export const usersService = {
 				}
 		},
 		async deleteUser(id: string ): Promise<ResultType>{
-			const user = await usersQueryRepository.findUserById(id)
+
+			const user = await usersRepository.findUserById(id)
 			if (user) {
 				return await usersRepository.deleteUser(id)
 					? {

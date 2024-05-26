@@ -11,11 +11,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.postsService = void 0;
 const posts_repository_1 = require("../repositories/posts/posts.repository");
-const postsQuery_repository_1 = require("../repositories/posts/postsQuery.repository");
 const comments_repository_1 = require("../repositories/comments/comments.repository");
 const resultStatus_type_1 = require("../common/types/resultStatus.type");
-const usersQuery_repository_1 = require("../repositories/users/usersQuery.repository");
 const mappers_1 = require("../common/utils/mappers");
+const users_repository_1 = require("../repositories/users/users.repository");
 exports.postsService = {
     createPost(body) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -59,8 +58,8 @@ exports.postsService = {
     },
     createComment(userId, postId, body) {
         return __awaiter(this, void 0, void 0, function* () {
-            const post = yield postsQuery_repository_1.postsQueryRepository.getPostById(postId);
-            const user = yield usersQuery_repository_1.usersQueryRepository.findUserById(userId);
+            const post = yield posts_repository_1.postsRepository.getPostById(postId);
+            const user = yield users_repository_1.usersRepository.findUserById(userId);
             if (post && user) {
                 const res = yield comments_repository_1.commentsRepository.createComment(user, post, body);
                 return res

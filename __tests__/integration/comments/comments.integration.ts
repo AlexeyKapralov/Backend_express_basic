@@ -12,7 +12,7 @@ import {ICommentatorInfo} from "../../../src/features/comments/models/commentato
 import {commentsService} from "../../../src/service/comments.service";
 
 describe('comments integration tests', () => {
-    let accessToken
+    let tokens
     let blog
     let post
 
@@ -24,9 +24,9 @@ describe('comments integration tests', () => {
 
     beforeEach(async () => {
         await db.drop()
-        accessToken = await authManagerTest.createAndAuthUser()
-        blog = await blogsManagerTest.createBlog('default', accessToken ? accessToken : ' ')
-        post = await postsManagerTest.createPost('default', accessToken ? accessToken : ' ')
+        tokens = await authManagerTest.createAndAuthUser()
+        blog = await blogsManagerTest.createBlog('default', tokens!.accessToken ? tokens!.accessToken : ' ')
+        post = await postsManagerTest.createPost('default', tokens!.accessToken ? tokens!.accessToken : ' ')
     })
 
     afterAll(async () => {
@@ -41,7 +41,7 @@ describe('comments integration tests', () => {
         const body = {
             content: 'aaaa'
         }
-        const userId = jwtService.getUserIdByToken(accessToken!)
+        const userId = jwtService.getUserIdByToken(tokens!.accessToken)
         const result = await postsService.createComment(
             userId!, post!.id, body
         )
@@ -64,7 +64,7 @@ describe('comments integration tests', () => {
         const body = {
             content: 'aaabbb'
         }
-        const userId = jwtService.getUserIdByToken(accessToken!)
+        const userId = jwtService.getUserIdByToken(tokens!.accessToken)
         const result = await postsService.createComment(
             userId!, post!.id, body
         )
@@ -84,7 +84,7 @@ describe('comments integration tests', () => {
         const body = {
             content: 'aaabbb'
         }
-        const userId = jwtService.getUserIdByToken(accessToken!)
+        const userId = jwtService.getUserIdByToken(tokens!.accessToken)
         const result = await postsService.createComment(
             userId!, post!.id, body
         )
@@ -104,7 +104,7 @@ describe('comments integration tests', () => {
         const body = {
             content: 'aaabbb'
         }
-        const userId = jwtService.getUserIdByToken(accessToken!)
+        const userId = jwtService.getUserIdByToken(tokens!.accessToken)
         const result = await postsService.createComment(
             userId!, post!.id, body
         )
@@ -120,7 +120,7 @@ describe('comments integration tests', () => {
         const body = {
             content: 'aaabbb'
         }
-        const userId = jwtService.getUserIdByToken(accessToken!)
+        const userId = jwtService.getUserIdByToken(tokens!.accessToken)
         const result = await postsService.createComment(
             userId!, post!.id, body
         )

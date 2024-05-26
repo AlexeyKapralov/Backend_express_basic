@@ -132,7 +132,7 @@ describe('posts tests', () => {
 		const accessToken = await authManagerTest.createAndAuthUser()
 		const res = await agent(app)
 			.post(SETTINGS.PATH.POSTS)
-			.set({ authorization: `Bearer ${accessToken}` })
+			.set({ authorization: `Bearer ${accessToken!.accessToken}` })
 			.expect(StatusCodes.BAD_REQUEST)
 
 		expect(res.body).toEqual(
@@ -160,7 +160,9 @@ describe('posts tests', () => {
 	})
 
 	it(`should create post with correct request body and bearer token`, async () => {
-		const accessToken = await authManagerTest.createAndAuthUser()
+		const tokens = await authManagerTest.createAndAuthUser()
+		let accessToken
+		tokens ?  accessToken = tokens.accessToken : accessToken = ''
 		const createdBlog: IBlogViewModel | undefined = await blogsManagerTest.createBlog('default', accessToken!)
 		if (createdBlog) {
 			const requestBody: IPostInputModel = {
@@ -175,7 +177,9 @@ describe('posts tests', () => {
 	})
 
 	it(`shouldn't get post by id with incorrect id`, async () => {
-		const accessToken = await authManagerTest.createAndAuthUser()
+		const tokens = await authManagerTest.createAndAuthUser()
+		let accessToken
+		tokens ?  accessToken = tokens.accessToken : accessToken = ''
 		const createdBlog: IBlogViewModel | undefined = await blogsManagerTest.createBlog('default', accessToken!)
 		if (createdBlog) {
 			const requestBody = {
@@ -193,7 +197,9 @@ describe('posts tests', () => {
 	})
 
 	it(`should get post by id`, async () => {
-		const accessToken = await authManagerTest.createAndAuthUser()
+		const tokens = await authManagerTest.createAndAuthUser()
+		let accessToken
+		tokens ?  accessToken = tokens.accessToken : accessToken = ''
 		const createdBlog: IBlogViewModel | undefined = await blogsManagerTest.createBlog('default', accessToken!)
 		if (createdBlog) {
 			const requestBody = {
@@ -212,7 +218,9 @@ describe('posts tests', () => {
 	})
 
 	it(`should update post by id`, async () => {
-		const accessToken = await authManagerTest.createAndAuthUser()
+		const tokens = await authManagerTest.createAndAuthUser()
+		let accessToken
+		tokens ?  accessToken = tokens.accessToken : accessToken = ''
 		const createdBlog: IBlogViewModel | undefined = await blogsManagerTest.createBlog('default', accessToken!)
 		if (createdBlog) {
 			const requestBody = {
@@ -240,8 +248,9 @@ describe('posts tests', () => {
 
 	//тесты для delete post by id
 	it(`should delete post`, async () => {
-		let accessToken = await authManagerTest.createAndAuthUser()
-		!accessToken ? accessToken = '' : accessToken
+		const tokens = await authManagerTest.createAndAuthUser()
+		let accessToken
+		(tokens) ? accessToken = tokens.accessToken : accessToken = ''
 		const post = await postsManagerTest.createPost('default', accessToken)
 		if (post) {
 			await postsManagerTest.deletePost(post.id, accessToken)

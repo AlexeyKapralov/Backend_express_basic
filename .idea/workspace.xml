@@ -4,16 +4,85 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="26bf12fa-1c19-43fd-bd80-8f598efb16f4" name="Changes" comment="add logout and refresh token endpoints and tests for these endpoints, also add fake timers for tests">
-      <change afterPath="$PROJECT_DIR$/__tests__/integration/auth/rateLimit.integration.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/common/types/rateLimit.model.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/middlewares/rateLimit.middleware.ts" afterDir="false" />
+    <list default="true" id="26bf12fa-1c19-43fd-bd80-8f598efb16f4" name="Changes" comment="Update login service and refactor tests&#10;&#10;The code has been updated to enhance the login service that now receives additional parameters. Related tests have been refactored for this change. Files related to handling blocklist functionality have been removed. The auth test file has been renamed, and a new test file for refresh token has been added. The integration test for logout has been updated. The mechanism to handle devices for security has been introduced.">
+      <change afterPath="$PROJECT_DIR$/__tests__/e2e/auth/logout.api.e2e.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/__tests__/e2e/auth/refreshToken.e2e.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/__tests__/e2e/devices/devices.e2e.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/__tests__/integration/auth/refreshToken.integration.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/__tests__/integration/devices/deleteDevice.integration.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/__tests__/integration/devices/getDevices.integration.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/common/types/devices.model.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/features/securityDevices/controllers/deleteSecurityDeviceById.controller.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/features/securityDevices/controllers/deleteSecurityDevices.controller.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/features/securityDevices/controllers/getSecurityDevices.controller.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/features/securityDevices/models/deviceView.model.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/features/securityDevices/securityDevices.router.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/repositories/devices/devices.queryRepository.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/repositories/devices/devices.repository.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/service/devicesService.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/__tests__/e2e/auth/auth.api.e2e.ts" beforeDir="false" afterPath="$PROJECT_DIR$/__tests__/e2e/auth/login.api.e2e.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/__tests__/e2e/auth/authManager.test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/__tests__/e2e/auth/authManager.test.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/__tests__/e2e/blogs/blogs.api.e2e.ts" beforeDir="false" afterPath="$PROJECT_DIR$/__tests__/e2e/blogs/blogs.api.e2e.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/__tests__/e2e/posts/posts.api.e2e.ts" beforeDir="false" afterPath="$PROJECT_DIR$/__tests__/e2e/posts/posts.api.e2e.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/__tests__/e2e/users/userManager.test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/__tests__/e2e/users/userManager.test.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/__tests__/integration/auth/authUser.integration.ts" beforeDir="false" afterPath="$PROJECT_DIR$/__tests__/integration/auth/loginUser.integration.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/__tests__/integration/auth/logoutUser.integration.ts" beforeDir="false" afterPath="$PROJECT_DIR$/__tests__/integration/auth/logoutUser.integration.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/__tests__/integration/auth/rateLimit.integration.ts" beforeDir="false" afterPath="$PROJECT_DIR$/__tests__/integration/auth/rateLimit.integration.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/__tests__/integration/comments/comments.integration.ts" beforeDir="false" afterPath="$PROJECT_DIR$/__tests__/integration/comments/comments.integration.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/__tests__/unit/auth/refreshToken.unit.ts" beforeDir="false" afterPath="$PROJECT_DIR$/__tests__/unit/auth/refreshToken.unit.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/__tests__/e2e/auth/auth.api.e2e.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/__tests__/e2e/auth/auth.api.e2e.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/__tests__/e2e/auth/authManager.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/__tests__/e2e/auth/authManager.test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/__tests__/e2e/blogs/blogs.api.e2e.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/__tests__/e2e/blogs/blogs.api.e2e.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/__tests__/e2e/posts/posts.api.e2e.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/__tests__/e2e/posts/posts.api.e2e.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/__tests__/e2e/users/userManager.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/__tests__/e2e/users/userManager.test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/__tests__/integration/auth/authUser.integration.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/__tests__/integration/auth/authUser.integration.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/__tests__/integration/auth/logoutUser.integration.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/__tests__/integration/auth/logoutUser.integration.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/__tests__/integration/auth/rateLimit.integration.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/__tests__/integration/auth/rateLimit.integration.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/__tests__/integration/comments/comments.integration.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/__tests__/integration/comments/comments.integration.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/__tests__/unit/auth/refreshToken.unit.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/__tests__/unit/auth/refreshToken.unit.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/src/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/common/adapters/jwt.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/common/adapters/jwt.service.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/common/config/settings.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/common/config/settings.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/common/validation/express-validation.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/common/validation/express-validation.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/src/db/db.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/db/db.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/src/features/auth/authRouter.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/auth/authRouter.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/features/auth/controllers/loginController.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/auth/controllers/loginController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/features/auth/controllers/logout.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/auth/controllers/logout.controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/features/auth/controllers/refreshToken.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/auth/controllers/refreshToken.controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/middlewares/inputValidation.middleware.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/middlewares/inputValidation.middleware.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/middlewares/rateLimit.middleware.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/middlewares/rateLimit.middleware.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/repositories/blogs/blogs.repository.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/repositories/blogs/blogs.repository.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/repositories/comments/comments.repository.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/repositories/comments/comments.repository.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/repositories/posts/posts.repository.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/repositories/posts/posts.repository.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/repositories/users/users.repository.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/repositories/users/users.repository.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/repositories/users/usersQuery.repository.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/repositories/users/usersQuery.repository.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/service/comments.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/service/comments.service.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/service/login.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/service/login.service.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/service/posts.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/service/posts.service.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/service/users.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/service/users.service.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/adapters/jwt.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/adapters/jwt.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/config/settings.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/config/settings.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/types/blockList.model.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/validation/express-validation.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/validation/express-validation.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/db/db.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/db/db.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/features/auth/authRouter.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/auth/authRouter.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/auth/controllers/loginController.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/auth/controllers/loginController.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/auth/controllers/logout.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/auth/controllers/logout.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/auth/controllers/refreshToken.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/auth/controllers/refreshToken.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/middlewares/inputValidation.middleware.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/middlewares/inputValidation.middleware.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/middlewares/rateLimit.middleware.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/middlewares/rateLimit.middleware.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/repositories/blockList/blockList.repository.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/repositories/blogs/blogs.repository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/repositories/blogs/blogs.repository.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/repositories/comments/comments.repository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/repositories/comments/comments.repository.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/repositories/posts/posts.repository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/repositories/posts/posts.repository.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/repositories/users/users.repository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/repositories/users/users.repository.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/repositories/users/usersQuery.repository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/repositories/users/usersQuery.repository.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/service/comments.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/comments.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/service/login.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/login.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/service/posts.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/posts.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/service/users.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/users.service.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,7 +120,9 @@
 }</component>
   <component name="ProjectId" id="2gMslTgPGDVAl7NZJQIqO1ifamS" />
   <component name="ProjectViewState">
+    <option name="autoscrollFromSource" value="true" />
     <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="openDirectoriesWithSingleClick" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
@@ -59,19 +130,39 @@
     "Jest.Authentication User.executor": "Run",
     "Jest.Authentication User.should register user (add in db with confirmation code.executor": "Run",
     "Jest.Authentication User.should update refresh token.executor": "Run",
+    "Jest.Authentication User.shouldn't update refresh token after expired time.executor": "Run",
     "Jest.Authentication User.shouldn't update refresh token.executor": "Run",
+    "Jest.Login User.should login user.executor": "Debug",
     "Jest.auth test.should auth.executor": "Debug",
+    "Jest.auth test.should logout.executor": "Run",
     "Jest.comments integration tests.shouldn't delete comment with another userId.executor": "Run",
     "Jest.comments integration tests.shouldn't update comment with another user.executor": "Run",
+    "Jest.e2e test for devices.Should delete another devices.executor": "Debug",
+    "Jest.e2e test for devices.Should delete device.executor": "Run",
+    "Jest.e2e test for devices.Should get a device list of devices.executor": "Run",
+    "Jest.e2e test for devices.Should get delete another devices.executor": "Run",
+    "Jest.e2e test for devices.Shouldn't delete device with token from another user.executor": "Run",
+    "Jest.e2e test for devices.executor": "Run",
+    "Jest.integration test delete device.executor": "Run",
+    "Jest.integration test delete device.should return forbidden.executor": "Run",
+    "Jest.integration test delete device.should return not found.executor": "Run",
+    "Jest.integration test delete device.should return unauthorize.executor": "Run",
     "Jest.logout user integration test.executor": "Run",
+    "Jest.logout user integration test.should logout and error if try refresh token with old token.executor": "Run",
+    "Jest.logout user integration test.should logout user.executor": "Run",
     "Jest.logout user integration test.shouldn't logout user with incorrect token.executor": "Run",
+    "Jest.logout user integration test.shouldn't refresh token if token was logout.executor": "Run",
+    "Jest.logout user integration test.test.executor": "Debug",
+    "Jest.refresh Token e2e test.executor": "Run",
+    "Jest.refresh Token integration test.executor": "Run",
+    "Jest.refresh Token integration test.should refresh token.executor": "Run",
     "Jest.refresh token test.should refresh token.executor": "Run",
     "Jest.show-delayed-banner.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "D:/Projects/IT_Incubator_Projects/Social_network_backend/src/middlewares",
+    "last_opened_file_path": "D:/Projects/IT_Incubator_Projects/Social_network_backend/__tests__/e2e/auth",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -83,25 +174,66 @@
     "npm.test:e2e.executor": "Run",
     "npm.test:integration.executor": "Run",
     "npm.watch.executor": "Run",
+    "settings.editor.selected.configurable": "project.scopes",
     "ts.external.directory.path": "D:\\Projects\\IT_Incubator_Projects\\Social_network_backend\\node_modules\\typescript\\lib",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Projects\IT_Incubator_Projects\Social_network_backend\__tests__\e2e\auth" />
       <recent name="D:\Projects\IT_Incubator_Projects\Social_network_backend\src\middlewares" />
       <recent name="D:\Projects\IT_Incubator_Projects\Social_network_backend\__tests__\integration\auth" />
       <recent name="D:\Projects\IT_Incubator_Projects\Social_network_backend" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Projects\IT_Incubator_Projects\Social_network_backend\__tests__\integration\devices" />
       <recent name="D:\Projects\IT_Incubator_Projects\Social_network_backend\__tests__\unit\blogs" />
       <recent name="D:\Projects\IT_Incubator_Projects\Social_network_backend\__tests__\integration\comments" />
       <recent name="D:\Projects\IT_Incubator_Projects\Social_network_backend\__tests__\integration\blogs" />
       <recent name="D:\Projects\IT_Incubator_Projects\Social_network_backend\__tests__\integration\auth" />
     </key>
   </component>
-  <component name="RunManager" selected="Jest.logout user integration test.shouldn't logout user with incorrect token">
-    <configuration name="logout user integration test.shouldn't logout user with incorrect token" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Jest.logout user integration test.should logout and error if try refresh token with old token">
+    <configuration name="Login User.should login user" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="TEST" />
+      <test-file value="$PROJECT_DIR$/__tests__/integration/auth/loginUser.integration.ts" />
+      <test-names>
+        <test-name value="Login User" />
+        <test-name value="should login user" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="auth test.should logout" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="TEST" />
+      <test-file value="$PROJECT_DIR$/__tests__/e2e/auth/logout.api.e2e.ts" />
+      <test-names>
+        <test-name value="auth test" />
+        <test-name value="should logout" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="e2e test for devices" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="SUITE" />
+      <test-file value="$PROJECT_DIR$/__tests__/e2e/devices/devices.e2e.ts" />
+      <test-names>
+        <test-name value="e2e test for devices" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="logout user integration test.should logout and error if try refresh token with old token" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
       <node-interpreter value="project" />
       <jest-package value="$PROJECT_DIR$/node_modules/jest" />
       <working-dir value="$PROJECT_DIR$" />
@@ -110,64 +242,37 @@
       <test-file value="$PROJECT_DIR$/__tests__/integration/auth/logoutUser.integration.ts" />
       <test-names>
         <test-name value="logout user integration test" />
-        <test-name value="shouldn't logout user with incorrect token" />
+        <test-name value="should logout and error if try refresh token with old token" />
       </test-names>
       <method v="2" />
     </configuration>
-    <configuration name="dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/package.json" />
-      <command value="run" />
-      <scripts>
-        <script value="dev" />
-      </scripts>
+    <configuration name="logout user integration test.shouldn't refresh token if token was logout" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
       <node-interpreter value="project" />
+      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
+      <working-dir value="$PROJECT_DIR$" />
       <envs />
-      <method v="2" />
-    </configuration>
-    <configuration name="test:e2e" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/package.json" />
-      <command value="run" />
-      <scripts>
-        <script value="test:e2e" />
-      </scripts>
-      <node-interpreter value="project" />
-      <envs />
-      <method v="2" />
-    </configuration>
-    <configuration name="test:integration" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/package.json" />
-      <command value="run" />
-      <scripts>
-        <script value="test:integration" />
-      </scripts>
-      <node-interpreter value="project" />
-      <envs />
-      <method v="2" />
-    </configuration>
-    <configuration name="watch" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/package.json" />
-      <command value="run" />
-      <scripts>
-        <script value="watch" />
-      </scripts>
-      <node-interpreter value="project" />
-      <envs />
+      <scope-kind value="TEST" />
+      <test-file value="$PROJECT_DIR$/__tests__/integration/auth/logoutUser.integration.ts" />
+      <test-names>
+        <test-name value="logout user integration test" />
+        <test-name value="shouldn't refresh token if token was logout" />
+      </test-names>
       <method v="2" />
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="npm.dev" />
-        <item itemvalue="npm.watch" />
-        <item itemvalue="npm.test:integration" />
-        <item itemvalue="npm.test:e2e" />
-        <item itemvalue="Jest.logout user integration test.shouldn't logout user with incorrect token" />
+        <item itemvalue="Jest.logout user integration test.should logout and error if try refresh token with old token" />
+        <item itemvalue="Jest.e2e test for devices" />
+        <item itemvalue="Jest.auth test.should logout" />
+        <item itemvalue="Jest.Login User.should login user" />
+        <item itemvalue="Jest.logout user integration test.shouldn't refresh token if token was logout" />
       </list>
     </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-1d06a55b98c1-91d5c284f522-JavaScript-WS-241.15989.105" />
+        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-WS-241.17011.90" />
       </set>
     </attachedChunks>
   </component>
@@ -184,7 +289,14 @@
       <workItem from="1715629396450" duration="1513000" />
       <workItem from="1715663040945" duration="23984000" />
       <workItem from="1716014567588" duration="35349000" />
-      <workItem from="1716268615446" duration="6920000" />
+      <workItem from="1716268615446" duration="21269000" />
+      <workItem from="1716404971231" duration="1088000" />
+      <workItem from="1716440091789" duration="1068000" />
+      <workItem from="1716441374252" duration="1198000" />
+      <workItem from="1716442603849" duration="14000" />
+      <workItem from="1716442630751" duration="27993000" />
+      <workItem from="1716614930749" duration="123000" />
+      <workItem from="1716615062038" duration="60713000" />
     </task>
     <task id="LOCAL-00001" summary="small fixes">
       <option name="closed" value="true" />
@@ -202,7 +314,15 @@
       <option name="project" value="LOCAL" />
       <updated>1716116099381</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="add custom rate limit">
+      <option name="closed" value="true" />
+      <created>1716317761597</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1716317761597</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -211,6 +331,9 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="small fixes" />
     <MESSAGE value="add logout and refresh token endpoints and tests for these endpoints, also add fake timers for tests" />
-    <option name="LAST_COMMIT_MESSAGE" value="add logout and refresh token endpoints and tests for these endpoints, also add fake timers for tests" />
+    <MESSAGE value="add custom rate limit" />
+    <MESSAGE value="Updated authentication functionality and test refactoring&#10;&#10;The commit introduces changes including updating the loginController to include user agent and IP, renaming and modifying test files for better handling and assertions. It also introduces refreshToken integration tests and updates a comment in authManager.test.ts. A significant portion of the changes involves updating test cases to adapt to the new token structure, ensuring accurate verification of access and refresh tokens." />
+    <MESSAGE value="Update login service and refactor tests&#10;&#10;The code has been updated to enhance the login service that now receives additional parameters. Related tests have been refactored for this change. Files related to handling blocklist functionality have been removed. The auth test file has been renamed, and a new test file for refresh token has been added. The integration test for logout has been updated. The mechanism to handle devices for security has been introduced." />
+    <option name="LAST_COMMIT_MESSAGE" value="Update login service and refactor tests&#10;&#10;The code has been updated to enhance the login service that now receives additional parameters. Related tests have been refactored for this change. Files related to handling blocklist functionality have been removed. The auth test file has been renamed, and a new test file for refresh token has been added. The integration test for logout has been updated. The mechanism to handle devices for security has been introduced." />
   </component>
 </project>

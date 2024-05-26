@@ -12,10 +12,10 @@ export const authManagerTest = {
 	 * 'password': '123456',
 	 * 'email': 'asdasdas@e.com'
 	 */
-	//todo стоит переписать с возвратом refresh token и без зависимости от api (сразу работа с базой)
+	//todo стоит переписать без зависимости от api (сразу работа с базой)
 	async createAndAuthUser(loginData: 'default' | ILoginInputModel | null = 'default', newUserData: 'default' | IUserInputModel = 'default',
-													expectedStatus: StatusCodes = StatusCodes.OK
-	): Promise<string | undefined> {
+													expectedStatus: StatusCodes = StatusCodes.OK, userAgent: string = ''
+	): Promise<{ refreshToken: string, accessToken: string } | undefined> {
 
 		if (newUserData === 'default') {
 			newUserData = {
@@ -35,6 +35,7 @@ export const authManagerTest = {
 				}
 				res = await agent(app)
 					.post(`${SETTINGS.PATH.AUTH}/login`)
+					.set('User-Agent', userAgent)
 					.send(loginData)
 					.expect(expectedStatus)
 				break
@@ -43,6 +44,7 @@ export const authManagerTest = {
 			case null: {
 				res = await agent(app)
 					.post(`${SETTINGS.PATH.AUTH}/login`)
+					.set('User-Agent', userAgent)
 					.expect(expectedStatus)
 				break
 			}
@@ -50,6 +52,7 @@ export const authManagerTest = {
 			default: {
 				res = await agent(app)
 					.post(`${SETTINGS.PATH.AUTH}/login`)
+					.set('User-Agent', userAgent)
 					.send(loginData)
 					.expect(expectedStatus)
 			}
@@ -64,22 +67,25 @@ export const authManagerTest = {
 
 			const getUserByToken = await agent(app)
 				.get(`${SETTINGS.PATH.AUTH}/me`)
-				.set({ authorization: `Bearer ${res.body.accessToken}`
-		})
+				.set({ authorization: `Bearer ${res.body.accessToken}`})
+
 
 			expect(getUserByToken.body).toEqual({
 				'email': newUserData.email,
 				'login': newUserData.login,
 				'userId': expect.any(String)
 			})
-			return res.body.accessToken
+			return {
+				refreshToken: res.header['set-cookie'][0].split('; ')[0].replace('refreshToken=', ''),
+				accessToken: res.body.accessToken
+			}
 		} else {
 			return undefined
 		}
 	},
 
 	async authUser(loginData: 'default' | ILoginInputModel = 'default',
-								 expectedStatus: StatusCodes = StatusCodes.OK
+								 expectedStatus: StatusCodes = StatusCodes.OK, userAgent: string = ''
 	): Promise<{ accessToken: string, refreshToken: string } | undefined> {
 
 		let res
@@ -90,11 +96,13 @@ export const authManagerTest = {
 			}
 			res = await agent(app)
 				.post(`${SETTINGS.PATH.AUTH}/login`)
+				.set('User-Agent', userAgent)
 				.send(loginData)
 				.expect(expectedStatus)
 		} else {
 			res = await agent(app)
 				.post(`${SETTINGS.PATH.AUTH}/login`)
+				.set('User-Agent', userAgent)
 				.send(loginData)
 				.expect(expectedStatus)
 		}

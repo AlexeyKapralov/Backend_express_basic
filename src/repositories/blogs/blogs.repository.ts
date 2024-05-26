@@ -22,5 +22,11 @@ export const blogsRepository = {
     async deleteBlogByID(id: string): Promise<boolean> {
         const result = await db.getCollection().blogsCollection.deleteOne({_id: id})
         return result.deletedCount > 0
-    }
+    },
+    async getBlogByID(id: string) {
+        const result = await db.getCollection().blogsCollection.findOne({
+            _id: id
+        })
+        return result ? result : undefined
+    },
 }

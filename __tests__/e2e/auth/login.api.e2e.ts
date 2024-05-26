@@ -16,6 +16,14 @@ describe('auth test', () => {
 		await db.drop()
 	})
 
+	afterAll(async () => {
+		db.stop()
+	})
+
+	afterAll(done => {
+		done()
+	})
+
 	it(`should write All is running `, async () => {
 		await agent(app)
 			.get('/')
@@ -35,12 +43,4 @@ describe('auth test', () => {
 			await authManagerTest.createAndAuthUser(newBadLoginData, 'default', StatusCodes.UNAUTHORIZED)
 	})
 
-
-	afterAll(async () => {
-		db.stop()
-	})
-
-	afterAll(done => {
-		done()
-	})
 })
