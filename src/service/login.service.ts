@@ -192,39 +192,22 @@ export const loginService = {
             }
         }
 
-        if (deviceInfo) {
-            device = await db.getCollection().devices.findOne({
-                deviceId: deviceInfo.deviceId,
-                ip: deviceInfo.ip,
-                iat: deviceInfo.iat,
-                expirationDate: deviceInfo.expirationDate,
-                userId: deviceInfo.userId
-            })
-        }
+        const newAccessToken = jwtService.createAccessToken(device.userId)
+        const newRefreshToken = jwtService.createRefreshToken({
+            userId: device.userId,
+            deviceName: device.deviceName,
+            deviceId: device.deviceId,
+            ip: device.ip
+        })
 
-        if (device) {
+        const newDevice = jwtService.getPayloadFromRefreshToken(newRefreshToken)
 
-            const newAccessToken = jwtService.createAccessToken(device.userId)
-            const newRefreshToken = jwtService.createRefreshToken({
-                userId: device.userId,
-                deviceName: device.deviceName,
-                deviceId: device.deviceId,
-                ip: device.ip
-            })
-
-            const newDevice = jwtService.getPayloadFromRefreshToken(newRefreshToken)
-
-            await devicesRepository.createOrUpdateDevice(newDevice!)
-
-            return {
-                status: ResultStatus.Success,
-                data: {accessToken: newAccessToken, refreshToken: newRefreshToken}
-            }
-        }
+        await devicesRepository.createOrUpdateDevice(newDevice!)
 
         return {
-            status: ResultStatus.Unauthorized,
-            data: null
+            status: ResultStatus.Success,
+            data: {accessToken: newAccessToken, refreshToken: newRefreshToken}
         }
+
     }
 }

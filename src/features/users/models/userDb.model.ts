@@ -1,3 +1,4 @@
+//todo переписать с использование WithID
 export interface IUserDbModel {
 	_id: string
 	login: string

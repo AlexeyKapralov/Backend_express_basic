@@ -27,9 +27,9 @@ describe('logout user integration test', () => {
 
     it(`shouldn't logout user with incorrect token`, async () => {
 
-            const isLogout = await loginService.logout('123')
+        const isLogout = await loginService.logout('123')
 
-            expect(isLogout.status).toBe(ResultStatus.Unauthorized)
+        expect(isLogout.status).toBe(ResultStatus.Unauthorized)
     });
 
     it('should logout user', async () => {
@@ -56,7 +56,7 @@ describe('logout user integration test', () => {
         }
     })
     it('should logout and error if try refresh token with old token', async () => {
-        //todo непонятно почему этот тест падает
+
         const inputData = {
             loginOrEmail: 'login',
             password: 'qwert1234',
@@ -64,16 +64,17 @@ describe('logout user integration test', () => {
 
         await userManagerTest.createUser('default', SETTINGS.ADMIN_AUTH)
         const tokens = await authManagerTest.authUser(inputData)
+        await new Promise(resolve => setTimeout(resolve, 1000))
         const newTokens = await loginService.refreshToken(tokens!.refreshToken)
 
         expect(tokens!.refreshToken).not.toBe(newTokens.data!.refreshToken)
 
-        const isRefreshed = await loginService.refreshToken(tokens!.refreshToken)
+        let isRefreshed = await loginService.refreshToken(tokens!.refreshToken)
 
         expect(isRefreshed!.status).toBe(ResultStatus.Unauthorized)
 
         const result = await loginService.logout(tokens!.refreshToken)
+        expect(result.status).toBe(ResultStatus.Unauthorized)
 
-        // expect(result.status).toBe(ResultStatus.Unauthorized)
     });
 })

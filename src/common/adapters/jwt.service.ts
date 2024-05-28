@@ -4,10 +4,10 @@ import {IDeviceModel} from "../types/devices.model";
 
 export const jwtService = {
     createAccessToken(userId: string): string {
-        return jwt.sign({userId}, SETTINGS.SECRET_JWT, {expiresIn: "10s"});
+        return jwt.sign({userId}, SETTINGS.SECRET_JWT, {expiresIn: SETTINGS.EXPIRATION.ACCESS_TOKEN});
     },
     createRefreshToken(device: Omit<IDeviceModel, 'iat' | 'expirationDate'>): string {
-        return jwt.sign(device, SETTINGS.SECRET_JWT, {expiresIn: "20s"});
+        return jwt.sign(device, SETTINGS.SECRET_JWT, {expiresIn: SETTINGS.EXPIRATION.REFRESH_TOKEN});
     },
     getUserIdByToken(token: string): string | null {
         try {

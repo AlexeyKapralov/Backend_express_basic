@@ -20,4 +20,8 @@ export const SETTINGS = {
 	SECRET_JWT: process.env.SECRET_JWT || '',
 	LOGIN_MAIL: process.env.LOGIN_MAIL || '',
 	PASS_MAIL: process.env.PASS_MAIL || '',
+	EXPIRATION: {
+		ACCESS_TOKEN: process.env.ACCESS_TOKEN_LIVE,
+		REFRESH_TOKEN: process.env.REFRESH_TOKEN_LIVE,
+	}
 }
