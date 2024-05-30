@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { IUserInputModel } from '../models/userInput.model'
 import { IUserViewModel } from '../models/userView.model'
-import { usersService } from '../../../service/users.service'
+import { usersService } from '../service/users.service'
 import { StatusCodes } from 'http-status-codes'
 import { ResultStatus } from '../../../common/types/resultStatus.type'
 

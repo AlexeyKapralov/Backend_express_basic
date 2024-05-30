@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getCommentsController = void 0;
-const commentsQuery_repository_1 = require("../../../repositories/comments/commentsQuery.repository");
+const commentsQuery_repository_1 = require("../../comments/repository/commentsQuery.repository");
 const mappers_1 = require("../../../common/utils/mappers");
 const http_status_codes_1 = require("http-status-codes");
 const getCommentsController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {

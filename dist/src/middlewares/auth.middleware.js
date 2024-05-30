@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.authMiddleware = void 0;
 const http_status_codes_1 = require("http-status-codes");
 const jwt_service_1 = require("../common/adapters/jwt.service");
-const usersQuery_repository_1 = require("../repositories/users/usersQuery.repository");
+const usersQuery_repository_1 = require("../features/users/repository/usersQuery.repository");
 const settings_1 = require("../common/config/settings");
 const authMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const auth = req.headers.authorization;

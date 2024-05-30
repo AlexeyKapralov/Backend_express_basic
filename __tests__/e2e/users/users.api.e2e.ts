@@ -5,7 +5,8 @@ import {SETTINGS} from '../../../src/common/config/settings'
 import {MongoMemoryServer} from 'mongodb-memory-server'
 import {userManagerTest} from './userManager.test'
 import {StatusCodes} from 'http-status-codes'
-import {getUserViewModel} from "../../../src/common/utils/mappers";
+import {getUserViewModel} from "../../../src/features/users/mappers/userMappers";
+import {PATH} from "../../../src/common/config/path";
 
 
 describe('user tests', () => {
@@ -21,7 +22,7 @@ describe('user tests', () => {
         await userManagerTest.createUsers(20)
 
         const res = await agent(app)
-            .get(SETTINGS.PATH.USERS)
+            .get(PATH.USERS)
 
         expect(res.body).toEqual({
             pagesCount: 2,
@@ -54,7 +55,7 @@ describe('user tests', () => {
         await userManagerTest.createUsers(20)
 
         const res = await agent(app)
-            .get(SETTINGS.PATH.USERS)
+            .get(PATH.USERS)
             .query({
                 sortBy: 'login',
                 sortDirection: 'asc',

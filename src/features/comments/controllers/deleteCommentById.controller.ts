@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { commentsService } from '../../../service/comments.service'
+import { commentsService } from '../service/comments.service'
 import { ResultStatus } from '../../../common/types/resultStatus.type'
 import { StatusCodes } from 'http-status-codes'
 

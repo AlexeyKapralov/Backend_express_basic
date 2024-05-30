@@ -8,6 +8,7 @@ import {ObjectId} from "mongodb";
 import { IUserDbModel } from '../../../src/features/users/models/userDb.model'
 import { add } from 'date-fns'
 import { IUserViewModel } from '../../../src/features/users/models/userView.model'
+import {PATH} from "../../../src/common/config/path";
 
 const getRandomName = () => {
     const names = ["John", "Alice", "Bob", "Eva", "Michael", "Emma", "David", "Sophia", "James", "Olivia"];
@@ -36,7 +37,7 @@ export const userManagerTest = {
         const buff = Buffer.from(auth, 'utf-8')
         const decodedAuth = buff.toString('base64')
         const result = await agent(app)
-            .post(SETTINGS.PATH.USERS)
+            .post(PATH.USERS)
             .send(data)
             .set({authorization: `Basic ${decodedAuth}`})
 
@@ -82,7 +83,7 @@ export const userManagerTest = {
         const buff = Buffer.from(auth, 'utf-8')
         const decodedAuth = buff.toString('base64')
         const result = await agent(app)
-            .delete(`${SETTINGS.PATH.USERS}/${id}`)
+            .delete(`${PATH.USERS}/${id}`)
             .set({authorization: `Basic ${decodedAuth}`})
 
         expect(result.status).toBe(expected_status)

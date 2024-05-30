@@ -3,7 +3,6 @@ import { db } from '../../../src/db/db'
 import { agent } from 'supertest'
 import { app } from '../../../src/app'
 import { SETTINGS } from '../../../src/common/config/settings'
-import { getBlogViewModel } from '../../../src/common/utils/mappers'
 import { blogsManagerTest } from './blogsManager.test'
 import { IBlogViewModel } from '../../../src/features/blogs/models/blogView.model'
 import { IQueryModel } from '../../../src/common/types/query.model'
@@ -11,6 +10,8 @@ import { authManagerTest } from '../auth/authManager.test'
 import { IBlogInputModel } from '../../../src/features/blogs/models/blogInput.model'
 import { StatusCodes } from 'http-status-codes'
 import { IBlogDbModel } from '../../../src/features/blogs/models/blogDb.model'
+import {getBlogViewModel} from "../../../src/features/blogs/mappers/blogsMappers";
+import {PATH} from "../../../src/common/config/path";
 
 describe('blogs tests', () => {
 	beforeAll(async () => {
@@ -31,7 +32,7 @@ describe('blogs tests', () => {
 
 	it('should get blogs with default pagination and empty array', async () => {
 		const res = await agent(app)
-			.get(SETTINGS.PATH.BLOGS)
+			.get(PATH.BLOGS)
 
 		expect(res.body).toEqual({
 			pagesCount: 0,
@@ -54,7 +55,7 @@ describe('blogs tests', () => {
 		}
 
 		const res = await agent(app)
-			.get(SETTINGS.PATH.BLOGS)
+			.get(PATH.BLOGS)
 			.query(query)
 
 		const totalCount = await db.getCollection().blogsCollection

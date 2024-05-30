@@ -1,5 +1,5 @@
 import {Request, Response} from 'express'
-import {usersService} from "../../../service/users.service";
+import {usersService} from "../service/users.service";
 import {StatusCodes} from "http-status-codes";
 import {ResultStatus} from "../../../common/types/resultStatus.type";
 

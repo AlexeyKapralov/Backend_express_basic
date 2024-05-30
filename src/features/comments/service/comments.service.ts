@@ -1,9 +1,9 @@
-import { ICommentViewModel } from '../features/comments/models/commentView.model'
-import { ResultType } from '../common/types/result.type'
-import { ResultStatus } from '../common/types/resultStatus.type'
-import { ICommentInputModel } from '../features/comments/models/commentInput.model'
-import { commentsRepository } from '../repositories/comments/comments.repository'
-import {usersRepository} from "../repositories/users/users.repository";
+import { ICommentViewModel } from '../models/commentView.model'
+import { ResultType } from '../../../common/types/result.type'
+import { ResultStatus } from '../../../common/types/resultStatus.type'
+import { ICommentInputModel } from '../models/commentInput.model'
+import { commentsRepository } from '../repository/comments.repository'
+import {usersRepository} from "../../users/repository/users.repository";
 
 export const commentsService = {
 

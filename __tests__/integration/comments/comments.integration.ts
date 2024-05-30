@@ -1,6 +1,6 @@
 import {MongoMemoryServer} from "mongodb-memory-server";
 import {db} from "../../../src/db/db";
-import {postsService} from "../../../src/service/posts.service";
+import {postsService} from "../../../src/features/posts/service/posts.service";
 import {authManagerTest} from "../../e2e/auth/authManager.test";
 import {blogsManagerTest} from "../../e2e/blogs/blogsManager.test";
 import {postsManagerTest} from "../../e2e/posts/postsManager.test";
@@ -9,7 +9,7 @@ import {ResultType} from "../../../src/common/types/result.type";
 import {ResultStatus} from "../../../src/common/types/resultStatus.type";
 import {ICommentViewModel} from "../../../src/features/comments/models/commentView.model";
 import {ICommentatorInfo} from "../../../src/features/comments/models/commentatorInfo.model";
-import {commentsService} from "../../../src/service/comments.service";
+import {commentsService} from "../../../src/features/comments/service/comments.service";
 
 describe('comments integration tests', () => {
     let tokens

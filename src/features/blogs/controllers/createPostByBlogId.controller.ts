@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { IBlogPostInputModel } from '../models/blogInput.model'
 import { IPostViewModel } from '../../posts/models/postView.model'
-import { blogsService } from '../../../service/blogs.service'
+import { blogsService } from '../sevice/blogs.service'
 import { StatusCodes } from 'http-status-codes'
 import { ResultStatus } from '../../../common/types/resultStatus.type'
 

@@ -1,5 +1,5 @@
-import {db} from "../../db/db";
-import {IDeviceModel} from "../../common/types/devices.model";
+import {db} from "../../../db/db";
+import {IDeviceModel} from "../../../common/types/devices.model";
 
 export const devicesRepository = {
     async findDeviceId(userId: string, ip: string, deviceName: string) {

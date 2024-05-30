@@ -11,8 +11,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 // Mock-объект для blogsRepository, чтобы заменить его на управляемый тестами
 const globals_1 = require("@jest/globals");
-const blogs_repository_1 = require("../../../src/repositories/blogs/blogs.repository");
-const blogs_service_1 = require("../../../src/service/blogs.service");
+const blogs_repository_1 = require("../../../src/features/blogs/repository/blogs.repository");
+const blogs_service_1 = require("../../../src/features/blogs/sevice/blogs.service");
 const resultStatus_type_1 = require("../../../src/common/types/resultStatus.type");
 describe('Test for createBlog method in blogsService', () => {
     afterEach(() => {

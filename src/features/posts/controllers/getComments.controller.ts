@@ -1,7 +1,7 @@
 import {Request, Response} from 'express'
 import { IPaginator } from '../../../common/types/paginator'
 import { ICommentViewModel } from '../../comments/models/commentView.model'
-import { commentsQueryRepository } from '../../../repositories/comments/commentsQuery.repository'
+import { commentsQueryRepository } from '../../comments/repository/commentsQuery.repository'
 import { getQueryParams } from '../../../common/utils/mappers'
 import { StatusCodes } from 'http-status-codes'
 import { IQueryModel } from '../../../common/types/query.model'

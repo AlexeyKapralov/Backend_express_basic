@@ -1,6 +1,6 @@
-import {db} from "../../db/db";
-import {IBlogDbModel} from "../../features/blogs/models/blogDb.model";
-import {IBlogInputModel} from "../../features/blogs/models/blogInput.model";
+import {db} from "../../../db/db";
+import {IBlogDbModel} from "../models/blogDb.model";
+import {IBlogInputModel} from "../models/blogInput.model";
 
 export const blogsRepository = {
     async createBlog(body: IBlogDbModel) {

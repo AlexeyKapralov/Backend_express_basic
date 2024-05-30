@@ -8,20 +8,11 @@ export const SETTINGS = {
 	MONGO_URL: process.env.MONGO_URL || '',
 	PORT: process.env.PORT,
 	EXPIRED_LIFE: { minutes: 30 },
-	PATH: {
-		USERS: '/users',
-		BLOGS: '/blogs',
-		POSTS: '/posts',
-		COMMENTS: '/comments',
-		SECURITY: '/security',
-		AUTH: '/auth',
-		TESTING: '/testing/all-data'
-	},
 	SECRET_JWT: process.env.SECRET_JWT || '',
 	LOGIN_MAIL: process.env.LOGIN_MAIL || '',
 	PASS_MAIL: process.env.PASS_MAIL || '',
 	EXPIRATION: {
-		ACCESS_TOKEN: process.env.ACCESS_TOKEN_LIVE,
-		REFRESH_TOKEN: process.env.REFRESH_TOKEN_LIVE,
+		ACCESS_TOKEN: process.env.ACCESS_TOKEN_LIVE || '10s',
+		REFRESH_TOKEN: process.env.REFRESH_TOKEN_LIVE || '20s'
 	}
 }

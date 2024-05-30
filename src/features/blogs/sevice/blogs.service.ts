@@ -1,13 +1,13 @@
-import { IBlogInputModel, IBlogPostInputModel } from '../features/blogs/models/blogInput.model'
-import { IBlogDbModel } from '../features/blogs/models/blogDb.model'
+import { IBlogInputModel, IBlogPostInputModel } from '../models/blogInput.model'
+import { IBlogDbModel } from '../models/blogDb.model'
 import { ObjectId } from 'mongodb'
-import { blogsRepository } from '../repositories/blogs/blogs.repository'
-import { getBlogViewModel } from '../common/utils/mappers'
-import { postsRepository } from '../repositories/posts/posts.repository'
-import { ResultType } from '../common/types/result.type'
-import { IBlogViewModel } from '../features/blogs/models/blogView.model'
-import { ResultStatus } from '../common/types/resultStatus.type'
-import { IPostViewModel } from '../features/posts/models/postView.model'
+import { blogsRepository } from '../repository/blogs.repository'
+import { postsRepository } from '../../posts/repository/posts.repository'
+import { ResultType } from '../../../common/types/result.type'
+import { IBlogViewModel } from '../models/blogView.model'
+import { ResultStatus } from '../../../common/types/resultStatus.type'
+import { IPostViewModel } from '../../posts/models/postView.model'
+import {getBlogViewModel} from "../mappers/blogsMappers";
 
 export const blogsService = {
 	async createBlog(body: IBlogInputModel): Promise<ResultType<IBlogViewModel | null>> {
@@ -60,11 +60,19 @@ export const blogsService = {
 			content: body.content,
 			blogId: blogId
 		}
-		const result = await postsRepository.createPost(newBody)
-		return result
+		const foundBlog = await blogsRepository.getBlogByID(blogId)
+		if (!foundBlog) {
+			return {
+				status: ResultStatus.NotFound,
+				data: null
+			}
+		}
+
+		const createdPost = await postsRepository.createPost(newBody, foundBlog.name)
+		return createdPost
 			? {
 				status: ResultStatus.Success,
-				data: result
+				data: createdPost
 			}
 			: {
 				status: ResultStatus.BadRequest,

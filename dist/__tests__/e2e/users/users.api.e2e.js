@@ -16,7 +16,8 @@ const settings_1 = require("../../../src/common/config/settings");
 const mongodb_memory_server_1 = require("mongodb-memory-server");
 const userManager_test_1 = require("./userManager.test");
 const http_status_codes_1 = require("http-status-codes");
-const mappers_1 = require("../../../src/common/utils/mappers");
+const userMappers_1 = require("../../../src/features/users/mappers/userMappers");
+const path_1 = require("../../../src/common/config/path");
 describe('user tests', () => {
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
         const mongod = yield mongodb_memory_server_1.MongoMemoryServer.create();
@@ -28,7 +29,7 @@ describe('user tests', () => {
         yield db_1.db.drop();
         yield userManager_test_1.userManagerTest.createUsers(20);
         const res = yield (0, supertest_1.agent)(app_1.app)
-            .get(settings_1.SETTINGS.PATH.USERS);
+            .get(path_1.PATH.USERS);
         expect(res.body).toEqual({
             pagesCount: 2,
             page: 1,
@@ -49,13 +50,13 @@ describe('user tests', () => {
             .skip((1 - 1) * 10)
             .limit(10)
             .toArray();
-        expect(users.map(mappers_1.getUserViewModel)).toEqual(res.body.items);
+        expect(users.map(userMappers_1.getUserViewModel)).toEqual(res.body.items);
     }));
     it('should get with input custom pagination', () => __awaiter(void 0, void 0, void 0, function* () {
         yield db_1.db.drop();
         yield userManager_test_1.userManagerTest.createUsers(20);
         const res = yield (0, supertest_1.agent)(app_1.app)
-            .get(settings_1.SETTINGS.PATH.USERS)
+            .get(path_1.PATH.USERS)
             .query({
             sortBy: 'login',
             sortDirection: 'asc',
@@ -97,7 +98,7 @@ describe('user tests', () => {
                 })
             ])
         });
-        expect(users.map(mappers_1.getUserViewModel)).toEqual(res.body.items);
+        expect(users.map(userMappers_1.getUserViewModel)).toEqual(res.body.items);
     }));
     //test create
     it(`shouldn't create user with auth and incorrect input data`, () => __awaiter(void 0, void 0, void 0, function* () {

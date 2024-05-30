@@ -3,7 +3,6 @@ import { db } from '../../../src/db/db'
 import { agent } from 'supertest'
 import { app } from '../../../src/app'
 import { SETTINGS } from '../../../src/common/config/settings'
-import { getPostViewModel } from '../../../src/common/utils/mappers'
 import { postsManagerTest } from './postsManager.test'
 import { IQueryModel } from '../../../src/common/types/query.model'
 import { StatusCodes } from 'http-status-codes'
@@ -11,6 +10,8 @@ import { authManagerTest } from '../auth/authManager.test'
 import { blogsManagerTest } from '../blogs/blogsManager.test'
 import { IPostInputModel } from '../../../src/features/posts/models/postInput.model'
 import { IBlogViewModel } from '../../../src/features/blogs/models/blogView.model'
+import {getPostViewModel} from "../../../src/features/posts/mappers/postMappers";
+import {PATH} from "../../../src/common/config/path";
 
 describe('posts tests', () => {
 	beforeAll(async () => {
@@ -32,7 +33,7 @@ describe('posts tests', () => {
 		await db.drop()
 
 		const res = await agent(app)
-			.get(SETTINGS.PATH.POSTS)
+			.get(PATH.POSTS)
 
 		expect(res.body).toEqual({
 			pagesCount: 0,
@@ -48,7 +49,7 @@ describe('posts tests', () => {
 		await postsManagerTest.createPosts(20)
 
 		const res = await agent(app)
-			.get(SETTINGS.PATH.POSTS)
+			.get(PATH.POSTS)
 
 		expect(res.body).toEqual({
 			pagesCount: 2,
@@ -89,7 +90,7 @@ describe('posts tests', () => {
 			sortDirection: 'asc'
 		}
 		const res = await agent(app)
-			.get(SETTINGS.PATH.POSTS)
+			.get(PATH.POSTS)
 			.query(
 				query
 			)
@@ -124,14 +125,14 @@ describe('posts tests', () => {
 
 	it(`shouldn't create post with no auth`, async () => {
 		await agent(app)
-			.post(SETTINGS.PATH.POSTS)
+			.post(PATH.POSTS)
 			.expect(StatusCodes.UNAUTHORIZED)
 	})
 
 	it(`shouldn't create post with no request body`, async () => {
 		const accessToken = await authManagerTest.createAndAuthUser()
 		const res = await agent(app)
-			.post(SETTINGS.PATH.POSTS)
+			.post(PATH.POSTS)
 			.set({ authorization: `Bearer ${accessToken!.accessToken}` })
 			.expect(StatusCodes.BAD_REQUEST)
 

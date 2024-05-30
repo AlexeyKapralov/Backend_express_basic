@@ -26,4 +26,5 @@ describe('auth test', () => {
     afterAll(done => {
         done();
     });
+    it.skip('', () => { });
 });

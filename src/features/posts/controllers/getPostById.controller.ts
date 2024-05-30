@@ -1,5 +1,5 @@
 import {Request, Response} from "express"
-import {postsQueryRepository} from "../../../repositories/posts/postsQuery.repository"
+import {postsQueryRepository} from "../repository/postsQuery.repository"
 import {StatusCodes} from "http-status-codes";
 
 export const getPostByIdController = async (req: Request, res: Response) => {

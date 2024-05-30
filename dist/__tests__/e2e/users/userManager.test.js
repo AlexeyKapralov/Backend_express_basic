@@ -11,12 +11,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userManagerTest = void 0;
 const supertest_1 = require("supertest");
-const settings_1 = require("../../../src/common/config/settings");
 const app_1 = require("../../../src/app");
 const http_status_codes_1 = require("http-status-codes");
 const db_1 = require("../../../src/db/db");
 const mongodb_1 = require("mongodb");
 const date_fns_1 = require("date-fns");
+const path_1 = require("../../../src/common/config/path");
 const getRandomName = () => {
     const names = ["John", "Alice", "Bob", "Eva", "Michael", "Emma", "David", "Sophia", "James", "Olivia"];
     const randomIndex = Math.floor(Math.random() * names.length);
@@ -39,7 +39,7 @@ exports.userManagerTest = {
             const buff = Buffer.from(auth, 'utf-8');
             const decodedAuth = buff.toString('base64');
             const result = yield (0, supertest_1.agent)(app_1.app)
-                .post(settings_1.SETTINGS.PATH.USERS)
+                .post(path_1.PATH.USERS)
                 .send(data)
                 .set({ authorization: `Basic ${decodedAuth}` });
             expect(result.status).toBe(expected_status);
@@ -79,7 +79,7 @@ exports.userManagerTest = {
             const buff = Buffer.from(auth, 'utf-8');
             const decodedAuth = buff.toString('base64');
             const result = yield (0, supertest_1.agent)(app_1.app)
-                .delete(`${settings_1.SETTINGS.PATH.USERS}/${id}`)
+                .delete(`${path_1.PATH.USERS}/${id}`)
                 .set({ authorization: `Basic ${decodedAuth}` });
             expect(result.status).toBe(expected_status);
             if (result.status === http_status_codes_1.StatusCodes.NO_CONTENT) {

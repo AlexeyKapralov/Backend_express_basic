@@ -43,7 +43,7 @@ exports.userTestManager = {
     },
     createUsers(count) {
         return __awaiter(this, void 0, void 0, function* () {
-            // let users = [];
+            // let repository = [];
             for (let i = 0; i < count; i++) {
                 let user = {
                     _id: new mongodb_1.ObjectId().toString(),
@@ -52,8 +52,8 @@ exports.userTestManager = {
                     createdAt: new Date().toISOString(),
                     password: `generatedPassword${i}`
                 };
-                // users.push(user);
-                // users = [...users, user];
+                // repository.push(user);
+                // repository = [...repository, user];
                 yield db_1.db.getCollection().usersCollection.insertOne(user);
             }
         });

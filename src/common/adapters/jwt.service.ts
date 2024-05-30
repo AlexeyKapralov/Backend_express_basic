@@ -6,6 +6,7 @@ export const jwtService = {
     createAccessToken(userId: string): string {
         return jwt.sign({userId}, SETTINGS.SECRET_JWT, {expiresIn: SETTINGS.EXPIRATION.ACCESS_TOKEN});
     },
+    //todo переписать чтобы хранился только device Id и userId
     createRefreshToken(device: Omit<IDeviceModel, 'iat' | 'expirationDate'>): string {
         return jwt.sign(device, SETTINGS.SECRET_JWT, {expiresIn: SETTINGS.EXPIRATION.REFRESH_TOKEN});
     },
@@ -17,10 +18,9 @@ export const jwtService = {
             return null
         }
     },
-    //todo вопросики по корректности такого кода (как типизировать payload из JWT verify)
-    getPayloadFromRefreshToken(token: string) {
+    decodeToken(token: string) {
         try {
-            const result:any = jwt.verify(token, SETTINGS.SECRET_JWT)
+            const result:any = jwt.decode(token)
             return {
                 deviceId: result.deviceId,
                 userId: result.userId,

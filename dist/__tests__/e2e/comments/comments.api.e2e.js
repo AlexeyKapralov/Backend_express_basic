@@ -14,9 +14,9 @@ const mongodb_memory_server_1 = require("mongodb-memory-server");
 const commentsManager_test_1 = require("./commentsManager.test");
 const supertest_1 = require("supertest");
 const app_1 = require("../../../src/app");
-const settings_1 = require("../../../src/common/config/settings");
 const postsManager_test_1 = require("../posts/postsManager.test");
-const mappers_1 = require("../../../src/common/utils/mappers");
+const commentsMappers_1 = require("../../../src/features/comments/mappers/commentsMappers");
+const path_1 = require("../../../src/common/config/path");
 describe('comments e2e tests', () => {
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
         const mongod = yield mongodb_memory_server_1.MongoMemoryServer.create();
@@ -36,7 +36,7 @@ describe('comments e2e tests', () => {
     it('should get empty array with default pagination', () => __awaiter(void 0, void 0, void 0, function* () {
         const posts = yield db_1.db.getCollection().postsCollection.find().toArray();
         const result = yield (0, supertest_1.agent)(app_1.app)
-            .get(`${settings_1.SETTINGS.PATH.POSTS}/${posts[0]._id}/comments`);
+            .get(`${path_1.PATH.POSTS}/${posts[0]._id}/comments`);
         expect(result.body).toEqual({
             "pagesCount": 0,
             "page": 1,
@@ -55,7 +55,7 @@ describe('comments e2e tests', () => {
             pageSize: 4
         };
         const result = yield (0, supertest_1.agent)(app_1.app)
-            .get(`${settings_1.SETTINGS.PATH.POSTS}/${posts[0]._id}/comments`)
+            .get(`${path_1.PATH.POSTS}/${posts[0]._id}/comments`)
             .query(query);
         const comments = yield db_1.db.getCollection().commentsCollection.find()
             .sort(query.sortBy, query.sortDirection)
@@ -68,7 +68,7 @@ describe('comments e2e tests', () => {
             "page": query.pageNumber,
             "pageSize": query.pageSize,
             "totalCount": commentsCount,
-            "items": comments.map(i => (0, mappers_1.getCommentView)(i))
+            "items": comments.map(i => (0, commentsMappers_1.getCommentView)(i))
         });
     }));
 });

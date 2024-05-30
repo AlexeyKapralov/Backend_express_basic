@@ -1,4 +1,4 @@
 "use strict";
-describe('blogs integration tests', () => {
+describe('repository integration tests', () => {
     it.skip('', () => { });
 });

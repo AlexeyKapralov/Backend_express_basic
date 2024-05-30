@@ -1,9 +1,9 @@
-import { IUserViewModel } from '../../features/users/models/userView.model'
-import { db } from '../../db/db'
+import { IUserViewModel } from '../models/userView.model'
+import { db } from '../../../db/db'
 import { SortDirection } from 'mongodb'
-import { getUserViewModel } from '../../common/utils/mappers'
-import { IPaginator } from '../../common/types/paginator'
-import { IQueryModel } from '../../common/types/query.model'
+import { IPaginator } from '../../../common/types/paginator'
+import { IQueryModel } from '../../../common/types/query.model'
+import {getUserViewModel} from "../mappers/userMappers";
 
 export const usersQueryRepository = {
 	async findUsers(query: IQueryModel): Promise<IPaginator<IUserViewModel>> {

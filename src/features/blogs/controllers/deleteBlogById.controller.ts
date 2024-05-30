@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
-import { blogsService } from '../../../service/blogs.service'
+import { blogsService } from '../sevice/blogs.service'
 import { ResultStatus } from '../../../common/types/resultStatus.type'
 
 export const deleteBlogByIdController = async (req: Request<{id: string}>, res: Response<StatusCodes>) => {

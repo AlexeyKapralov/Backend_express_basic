@@ -8,10 +8,11 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const settings_1 = require("../config/settings");
 exports.jwtService = {
     createAccessToken(userId) {
-        return jsonwebtoken_1.default.sign({ userId }, settings_1.SETTINGS.SECRET_JWT, { expiresIn: "10s" });
+        return jsonwebtoken_1.default.sign({ userId }, settings_1.SETTINGS.SECRET_JWT, { expiresIn: settings_1.SETTINGS.EXPIRATION.ACCESS_TOKEN });
     },
+    //todo переписать чтобы хранился только device Id и userId
     createRefreshToken(device) {
-        return jsonwebtoken_1.default.sign(device, settings_1.SETTINGS.SECRET_JWT, { expiresIn: "20s" });
+        return jsonwebtoken_1.default.sign(device, settings_1.SETTINGS.SECRET_JWT, { expiresIn: settings_1.SETTINGS.EXPIRATION.REFRESH_TOKEN });
     },
     getUserIdByToken(token) {
         try {
@@ -22,10 +23,9 @@ exports.jwtService = {
             return null;
         }
     },
-    //todo вопросики по корректности такого кода (как типизировать payload из JWT verify)
-    getPayloadFromRefreshToken(token) {
+    decodeToken(token) {
         try {
-            const result = jsonwebtoken_1.default.verify(token, settings_1.SETTINGS.SECRET_JWT);
+            const result = jsonwebtoken_1.default.decode(token);
             return {
                 deviceId: result.deviceId,
                 userId: result.userId,
@@ -41,7 +41,7 @@ exports.jwtService = {
     },
     checkRefreshToken(token) {
         try {
-            const result = jsonwebtoken_1.default.verify(token, settings_1.SETTINGS.SECRET_JWT);
+            jsonwebtoken_1.default.verify(token, settings_1.SETTINGS.SECRET_JWT);
             return true;
         }
         catch (e) {

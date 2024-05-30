@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.registrationConfirmationController = void 0;
-const login_service_1 = require("../../../service/login.service");
+const login_service_1 = require("../service/login.service");
 const resultStatus_type_1 = require("../../../common/types/resultStatus.type");
 const http_status_codes_1 = require("http-status-codes");
 const registrationConfirmationController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {

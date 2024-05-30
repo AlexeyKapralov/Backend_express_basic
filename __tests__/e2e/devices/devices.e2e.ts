@@ -7,6 +7,7 @@ import {app} from "../../../src/app";
 import {SETTINGS} from "../../../src/common/config/settings";
 import {jwtService} from "../../../src/common/adapters/jwt.service";
 import {userManagerTest} from "../users/userManager.test";
+import {PATH} from "../../../src/common/config/path";
 
 describe('e2e test for devices', () => {
     let tokensUser1: { refreshToken: string, accessToken: string } | undefined
@@ -80,7 +81,7 @@ describe('e2e test for devices', () => {
         // проверяем всё ли создалось
         const refreshToken = tokensUser4!.refreshToken
         const result = await agent(app)
-            .get(`${SETTINGS.PATH.SECURITY}/devices`)
+            .get(`${PATH.SECURITY}/devices`)
             .set('Cookie', [`refreshToken=${refreshToken}`])
 
         expect(result.body.length).toBe(4)
@@ -91,7 +92,7 @@ describe('e2e test for devices', () => {
         // удаляем девайсы
         const refreshToken = tokensUser4!.refreshToken
         const result = await agent(app)
-            .delete(`${SETTINGS.PATH.SECURITY}/devices`)
+            .delete(`${PATH.SECURITY}/devices`)
             .set('Cookie', [`refreshToken=${refreshToken}`])
 
         //проверяем статус
@@ -108,10 +109,10 @@ describe('e2e test for devices', () => {
         // удаляем девайсы
         const refreshToken = tokensAnotherUser1!.refreshToken
 
-        const device = jwtService.getPayloadFromRefreshToken(tokensUser1!.refreshToken)
+        const device = jwtService.decodeToken(tokensUser1!.refreshToken)
 
         const result = await agent(app)
-            .delete(`${SETTINGS.PATH.SECURITY}/devices/${device!.deviceId}`)
+            .delete(`${PATH.SECURITY}/devices/${device!.deviceId}`)
             .set('Cookie', [`refreshToken=${refreshToken}`])
 
         //проверяем статус
@@ -128,10 +129,10 @@ describe('e2e test for devices', () => {
         // удаляем девайсы
         const refreshToken = tokensUser1!.refreshToken
 
-        const device = jwtService.getPayloadFromRefreshToken(tokensUser1!.refreshToken)
+        const device = jwtService.decodeToken(tokensUser1!.refreshToken)
 
         const result = await agent(app)
-            .delete(`${SETTINGS.PATH.SECURITY}/devices/${device!.deviceId}`)
+            .delete(`${PATH.SECURITY}/devices/${device!.deviceId}`)
             .set('Cookie', [`refreshToken=${refreshToken}`])
 
         //проверяем статус

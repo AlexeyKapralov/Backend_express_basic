@@ -19,6 +19,8 @@ describe('auth test', () => {
 		done()
 	})
 
+	it.skip('', ()=>{})
+
 
 
 })

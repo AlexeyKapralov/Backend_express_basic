@@ -17,6 +17,7 @@ const rateLimitMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0
     const ip = req.ip || '';
     const url = req.url;
     const dateRequest = (0, date_fns_1.addSeconds)(new Date(), -10);
+    //todo возможно стоит переписать чтобы здесь не было обращения к бд а сделать через сервис
     const limitRequest = yield db_1.db.getCollection().rateLimitCollection.find({ ip, url, date: { $gt: dateRequest } }).toArray();
     if (limitRequest.length >= 5) {
         res.status(http_status_codes_1.StatusCodes.TOO_MANY_REQUESTS).send();

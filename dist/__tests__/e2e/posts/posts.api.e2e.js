@@ -13,12 +13,12 @@ const mongodb_memory_server_1 = require("mongodb-memory-server");
 const db_1 = require("../../../src/db/db");
 const supertest_1 = require("supertest");
 const app_1 = require("../../../src/app");
-const settings_1 = require("../../../src/common/config/settings");
-const mappers_1 = require("../../../src/common/utils/mappers");
 const postsManager_test_1 = require("./postsManager.test");
 const http_status_codes_1 = require("http-status-codes");
 const authManager_test_1 = require("../auth/authManager.test");
 const blogsManager_test_1 = require("../blogs/blogsManager.test");
+const postMappers_1 = require("../../../src/features/posts/mappers/postMappers");
+const path_1 = require("../../../src/common/config/path");
 describe('posts tests', () => {
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
         const mongod = yield mongodb_memory_server_1.MongoMemoryServer.create();
@@ -36,7 +36,7 @@ describe('posts tests', () => {
     it('should get posts with default pagination and empty array', () => __awaiter(void 0, void 0, void 0, function* () {
         yield db_1.db.drop();
         const res = yield (0, supertest_1.agent)(app_1.app)
-            .get(settings_1.SETTINGS.PATH.POSTS);
+            .get(path_1.PATH.POSTS);
         expect(res.body).toEqual({
             pagesCount: 0,
             page: 1,
@@ -49,7 +49,7 @@ describe('posts tests', () => {
         yield db_1.db.drop();
         yield postsManager_test_1.postsManagerTest.createPosts(20);
         const res = yield (0, supertest_1.agent)(app_1.app)
-            .get(settings_1.SETTINGS.PATH.POSTS);
+            .get(path_1.PATH.POSTS);
         expect(res.body).toEqual({
             pagesCount: 2,
             page: 1,
@@ -73,7 +73,7 @@ describe('posts tests', () => {
             .skip((1 - 1) * 10)
             .limit(10)
             .toArray();
-        expect(posts.map(mappers_1.getPostViewModel)).toEqual(res.body.items);
+        expect(posts.map(postMappers_1.getPostViewModel)).toEqual(res.body.items);
     }));
     it('should get posts with custom pagination', () => __awaiter(void 0, void 0, void 0, function* () {
         yield db_1.db.drop();
@@ -85,7 +85,7 @@ describe('posts tests', () => {
             sortDirection: 'asc'
         };
         const res = yield (0, supertest_1.agent)(app_1.app)
-            .get(settings_1.SETTINGS.PATH.POSTS)
+            .get(path_1.PATH.POSTS)
             .query(query);
         expect(res.body).toEqual({
             pagesCount: Math.ceil(20 / 6),
@@ -110,17 +110,17 @@ describe('posts tests', () => {
             .skip((3 - 1) * 6)
             .limit(6)
             .toArray();
-        expect(posts.map(mappers_1.getPostViewModel)).toEqual(res.body.items);
+        expect(posts.map(postMappers_1.getPostViewModel)).toEqual(res.body.items);
     }));
     it(`shouldn't create post with no auth`, () => __awaiter(void 0, void 0, void 0, function* () {
         yield (0, supertest_1.agent)(app_1.app)
-            .post(settings_1.SETTINGS.PATH.POSTS)
+            .post(path_1.PATH.POSTS)
             .expect(http_status_codes_1.StatusCodes.UNAUTHORIZED);
     }));
     it(`shouldn't create post with no request body`, () => __awaiter(void 0, void 0, void 0, function* () {
         const accessToken = yield authManager_test_1.authManagerTest.createAndAuthUser();
         const res = yield (0, supertest_1.agent)(app_1.app)
-            .post(settings_1.SETTINGS.PATH.POSTS)
+            .post(path_1.PATH.POSTS)
             .set({ authorization: `Bearer ${accessToken.accessToken}` })
             .expect(http_status_codes_1.StatusCodes.BAD_REQUEST);
         expect(res.body).toEqual({

@@ -1,10 +1,10 @@
-import {jwtService} from "../common/adapters/jwt.service";
-import {IDeviceViewModel} from "../features/securityDevices/models/deviceView.model";
-import {devicesQueryRepository} from "../repositories/devices/devices.queryRepository";
-import {ResultType} from "../common/types/result.type";
-import {ResultStatus} from "../common/types/resultStatus.type";
-import {devicesRepository} from "../repositories/devices/devices.repository";
-import {IDeviceModel} from "../common/types/devices.model";
+import {jwtService} from "../../../common/adapters/jwt.service";
+import {IDeviceViewModel} from "../models/deviceView.model";
+import {devicesQueryRepository} from "../repository/devices.queryRepository";
+import {ResultType} from "../../../common/types/result.type";
+import {ResultStatus} from "../../../common/types/resultStatus.type";
+import {devicesRepository} from "../repository/devices.repository";
+import {IDeviceModel} from "../../../common/types/devices.model";
 
 export const devicesService = {
     async getDevice(device: IDeviceModel): Promise<ResultType<IDeviceModel | null>> {
@@ -20,31 +20,25 @@ export const devicesService = {
             }
 
     },
-    async getSecurityDevices(refreshToken: string): Promise<ResultType<IDeviceViewModel[] | null>> {
-        const device = jwtService.getPayloadFromRefreshToken(refreshToken)
+    async getSecurityDevices(userId: string): Promise<ResultType<IDeviceViewModel[] | null>> {
 
-        if (!device){
+        const devices = await devicesQueryRepository.getSecurityDevices(userId)
+
+        if (!devices){
             return {
                 status: ResultStatus.Unauthorized,
                 data: null
             }
         }
 
-        if (device) {
-            const result = await devicesQueryRepository.getSecurityDevices(device.userId)
-            return {
-                status: ResultStatus.Success,
-                data: result
-            }
-        }
         return {
-            status: ResultStatus.Unauthorized,
-            data: null
+            status: ResultStatus.Success,
+            data: devices
         }
 
     },
     async deleteAllSecurityDevices(refreshToken: string): Promise<ResultType> {
-        const device = jwtService.getPayloadFromRefreshToken(refreshToken)
+        const device = jwtService.decodeToken(refreshToken)
 
         if (device) {
             if (await devicesRepository.deleteAllAnotherDevices(device)) {

@@ -1,18 +1,18 @@
-import {bcryptService} from '../common/adapters/bcrypt.service'
-import {usersRepository} from '../repositories/users/users.repository'
-import {ILoginInputModel} from '../features/auth/models/loginInput.model'
-import {ResultType} from '../common/types/result.type'
-import {ResultStatus} from '../common/types/resultStatus.type'
-import {IUserInputModel} from '../features/users/models/userInput.model'
-import {emailService} from '../common/adapters/email.service'
-import {db} from '../db/db'
+import {bcryptService} from '../../../common/adapters/bcrypt.service'
+import {usersRepository} from '../../users/repository/users.repository'
+import {ILoginInputModel} from '../models/loginInput.model'
+import {ResultType} from '../../../common/types/result.type'
+import {ResultStatus} from '../../../common/types/resultStatus.type'
+import {IUserInputModel} from '../../users/models/userInput.model'
+import {emailService} from '../../../common/adapters/email.service'
+import {db} from '../../../db/db'
 import {v4 as uuidv4} from 'uuid'
 import {add} from 'date-fns'
-import {SETTINGS} from '../common/config/settings'
-import {jwtService} from "../common/adapters/jwt.service";
-import {IDeviceModel} from "../common/types/devices.model";
-import {devicesRepository} from "../repositories/devices/devices.repository";
-import {devicesService} from "./devicesService";
+import {SETTINGS} from '../../../common/config/settings'
+import {jwtService} from "../../../common/adapters/jwt.service";
+import {IDeviceModel} from "../../../common/types/devices.model";
+import {devicesRepository} from "../../securityDevices/repository/devices.repository";
+import {devicesService} from "../../securityDevices/service/devicesService";
 
 export const loginService = {
     async registrationUser(data: IUserInputModel): Promise<ResultType> {
@@ -114,7 +114,7 @@ export const loginService = {
             const refreshToken = jwtService.createRefreshToken(device)
 
             if (isTrueHash) {
-                const refreshTokenPayload = jwtService.getPayloadFromRefreshToken(refreshToken)
+                const refreshTokenPayload = jwtService.decodeToken(refreshToken)
 
                 if (await devicesRepository.createOrUpdateDevice(refreshTokenPayload!)) {
                     return {
@@ -137,8 +137,9 @@ export const loginService = {
 
         }
     },
+    //todo не использовать refreshtoken, а сделать чтобы сюда приходил device id и userId
     async logout(refreshToken: string): Promise<ResultType> {
-        const deviceData = jwtService.getPayloadFromRefreshToken(refreshToken)
+        const deviceData = jwtService.decodeToken(refreshToken)
 
         if (!deviceData) {
             return {
@@ -170,12 +171,14 @@ export const loginService = {
                 data: null
             }
     },
+    //todo не использовать refreshtoken, а сделать чтобы сюда приходил device id и userId
     async refreshToken(refreshToken: string): Promise<ResultType<{
         accessToken: string,
         refreshToken: string
     } | null>> {
+        //TODO в качестве аргументов получаем deviceId и userId
 
-        const deviceInfo = jwtService.getPayloadFromRefreshToken(refreshToken)
+        const deviceInfo = jwtService.decodeToken(refreshToken)
 
         if (!deviceInfo) {
             return {
@@ -200,7 +203,7 @@ export const loginService = {
             ip: device.ip
         })
 
-        const newDevice = jwtService.getPayloadFromRefreshToken(newRefreshToken)
+        const newDevice = jwtService.decodeToken(newRefreshToken)
 
         await devicesRepository.createOrUpdateDevice(newDevice!)
 

@@ -1,9 +1,9 @@
-import { IPaginator } from '../../common/types/paginator'
-import { ICommentViewModel } from '../../features/comments/models/commentView.model'
-import { db } from '../../db/db'
-import { getCommentView } from '../../common/utils/mappers'
+import { IPaginator } from '../../../common/types/paginator'
+import { ICommentViewModel } from '../models/commentView.model'
+import { db } from '../../../db/db'
 import { SortDirection } from 'mongodb'
-import { IQueryModel } from '../../common/types/query.model'
+import { IQueryModel } from '../../../common/types/query.model'
+import {getCommentView} from "../mappers/commentsMappers";
 
 export const commentsQueryRepository = {
 	async getComments(postId: string, query: IQueryModel): Promise<IPaginator<ICommentViewModel> | undefined> {

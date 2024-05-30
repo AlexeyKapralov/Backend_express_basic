@@ -18,6 +18,7 @@ const app_1 = require("../../../src/app");
 const settings_1 = require("../../../src/common/config/settings");
 const jwt_service_1 = require("../../../src/common/adapters/jwt.service");
 const userManager_test_1 = require("../users/userManager.test");
+const path_1 = require("../../../src/common/config/path");
 describe('e2e test for devices', () => {
     let tokensUser1;
     let tokensUser2;
@@ -62,7 +63,7 @@ describe('e2e test for devices', () => {
         // проверяем всё ли создалось
         const refreshToken = tokensUser4.refreshToken;
         const result = yield (0, supertest_1.agent)(app_1.app)
-            .get(`${settings_1.SETTINGS.PATH.SECURITY}/devices`)
+            .get(`${path_1.PATH.SECURITY}/devices`)
             .set('Cookie', [`refreshToken=${refreshToken}`]);
         expect(result.body.length).toBe(4);
     }));
@@ -70,7 +71,7 @@ describe('e2e test for devices', () => {
         // удаляем девайсы
         const refreshToken = tokensUser4.refreshToken;
         const result = yield (0, supertest_1.agent)(app_1.app)
-            .delete(`${settings_1.SETTINGS.PATH.SECURITY}/devices`)
+            .delete(`${path_1.PATH.SECURITY}/devices`)
             .set('Cookie', [`refreshToken=${refreshToken}`]);
         //проверяем статус
         expect(result.status).toBe(http_status_codes_1.StatusCodes.NO_CONTENT);
@@ -82,9 +83,9 @@ describe('e2e test for devices', () => {
     it(`Shouldn't delete device with token from another user`, () => __awaiter(void 0, void 0, void 0, function* () {
         // удаляем девайсы
         const refreshToken = tokensAnotherUser1.refreshToken;
-        const device = jwt_service_1.jwtService.getPayloadFromRefreshToken(tokensUser1.refreshToken);
+        const device = jwt_service_1.jwtService.decodeToken(tokensUser1.refreshToken);
         const result = yield (0, supertest_1.agent)(app_1.app)
-            .delete(`${settings_1.SETTINGS.PATH.SECURITY}/devices/${device.deviceId}`)
+            .delete(`${path_1.PATH.SECURITY}/devices/${device.deviceId}`)
             .set('Cookie', [`refreshToken=${refreshToken}`]);
         //проверяем статус
         expect(result.status).toBe(http_status_codes_1.StatusCodes.FORBIDDEN);
@@ -96,9 +97,9 @@ describe('e2e test for devices', () => {
     it(`Should delete device`, () => __awaiter(void 0, void 0, void 0, function* () {
         // удаляем девайсы
         const refreshToken = tokensUser1.refreshToken;
-        const device = jwt_service_1.jwtService.getPayloadFromRefreshToken(tokensUser1.refreshToken);
+        const device = jwt_service_1.jwtService.decodeToken(tokensUser1.refreshToken);
         const result = yield (0, supertest_1.agent)(app_1.app)
-            .delete(`${settings_1.SETTINGS.PATH.SECURITY}/devices/${device.deviceId}`)
+            .delete(`${path_1.PATH.SECURITY}/devices/${device.deviceId}`)
             .set('Cookie', [`refreshToken=${refreshToken}`]);
         //проверяем статус
         expect(result.status).toBe(http_status_codes_1.StatusCodes.NO_CONTENT);

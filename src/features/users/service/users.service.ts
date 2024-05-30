@@ -1,10 +1,10 @@
-import { bcryptService } from '../common/adapters/bcrypt.service'
-import { IUserInputModel } from '../features/users/models/userInput.model'
-import { IUserViewModel } from '../features/users/models/userView.model'
-import { usersRepository } from '../repositories/users/users.repository'
-import { getUserViewModel } from '../common/utils/mappers'
-import { ResultType } from '../common/types/result.type'
-import { ResultStatus } from '../common/types/resultStatus.type'
+import { bcryptService } from '../../../common/adapters/bcrypt.service'
+import { IUserInputModel } from '../models/userInput.model'
+import { IUserViewModel } from '../models/userView.model'
+import { usersRepository } from '../repository/users.repository'
+import { ResultType } from '../../../common/types/result.type'
+import { ResultStatus } from '../../../common/types/resultStatus.type'
+import {getUserViewModel} from "../mappers/userMappers";
 
 export const usersService = {
 		async createUser(

@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteBlogByIdController = void 0;
 const http_status_codes_1 = require("http-status-codes");
-const blogs_service_1 = require("../../../service/blogs.service");
+const blogs_service_1 = require("../sevice/blogs.service");
 const resultStatus_type_1 = require("../../../common/types/resultStatus.type");
 const deleteBlogByIdController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const isDeleted = yield blogs_service_1.blogsService.deleteBlogByID(req.params.id);

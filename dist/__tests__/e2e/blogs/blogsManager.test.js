@@ -12,11 +12,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.blogsManagerTest = void 0;
 const supertest_1 = require("supertest");
 const app_1 = require("../../../src/app");
-const settings_1 = require("../../../src/common/config/settings");
 const http_status_codes_1 = require("http-status-codes");
 const mongodb_1 = require("mongodb");
 const db_1 = require("../../../src/db/db");
 const generators_1 = require("../../../src/common/utils/generators");
+const path_1 = require("../../../src/common/config/path");
 exports.blogsManagerTest = {
     createBlog() {
         return __awaiter(this, arguments, void 0, function* (data = 'default', accessToken, expectedStatus = http_status_codes_1.StatusCodes.CREATED) {
@@ -28,7 +28,7 @@ exports.blogsManagerTest = {
                 };
             }
             const res = yield (0, supertest_1.agent)(app_1.app)
-                .post(settings_1.SETTINGS.PATH.BLOGS)
+                .post(path_1.PATH.BLOGS)
                 .send(data)
                 .set({ authorization: `Bearer ${accessToken}` })
                 .expect(expectedStatus);

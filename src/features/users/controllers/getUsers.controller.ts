@@ -1,6 +1,6 @@
 import {Request, Response} from 'express'
 import {StatusCodes} from "http-status-codes";
-import {usersQueryRepository} from "../../../repositories/users/usersQuery.repository";
+import {usersQueryRepository} from "../repository/usersQuery.repository";
 import {getQueryParams} from "../../../common/utils/mappers";
 import { IPaginator } from '../../../common/types/paginator'
 import { IUserViewModel } from '../models/userView.model'

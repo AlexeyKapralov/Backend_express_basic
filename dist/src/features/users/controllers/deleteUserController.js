@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteUserController = void 0;
-const users_service_1 = require("../../../service/users.service");
+const users_service_1 = require("../service/users.service");
 const http_status_codes_1 = require("http-status-codes");
 const resultStatus_type_1 = require("../../../common/types/resultStatus.type");
 const deleteUserController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {

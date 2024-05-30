@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongodb_memory_server_1 = require("mongodb-memory-server");
 const db_1 = require("../../../src/db/db");
-const login_service_1 = require("../../../src/service/login.service");
+const login_service_1 = require("../../../src/features/auth/service/login.service");
 const email_service_1 = require("../../../src/common/adapters/email.service");
 const resultStatus_type_1 = require("../../../src/common/types/resultStatus.type");
 describe('Integration Auth', () => {

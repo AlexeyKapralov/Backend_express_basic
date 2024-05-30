@@ -8,6 +8,7 @@ import {db} from '../../../src/db/db'
 import {IBlogDbModel} from '../../../src/features/blogs/models/blogDb.model'
 import {getRandomTitle} from '../../../src/common/utils/generators'
 import {IBlogViewModel} from "../../../src/features/blogs/models/blogView.model";
+import {PATH} from "../../../src/common/config/path";
 
 export const blogsManagerTest = {
     async createBlog(
@@ -24,7 +25,7 @@ export const blogsManagerTest = {
         }
 
         const res = await agent(app)
-            .post(SETTINGS.PATH.BLOGS)
+            .post(PATH.BLOGS)
             .send(data)
             .set({authorization: `Bearer ${accessToken}`})
             .expect(expectedStatus)

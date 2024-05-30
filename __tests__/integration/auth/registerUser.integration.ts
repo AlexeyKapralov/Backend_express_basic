@@ -1,6 +1,6 @@
 import { MongoMemoryServer } from 'mongodb-memory-server'
 import { db } from '../../../src/db/db'
-import { loginService } from '../../../src/service/login.service'
+import { loginService } from '../../../src/features/auth/service/login.service'
 import { IUserInputModel } from '../../../src/features/users/models/userInput.model'
 import { emailService } from '../../../src/common/adapters/email.service'
 import { ResultType } from '../../../src/common/types/result.type'

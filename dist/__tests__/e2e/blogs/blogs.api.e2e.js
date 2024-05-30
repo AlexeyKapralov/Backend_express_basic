@@ -13,11 +13,11 @@ const mongodb_memory_server_1 = require("mongodb-memory-server");
 const db_1 = require("../../../src/db/db");
 const supertest_1 = require("supertest");
 const app_1 = require("../../../src/app");
-const settings_1 = require("../../../src/common/config/settings");
-const mappers_1 = require("../../../src/common/utils/mappers");
 const blogsManager_test_1 = require("./blogsManager.test");
 const authManager_test_1 = require("../auth/authManager.test");
 const http_status_codes_1 = require("http-status-codes");
+const blogsMappers_1 = require("../../../src/features/blogs/mappers/blogsMappers");
+const path_1 = require("../../../src/common/config/path");
 describe('blogs tests', () => {
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
         const mongod = yield mongodb_memory_server_1.MongoMemoryServer.create();
@@ -34,7 +34,7 @@ describe('blogs tests', () => {
     }));
     it('should get blogs with default pagination and empty array', () => __awaiter(void 0, void 0, void 0, function* () {
         const res = yield (0, supertest_1.agent)(app_1.app)
-            .get(settings_1.SETTINGS.PATH.BLOGS);
+            .get(path_1.PATH.BLOGS);
         expect(res.body).toEqual({
             pagesCount: 0,
             page: 1,
@@ -53,7 +53,7 @@ describe('blogs tests', () => {
             sortDirection: 'asc'
         };
         const res = yield (0, supertest_1.agent)(app_1.app)
-            .get(settings_1.SETTINGS.PATH.BLOGS)
+            .get(path_1.PATH.BLOGS)
             .query(query);
         const totalCount = yield db_1.db.getCollection().blogsCollection
             .countDocuments({ name: { $regex: query.searchNameTerm, $options: 'i' } });
@@ -79,7 +79,7 @@ describe('blogs tests', () => {
                 })
             ])
         });
-        expect(blogs.map(mappers_1.getBlogViewModel)).toEqual(res.body.items);
+        expect(blogs.map(blogsMappers_1.getBlogViewModel)).toEqual(res.body.items);
     }));
     //тесты для post (positive + negative)
     it(`shouldn't create blog with no auth`, () => __awaiter(void 0, void 0, void 0, function* () {

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
-import { loginService } from '../../../service/login.service'
+import { loginService } from '../service/login.service'
 import { ResultStatus } from '../../../common/types/resultStatus.type'
 
 export const emailResendingController = async (req:Request<{},{},{email: string}>, res:Response<StatusCodes>) => {

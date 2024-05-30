@@ -1,9 +1,9 @@
 import { SortDirection } from 'mongodb'
-import { db } from '../../db/db'
-import { getPostViewModel } from '../../common/utils/mappers'
-import { IPostViewModel } from '../../features/posts/models/postView.model'
-import { IPaginator } from '../../common/types/paginator'
-import { IQueryModel } from '../../common/types/query.model'
+import { db } from '../../../db/db'
+import { IPostViewModel } from '../models/postView.model'
+import { IPaginator } from '../../../common/types/paginator'
+import { IQueryModel } from '../../../common/types/query.model'
+import {getPostViewModel} from "../mappers/postMappers";
 
 export const postsQueryRepository = {
 	async getPosts(query: IQueryModel): Promise<IPaginator<IPostViewModel>> {

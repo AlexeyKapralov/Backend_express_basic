@@ -13,7 +13,7 @@ const jwt_service_1 = require("../../../src/common/adapters/jwt.service");
 const userManager_test_1 = require("../../e2e/users/userManager.test");
 const settings_1 = require("../../../src/common/config/settings");
 const authManager_test_1 = require("../../e2e/auth/authManager.test");
-const devicesService_1 = require("../../../src/service/devicesService");
+const devicesService_1 = require("../../../src/features/securityDevices/service/devicesService");
 const resultStatus_type_1 = require("../../../src/common/types/resultStatus.type");
 const mongodb_memory_server_1 = require("mongodb-memory-server");
 const db_1 = require("../../../src/db/db");
@@ -39,7 +39,7 @@ describe('integration test delete device', () => {
             loginOrEmail: userData.email,
             password: userData.password
         });
-        device = jwt_service_1.jwtService.getPayloadFromRefreshToken(tokens.refreshToken);
+        device = jwt_service_1.jwtService.decodeToken(tokens.refreshToken);
         const userData2 = {
             login: 'login2',
             password: 'qwert1234',

@@ -14,15 +14,15 @@ const mongodb_1 = require("mongodb");
 const db_1 = require("../../../src/db/db");
 const supertest_1 = require("supertest");
 const app_1 = require("../../../src/app");
-const settings_1 = require("../../../src/common/config/settings");
 const http_status_codes_1 = require("http-status-codes");
 const blogsManager_test_1 = require("../blogs/blogsManager.test");
 const generators_1 = require("../../../src/common/utils/generators");
+const path_1 = require("../../../src/common/config/path");
 exports.postsManagerTest = {
     deletePost(id_1, accessToken_1) {
         return __awaiter(this, arguments, void 0, function* (id, accessToken, expectedStatus = http_status_codes_1.StatusCodes.NO_CONTENT) {
             yield (0, supertest_1.agent)(app_1.app)
-                .delete(`${settings_1.SETTINGS.PATH.POSTS}/${id}`)
+                .delete(`${path_1.PATH.POSTS}/${id}`)
                 .set({ authorization: `Bearer ${accessToken}` })
                 .expect(expectedStatus);
             expect(yield db_1.db.getCollection().postsCollection.find({ _id: id }).toArray()).toEqual([]);
@@ -61,7 +61,7 @@ exports.postsManagerTest = {
                 };
             }
             const res = yield (0, supertest_1.agent)(app_1.app)
-                .post(settings_1.SETTINGS.PATH.POSTS)
+                .post(path_1.PATH.POSTS)
                 .send(requestBody)
                 .set({ authorization: `Bearer ${accessToken}` })
                 .expect(expectedStatus);
@@ -82,7 +82,7 @@ exports.postsManagerTest = {
     },
     getPostById(id, expectedStatus) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield (0, supertest_1.agent)(app_1.app).get(settings_1.SETTINGS.PATH.POSTS + '/' + id).expect(expectedStatus);
+            const result = yield (0, supertest_1.agent)(app_1.app).get(path_1.PATH.POSTS + '/' + id).expect(expectedStatus);
             if (result.status === http_status_codes_1.StatusCodes.OK) {
                 expect(result.body).toEqual({
                     'id': id,
@@ -101,7 +101,7 @@ exports.postsManagerTest = {
     updatePostById(id_1, accessToken_1, data_1) {
         return __awaiter(this, arguments, void 0, function* (id, accessToken, data, expectedStatus = http_status_codes_1.StatusCodes.NO_CONTENT) {
             yield (0, supertest_1.agent)(app_1.app)
-                .put(`${settings_1.SETTINGS.PATH.POSTS}/${id}`)
+                .put(`${path_1.PATH.POSTS}/${id}`)
                 .set({ authorization: `Bearer ${accessToken}` })
                 .send(data)
                 .expect(expectedStatus);

@@ -6,7 +6,8 @@ import {app} from "../../../src/app";
 import {SETTINGS} from "../../../src/common/config/settings";
 import {postsManagerTest} from "../posts/postsManager.test";
 import {IQueryModel} from "../../../src/common/types/query.model";
-import {getCommentView} from "../../../src/common/utils/mappers";
+import {getCommentView} from "../../../src/features/comments/mappers/commentsMappers";
+import {PATH} from "../../../src/common/config/path";
 
 describe('comments e2e tests', () => {
 
@@ -31,7 +32,7 @@ describe('comments e2e tests', () => {
     it('should get empty array with default pagination', async () => {
         const posts = await db.getCollection().postsCollection.find().toArray()
         const result = await agent(app)
-            .get(`${SETTINGS.PATH.POSTS}/${posts[0]._id}/comments`)
+            .get(`${PATH.POSTS}/${posts[0]._id}/comments`)
 
         expect(result.body).toEqual({
             "pagesCount": 0,
@@ -52,7 +53,7 @@ describe('comments e2e tests', () => {
             pageSize: 4
         }
         const result = await agent(app)
-            .get(`${SETTINGS.PATH.POSTS}/${posts[0]._id}/comments`)
+            .get(`${PATH.POSTS}/${posts[0]._id}/comments`)
             .query(query)
 
         const comments = await db.getCollection().commentsCollection.find()

@@ -9,6 +9,7 @@ import {postsRouter} from "./features/posts/posts.router";
 import {commentsRouter} from './features/comments/comments.router'
 import cookieParser from "cookie-parser";
 import {securityDevicesRouter} from "./features/securityDevices/securityDevices.router";
+import {PATH} from "./common/config/path";
 
 export const app = express()
 
@@ -20,14 +21,14 @@ app.use(cookieParser())
 app.get('/', (req: Request, res: Response) => {
     res.send('All is running!')
 })
-app.delete(SETTINGS.PATH.TESTING, async (req: Request, res: Response) => {
+app.delete(PATH.TESTING, async (req: Request, res: Response) => {
     await db.drop()
     res.status(StatusCodes.NO_CONTENT).send()
 })
 
-app.use(SETTINGS.PATH.USERS, usersRouter)
-app.use(SETTINGS.PATH.BLOGS, blogsRouter)
-app.use(SETTINGS.PATH.COMMENTS, commentsRouter)
-app.use(SETTINGS.PATH.POSTS, postsRouter)
-app.use(SETTINGS.PATH.AUTH, authRouter)
-app.use(SETTINGS.PATH.SECURITY, securityDevicesRouter)
+app.use(PATH.USERS, usersRouter)
+app.use(PATH.BLOGS, blogsRouter)
+app.use(PATH.COMMENTS, commentsRouter)
+app.use(PATH.POSTS, postsRouter)
+app.use(PATH.AUTH, authRouter)
+app.use(PATH.SECURITY, securityDevicesRouter)

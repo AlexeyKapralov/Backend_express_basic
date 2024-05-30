@@ -2,7 +2,7 @@ import {jwtService} from "../../../src/common/adapters/jwt.service";
 import {userManagerTest} from "../../e2e/users/userManager.test";
 import {SETTINGS} from "../../../src/common/config/settings";
 import {authManagerTest} from "../../e2e/auth/authManager.test";
-import {devicesService} from "../../../src/service/devicesService";
+import {devicesService} from "../../../src/features/securityDevices/service/devicesService";
 import {ResultStatus} from "../../../src/common/types/resultStatus.type";
 import {MongoMemoryServer} from "mongodb-memory-server";
 import {db} from "../../../src/db/db";
@@ -31,7 +31,7 @@ describe('integration test delete device', () => {
             loginOrEmail: userData.email,
             password: userData.password
         })
-        device = jwtService.getPayloadFromRefreshToken(tokens!.refreshToken)
+        device = jwtService.decodeToken(tokens!.refreshToken)
 
         const userData2 = {
             login: 'login2',

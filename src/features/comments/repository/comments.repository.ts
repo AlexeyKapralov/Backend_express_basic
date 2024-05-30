@@ -1,9 +1,9 @@
-import {ICommentDbModel} from '../../features/comments/models/commentDb.model'
-import {ICommentInputModel} from '../../features/comments/models/commentInput.model'
+import {ICommentDbModel} from '../models/commentDb.model'
+import {ICommentInputModel} from '../models/commentInput.model'
 import {ObjectId} from 'mongodb'
-import {db} from '../../db/db'
-import {IPostDbModel} from "../../features/posts/models/postDb.model";
-import {IUserDbModel} from "../../features/users/models/userDb.model";
+import {db} from '../../../db/db'
+import {IPostDbModel} from "../../posts/models/postDb.model";
+import {IUserDbModel} from "../../users/models/userDb.model";
 
 export const commentsRepository = {
     async getCommentById(id: string): Promise<ICommentDbModel | undefined> {

@@ -10,21 +10,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.refreshTokenController = void 0;
-const login_service_1 = require("../../../service/login.service");
+const login_service_1 = require("../service/login.service");
 const resultStatus_type_1 = require("../../../common/types/resultStatus.type");
 const http_status_codes_1 = require("http-status-codes");
-const date_fns_1 = require("date-fns");
+const generators_1 = require("../../../common/utils/generators");
 const refreshTokenController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const refreshToken = req.cookies.refreshToken;
-    if (!refreshToken) {
-        res.status(http_status_codes_1.StatusCodes.UNAUTHORIZED).send();
-        return;
-    }
     const result = yield login_service_1.loginService.refreshToken(refreshToken);
     if (result.status === resultStatus_type_1.ResultStatus.Success) {
+        (0, generators_1.setCookie)(res, result.data.refreshToken);
         res.status(http_status_codes_1.StatusCodes.OK)
-            .cookie('refreshToken', result.data.refreshToken, { httpOnly: true, secure: true, expires: (0, date_fns_1.addSeconds)(new Date(), 20) })
-            .json({ accessToken: result.data.accessToken });
+            .send({ accessToken: result.data.accessToken });
     }
     else {
         res.status(http_status_codes_1.StatusCodes.UNAUTHORIZED).json();

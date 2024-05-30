@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getBlogByIdController = void 0;
 const http_status_codes_1 = require("http-status-codes");
-const blogsQuery_repository_1 = require("../../../repositories/blogs/blogsQuery.repository");
+const blogsQuery_repository_1 = require("../repository/blogsQuery.repository");
 const getBlogByIdController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield blogsQuery_repository_1.blogsQueryRepository.getBlogByID(req.params.id);
     result ? res.status(http_status_codes_1.StatusCodes.OK).json(result) : res.status(http_status_codes_1.StatusCodes.NOT_FOUND).json();

@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getPostsController = void 0;
-const postsQuery_repository_1 = require("../../../repositories/posts/postsQuery.repository");
+const postsQuery_repository_1 = require("../repository/postsQuery.repository");
 const http_status_codes_1 = require("http-status-codes");
 const mappers_1 = require("../../../common/utils/mappers");
 const getPostsController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {

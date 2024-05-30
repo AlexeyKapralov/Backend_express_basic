@@ -1,7 +1,7 @@
 import {Request, Response} from "express";
 import {IBlogInputModel} from "../models/blogInput.model";
 import {IBlogViewModel} from "../models/blogView.model";
-import {blogsService} from "../../../service/blogs.service";
+import {blogsService} from "../sevice/blogs.service";
 import {StatusCodes} from "http-status-codes";
 
 export const createBlogsController = async (req: Request<{},{},IBlogInputModel>, res: Response<IBlogViewModel>) => {

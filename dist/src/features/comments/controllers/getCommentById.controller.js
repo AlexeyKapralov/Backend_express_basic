@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getCommentByIdController = void 0;
 const http_status_codes_1 = require("http-status-codes");
-const commentsQuery_repository_1 = require("../../../repositories/comments/commentsQuery.repository");
+const commentsQuery_repository_1 = require("../repository/commentsQuery.repository");
 const getCommentByIdController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const comment = yield commentsQuery_repository_1.commentsQueryRepository.getCommentById(req.params.commentId);
     comment

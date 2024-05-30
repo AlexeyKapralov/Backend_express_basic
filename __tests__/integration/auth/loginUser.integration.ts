@@ -1,13 +1,13 @@
 import {MongoMemoryServer} from 'mongodb-memory-server'
 import {db} from '../../../src/db/db'
-import {loginService} from '../../../src/service/login.service'
+import {loginService} from '../../../src/features/auth/service/login.service'
 import {jest} from "@jest/globals";
 import {bcryptService} from "../../../src/common/adapters/bcrypt.service";
 import {userManagerTest} from "../../e2e/users/userManager.test";
 import {authManagerTest} from "../../e2e/auth/authManager.test";
 import {SETTINGS} from "../../../src/common/config/settings";
 import {ResultStatus} from "../../../src/common/types/resultStatus.type";
-import {usersRepository} from "../../../src/repositories/users/users.repository";
+import {usersRepository} from "../../../src/features/users/repository/users.repository";
 
 describe('Login User', () => {
     beforeAll(async () => {
@@ -22,6 +22,7 @@ describe('Login User', () => {
 
     afterEach(async () => {
         jest.useRealTimers()
+        jest.restoreAllMocks();
     })
 
     afterAll(async () => {
@@ -90,6 +91,7 @@ describe('Login User', () => {
     })
 
     it(`shouldn't update refresh token after expired time`, async () => {
+        jest.replaceProperty(SETTINGS, 'EXPIRATION', {REFRESH_TOKEN: '1s', ACCESS_TOKEN: '1s'});
 
         const user = {
             login: 'login',
@@ -106,14 +108,13 @@ describe('Login User', () => {
 
         const tokens = await authManagerTest.authUser(loginInputData)
 
-        jest.useFakeTimers()
         let result
         await new Promise(res => {
             setTimeout(async () => {
                 result = await loginService.refreshToken(tokens!.refreshToken)
                 res(result)
-            }, 30000)
-            jest.advanceTimersByTime(30000)
+            }, 2000)
+            // jest.advanceTimersByTime(2000)
         })
 
         expect(result!.status).toBe(ResultStatus.Unauthorized)

@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getUsersController = void 0;
 const http_status_codes_1 = require("http-status-codes");
-const usersQuery_repository_1 = require("../../../repositories/users/usersQuery.repository");
+const usersQuery_repository_1 = require("../repository/usersQuery.repository");
 const mappers_1 = require("../../../common/utils/mappers");
 const getUsersController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const query = (0, mappers_1.getQueryParams)(req.query);

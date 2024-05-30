@@ -1,17 +1,26 @@
-import { IPostInputModel } from '../features/posts/models/postInput.model'
-import { postsRepository } from '../repositories/posts/posts.repository'
-import { ICommentInputModel } from '../features/comments/models/commentInput.model'
-import { ResultType } from '../common/types/result.type'
-import { ICommentViewModel } from '../features/comments/models/commentView.model'
-import { commentsRepository } from '../repositories/comments/comments.repository'
-import { ResultStatus } from '../common/types/resultStatus.type'
-import { getCommentView } from '../common/utils/mappers'
-import { IPostViewModel } from '../features/posts/models/postView.model'
-import {usersRepository} from "../repositories/users/users.repository";
+import { IPostInputModel } from '../models/postInput.model'
+import { postsRepository } from '../repository/posts.repository'
+import { ICommentInputModel } from '../../comments/models/commentInput.model'
+import { ResultType } from '../../../common/types/result.type'
+import { ICommentViewModel } from '../../comments/models/commentView.model'
+import { commentsRepository } from '../../comments/repository/comments.repository'
+import { ResultStatus } from '../../../common/types/resultStatus.type'
+import { IPostViewModel } from '../models/postView.model'
+import {usersRepository} from "../../users/repository/users.repository";
+import {getCommentView} from "../../comments/mappers/commentsMappers";
+import {blogsRepository} from "../../blogs/repository/blogs.repository";
 
 export const postsService = {
 	async createPost(body: IPostInputModel): Promise<ResultType<IPostViewModel | null>> {
-		const result = await postsRepository.createPost(body)
+		const foundBlog = await blogsRepository.getBlogByID(body.blogId)
+
+		if (!foundBlog) {
+			return {
+				status: ResultStatus.NotFound,
+				data: null
+			}
+		}
+		const result = await postsRepository.createPost(body, foundBlog.name)
 		return result
 			? {
 				status: ResultStatus.Success,
@@ -21,6 +30,7 @@ export const postsService = {
 				status: ResultStatus.BadRequest,
 				data: null
 			}
+
 	},
 	async updatePost(id: string, body: IPostInputModel):Promise<ResultType> {
 		return await postsRepository.updatePost(id, body)

@@ -1,5 +1,5 @@
 import {Request, Response} from "express";
-import {postsQueryRepository} from "../../../repositories/posts/postsQuery.repository";
+import {postsQueryRepository} from "../repository/postsQuery.repository";
 import {StatusCodes} from "http-status-codes";
 import {getQueryParams} from "../../../common/utils/mappers";
 import { IPaginator } from '../../../common/types/paginator'

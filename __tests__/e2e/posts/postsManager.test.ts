@@ -10,13 +10,14 @@ import {blogsManagerTest} from '../blogs/blogsManager.test'
 import {IPostViewModel} from '../../../src/features/posts/models/postView.model'
 import {IBlogViewModel} from '../../../src/features/blogs/models/blogView.model'
 import {getRandomTitle} from '../../../src/common/utils/generators'
+import {PATH} from "../../../src/common/config/path";
 
 
 export const postsManagerTest = {
     async deletePost(id: string, accessToken: string, expectedStatus: StatusCodes = StatusCodes.NO_CONTENT) {
 
         await agent(app)
-            .delete(`${SETTINGS.PATH.POSTS}/${id}`)
+            .delete(`${PATH.POSTS}/${id}`)
             .set({authorization: `Bearer ${accessToken}`})
             .expect(expectedStatus)
 
@@ -60,7 +61,7 @@ export const postsManagerTest = {
         }
 
         const res = await agent(app)
-            .post(SETTINGS.PATH.POSTS)
+            .post(PATH.POSTS)
             .send(requestBody)
             .set({authorization: `Bearer ${accessToken}`})
             .expect(expectedStatus)
@@ -83,7 +84,7 @@ export const postsManagerTest = {
 
     },
     async getPostById(id: string, expectedStatus: StatusCodes): Promise<IPostViewModel | undefined> {
-        const result = await agent(app).get(SETTINGS.PATH.POSTS + '/' + id).expect(expectedStatus)
+        const result = await agent(app).get(PATH.POSTS + '/' + id).expect(expectedStatus)
 
         if (result.status === StatusCodes.OK) {
             expect(result.body).toEqual(
@@ -103,7 +104,7 @@ export const postsManagerTest = {
     },
     async updatePostById(id: string, accessToken: string, data: IPostInputModel, expectedStatus: StatusCodes = StatusCodes.NO_CONTENT) {
         await agent(app)
-            .put(`${SETTINGS.PATH.POSTS}/${id}`)
+            .put(`${PATH.POSTS}/${id}`)
             .set({authorization: `Bearer ${accessToken}`})
             .send(data)
             .expect(expectedStatus)

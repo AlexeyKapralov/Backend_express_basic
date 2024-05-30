@@ -1,10 +1,11 @@
-import { db } from '../../db/db'
+import { db } from '../../../db/db'
 import { SortDirection } from 'mongodb'
-import { getBlogViewModel, getPostViewModel } from '../../common/utils/mappers'
-import { IPaginator } from '../../common/types/paginator'
-import { IBlogViewModel } from '../../features/blogs/models/blogView.model'
-import { IPostViewModel } from '../../features/posts/models/postView.model'
-import { IQueryModel } from '../../common/types/query.model'
+import { IPaginator } from '../../../common/types/paginator'
+import { IBlogViewModel } from '../models/blogView.model'
+import { IPostViewModel } from '../../posts/models/postView.model'
+import { IQueryModel } from '../../../common/types/query.model'
+import {getBlogViewModel} from "../mappers/blogsMappers";
+import {getPostViewModel} from "../../posts/mappers/postMappers";
 
 export const blogsQueryRepository = {
 	async getBlogs(query: IQueryModel): Promise<IPaginator<IBlogViewModel>> {

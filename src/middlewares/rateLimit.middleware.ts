@@ -13,6 +13,7 @@ export const rateLimitMiddleware = async (
     const url = req.url
     const dateRequest = addSeconds(new Date(), -10)
 
+    //todo возможно стоит переписать чтобы здесь не было обращения к бд а сделать через сервис
     const limitRequest = await db.getCollection().rateLimitCollection.find({ip, url, date: {$gt: dateRequest}}).toArray()
 
     if (limitRequest.length >= 5) {

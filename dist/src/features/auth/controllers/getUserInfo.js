@@ -10,11 +10,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getUserInfoController = void 0;
-const usersQuery_repository_1 = require("../../../repositories/users/usersQuery.repository");
-const mappers_1 = require("../../../common/utils/mappers");
+const usersQuery_repository_1 = require("../../users/repository/usersQuery.repository");
 const http_status_codes_1 = require("http-status-codes");
+const userMappers_1 = require("../../users/mappers/userMappers");
 const getUserInfoController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield usersQuery_repository_1.usersQueryRepository.findUserById(req.userId);
-    user ? res.status(http_status_codes_1.StatusCodes.OK).json((0, mappers_1.getUserInfo)(user)) : res.status(http_status_codes_1.StatusCodes.NOT_FOUND).json();
+    user ? res.status(http_status_codes_1.StatusCodes.OK).json((0, userMappers_1.getUserInfo)(user)) : res.status(http_status_codes_1.StatusCodes.NOT_FOUND).json();
 });
 exports.getUserInfoController = getUserInfoController;

@@ -18,7 +18,7 @@ const postsManager_test_1 = require("../e2e/posts/postsManager.test");
 const jwt_service_1 = require("../../src/common/adapters/jwt.service");
 const resultStatus_type_1 = require("../../src/common/types/resultStatus.type");
 const comments_service_1 = require("../../src/service/comments.service");
-describe('comments integration tests', () => {
+describe('repository integration tests', () => {
     let accessToken;
     let blog;
     let post;

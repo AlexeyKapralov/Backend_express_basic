@@ -10,15 +10,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteSecurityDeviceByIdController = void 0;
-const devicesService_1 = require("../../../service/devicesService");
+const devicesService_1 = require("../service/devicesService");
 const resultStatus_type_1 = require("../../../common/types/resultStatus.type");
 const http_status_codes_1 = require("http-status-codes");
 const deleteSecurityDeviceByIdController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const refreshToken = req.cookies.refreshToken;
-    if (!refreshToken) {
-        res.status(http_status_codes_1.StatusCodes.UNAUTHORIZED).send();
-        return;
-    }
     const result = yield devicesService_1.devicesService.deleteDevice(req.params.deviceId, refreshToken);
     if (result.status === resultStatus_type_1.ResultStatus.Success) {
         res.status(http_status_codes_1.StatusCodes.NO_CONTENT).send();

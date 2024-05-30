@@ -4,7 +4,7 @@ import {IDeviceModel} from "../../../src/common/types/devices.model";
 describe( 'refresh token test', () => {
     it.skip('should refresh token', () => {
 
-        jwtService.getPayloadFromRefreshToken = jest.fn().mockImplementation(():IDeviceModel => {
+        jwtService.decodeToken = jest.fn().mockImplementation(():IDeviceModel => {
             return{
                 deviceId : '123',
                 userId: '1',

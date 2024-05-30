@@ -11,14 +11,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongodb_memory_server_1 = require("mongodb-memory-server");
 const db_1 = require("../../../src/db/db");
-const login_service_1 = require("../../../src/service/login.service");
+const login_service_1 = require("../../../src/features/auth/service/login.service");
 const globals_1 = require("@jest/globals");
 const bcrypt_service_1 = require("../../../src/common/adapters/bcrypt.service");
 const userManager_test_1 = require("../../e2e/users/userManager.test");
 const authManager_test_1 = require("../../e2e/auth/authManager.test");
 const settings_1 = require("../../../src/common/config/settings");
 const resultStatus_type_1 = require("../../../src/common/types/resultStatus.type");
-const users_repository_1 = require("../../../src/repositories/users/users.repository");
+const users_repository_1 = require("../../../src/features/users/repository/users.repository");
 describe('Login User', () => {
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
         const mongod = yield mongodb_memory_server_1.MongoMemoryServer.create();
@@ -30,6 +30,7 @@ describe('Login User', () => {
     }));
     afterEach(() => __awaiter(void 0, void 0, void 0, function* () {
         globals_1.jest.useRealTimers();
+        globals_1.jest.restoreAllMocks();
     }));
     afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
         yield db_1.db.stop();
@@ -79,6 +80,7 @@ describe('Login User', () => {
         expect(tokens.refreshToken).not.toBe(result.data.refreshToken);
     }));
     it(`shouldn't update refresh token after expired time`, () => __awaiter(void 0, void 0, void 0, function* () {
+        globals_1.jest.replaceProperty(settings_1.SETTINGS, 'EXPIRATION', { REFRESH_TOKEN: '1s', ACCESS_TOKEN: '1s' });
         const user = {
             login: 'login',
             email: 'email@mail.ru',
@@ -90,14 +92,13 @@ describe('Login User', () => {
             password: user.password
         };
         const tokens = yield authManager_test_1.authManagerTest.authUser(loginInputData);
-        globals_1.jest.useFakeTimers();
         let result;
         yield new Promise(res => {
             setTimeout(() => __awaiter(void 0, void 0, void 0, function* () {
                 result = yield login_service_1.loginService.refreshToken(tokens.refreshToken);
                 res(result);
-            }), 30000);
-            globals_1.jest.advanceTimersByTime(30000);
+            }), 2000);
+            // jest.advanceTimersByTime(2000)
         });
         expect(result.status).toBe(resultStatus_type_1.ResultStatus.Unauthorized);
     }));

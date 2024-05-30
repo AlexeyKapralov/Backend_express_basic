@@ -5,6 +5,7 @@ import { StatusCodes } from 'http-status-codes'
 import { ILoginInputModel } from '../../../src/features/auth/models/loginInput.model'
 import { userManagerTest } from '../users/userManager.test'
 import { IUserInputModel } from '../../../src/features/users/models/userInput.model'
+import {PATH} from "../../../src/common/config/path";
 
 export const authManagerTest = {
 	/**
@@ -34,7 +35,7 @@ export const authManagerTest = {
 					'password': '123456'
 				}
 				res = await agent(app)
-					.post(`${SETTINGS.PATH.AUTH}/login`)
+					.post(`${PATH.AUTH}/login`)
 					.set('User-Agent', userAgent)
 					.send(loginData)
 					.expect(expectedStatus)
@@ -43,7 +44,7 @@ export const authManagerTest = {
 
 			case null: {
 				res = await agent(app)
-					.post(`${SETTINGS.PATH.AUTH}/login`)
+					.post(`${PATH.AUTH}/login`)
 					.set('User-Agent', userAgent)
 					.expect(expectedStatus)
 				break
@@ -51,7 +52,7 @@ export const authManagerTest = {
 
 			default: {
 				res = await agent(app)
-					.post(`${SETTINGS.PATH.AUTH}/login`)
+					.post(`${PATH.AUTH}/login`)
 					.set('User-Agent', userAgent)
 					.send(loginData)
 					.expect(expectedStatus)
@@ -66,7 +67,7 @@ export const authManagerTest = {
 			)
 
 			const getUserByToken = await agent(app)
-				.get(`${SETTINGS.PATH.AUTH}/me`)
+				.get(`${PATH.AUTH}/me`)
 				.set({ authorization: `Bearer ${res.body.accessToken}`})
 
 
@@ -95,13 +96,13 @@ export const authManagerTest = {
 				'password': '123456'
 			}
 			res = await agent(app)
-				.post(`${SETTINGS.PATH.AUTH}/login`)
+				.post(`${PATH.AUTH}/login`)
 				.set('User-Agent', userAgent)
 				.send(loginData)
 				.expect(expectedStatus)
 		} else {
 			res = await agent(app)
-				.post(`${SETTINGS.PATH.AUTH}/login`)
+				.post(`${PATH.AUTH}/login`)
 				.set('User-Agent', userAgent)
 				.send(loginData)
 				.expect(expectedStatus)

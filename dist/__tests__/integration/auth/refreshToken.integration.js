@@ -14,7 +14,7 @@ const db_1 = require("../../../src/db/db");
 const userManager_test_1 = require("../../e2e/users/userManager.test");
 const settings_1 = require("../../../src/common/config/settings");
 const authManager_test_1 = require("../../e2e/auth/authManager.test");
-const login_service_1 = require("../../../src/service/login.service");
+const login_service_1 = require("../../../src/features/auth/service/login.service");
 const resultStatus_type_1 = require("../../../src/common/types/resultStatus.type");
 describe('refresh Token integration test', () => {
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
@@ -37,7 +37,7 @@ describe('refresh Token integration test', () => {
             password: 'qwert1234',
             email: 'asdf@mail.ru'
         };
-        const user = yield userManager_test_1.userManagerTest.createUser('default', settings_1.SETTINGS.ADMIN_AUTH);
+        yield userManager_test_1.userManagerTest.createUser('default', settings_1.SETTINGS.ADMIN_AUTH);
         const tokens = yield authManager_test_1.authManagerTest.authUser({ password: inputData.password, loginOrEmail: inputData.login });
         let newTokens = yield login_service_1.loginService.refreshToken(tokens.refreshToken);
         expect(newTokens.data).not.toBe(tokens);

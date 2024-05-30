@@ -15,6 +15,7 @@ const app_1 = require("../../../src/app");
 const settings_1 = require("../../../src/common/config/settings");
 const http_status_codes_1 = require("http-status-codes");
 const userManager_test_1 = require("../users/userManager.test");
+const path_1 = require("../../../src/common/config/path");
 exports.authManagerTest = {
     /**
      * 'login': 'alexx123',
@@ -40,7 +41,7 @@ exports.authManagerTest = {
                         'password': '123456'
                     };
                     res = yield (0, supertest_1.agent)(app_1.app)
-                        .post(`${settings_1.SETTINGS.PATH.AUTH}/login`)
+                        .post(`${path_1.PATH.AUTH}/login`)
                         .set('User-Agent', userAgent)
                         .send(loginData)
                         .expect(expectedStatus);
@@ -48,14 +49,14 @@ exports.authManagerTest = {
                 }
                 case null: {
                     res = yield (0, supertest_1.agent)(app_1.app)
-                        .post(`${settings_1.SETTINGS.PATH.AUTH}/login`)
+                        .post(`${path_1.PATH.AUTH}/login`)
                         .set('User-Agent', userAgent)
                         .expect(expectedStatus);
                     break;
                 }
                 default: {
                     res = yield (0, supertest_1.agent)(app_1.app)
-                        .post(`${settings_1.SETTINGS.PATH.AUTH}/login`)
+                        .post(`${path_1.PATH.AUTH}/login`)
                         .set('User-Agent', userAgent)
                         .send(loginData)
                         .expect(expectedStatus);
@@ -66,7 +67,7 @@ exports.authManagerTest = {
                     'accessToken': res.body.accessToken
                 });
                 const getUserByToken = yield (0, supertest_1.agent)(app_1.app)
-                    .get(`${settings_1.SETTINGS.PATH.AUTH}/me`)
+                    .get(`${path_1.PATH.AUTH}/me`)
                     .set({ authorization: `Bearer ${res.body.accessToken}` });
                 expect(getUserByToken.body).toEqual({
                     'email': newUserData.email,
@@ -92,14 +93,14 @@ exports.authManagerTest = {
                     'password': '123456'
                 };
                 res = yield (0, supertest_1.agent)(app_1.app)
-                    .post(`${settings_1.SETTINGS.PATH.AUTH}/login`)
+                    .post(`${path_1.PATH.AUTH}/login`)
                     .set('User-Agent', userAgent)
                     .send(loginData)
                     .expect(expectedStatus);
             }
             else {
                 res = yield (0, supertest_1.agent)(app_1.app)
-                    .post(`${settings_1.SETTINGS.PATH.AUTH}/login`)
+                    .post(`${path_1.PATH.AUTH}/login`)
                     .set('User-Agent', userAgent)
                     .send(loginData)
                     .expect(expectedStatus);

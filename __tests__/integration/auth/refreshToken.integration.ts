@@ -3,7 +3,7 @@ import {db} from "../../../src/db/db";
 import {userManagerTest} from "../../e2e/users/userManager.test";
 import {SETTINGS} from "../../../src/common/config/settings";
 import {authManagerTest} from "../../e2e/auth/authManager.test";
-import {loginService} from "../../../src/service/login.service";
+import {loginService} from "../../../src/features/auth/service/login.service";
 import {ResultStatus} from "../../../src/common/types/resultStatus.type";
 
 describe('refresh Token integration test', () => {

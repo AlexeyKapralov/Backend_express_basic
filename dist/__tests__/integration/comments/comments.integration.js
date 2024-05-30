@@ -11,13 +11,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongodb_memory_server_1 = require("mongodb-memory-server");
 const db_1 = require("../../../src/db/db");
-const posts_service_1 = require("../../../src/service/posts.service");
+const posts_service_1 = require("../../../src/features/posts/service/posts.service");
 const authManager_test_1 = require("../../e2e/auth/authManager.test");
 const blogsManager_test_1 = require("../../e2e/blogs/blogsManager.test");
 const postsManager_test_1 = require("../../e2e/posts/postsManager.test");
 const jwt_service_1 = require("../../../src/common/adapters/jwt.service");
 const resultStatus_type_1 = require("../../../src/common/types/resultStatus.type");
-const comments_service_1 = require("../../../src/service/comments.service");
+const comments_service_1 = require("../../../src/features/comments/service/comments.service");
 describe('comments integration tests', () => {
     let tokens;
     let blog;

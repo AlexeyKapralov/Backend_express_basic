@@ -1,10 +1,10 @@
 import { ObjectId } from 'mongodb'
-import { IUserDbModel } from '../../features/users/models/userDb.model'
-import { IUserInputModel } from '../../features/users/models/userInput.model'
-import { db } from '../../db/db'
+import { IUserDbModel } from '../models/userDb.model'
+import { IUserInputModel } from '../models/userInput.model'
+import { db } from '../../../db/db'
 import { v4 as uuidv4 } from 'uuid'
 import { add } from 'date-fns'
-import { SETTINGS } from '../../common/config/settings'
+import { SETTINGS } from '../../../common/config/settings'
 
 export const usersRepository = {
 	async findUserWithPass(loginOrEmail: string): Promise<IUserDbModel | undefined> {

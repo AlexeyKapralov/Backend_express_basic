@@ -16,6 +16,7 @@ import {emailResendingController} from './controllers/emailResending.controller'
 import {refreshTokenController} from "./controllers/refreshToken.controller";
 import {logoutController} from "./controllers/logout.controller";
 import {rateLimitMiddleware} from "../../middlewares/rateLimit.middleware";
+import {checkCookieMiddleware} from "../../middlewares/checkCookie.middleware";
 
 export const authRouter = Router({})
 
@@ -29,6 +30,7 @@ authRouter.post('/login',
 
 authRouter.post('/refresh-token',
     rateLimitMiddleware,
+    checkCookieMiddleware,
     refreshTokenController
 )
 
@@ -55,6 +57,7 @@ authRouter.post('/registration-email-resending',
 )
 authRouter.post('/logout',
     rateLimitMiddleware,
+    checkCookieMiddleware,
     logoutController
 )
 
