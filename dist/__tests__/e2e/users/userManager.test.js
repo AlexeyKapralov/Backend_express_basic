@@ -13,7 +13,6 @@ exports.userManagerTest = void 0;
 const supertest_1 = require("supertest");
 const app_1 = require("../../../src/app");
 const http_status_codes_1 = require("http-status-codes");
-const db_1 = require("../../../src/db/db");
 const mongodb_1 = require("mongodb");
 const date_fns_1 = require("date-fns");
 const path_1 = require("../../../src/common/config/path");
@@ -70,7 +69,7 @@ exports.userManagerTest = {
                 };
                 // users.push(user);
                 // users = [...users, user];
-                yield db_1.db.getCollection().usersCollection.insertOne(user);
+                yield UserModel.create(user);
             }
         });
     },
@@ -83,7 +82,7 @@ exports.userManagerTest = {
                 .set({ authorization: `Basic ${decodedAuth}` });
             expect(result.status).toBe(expected_status);
             if (result.status === http_status_codes_1.StatusCodes.NO_CONTENT) {
-                const res = yield db_1.db.getCollection().usersCollection.findOne({ _id: id });
+                const res = yield UserModel.findOne({ _id: id });
                 expect(res).toBe(null);
             }
         });

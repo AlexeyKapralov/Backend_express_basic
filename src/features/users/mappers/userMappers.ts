@@ -1,6 +1,6 @@
-import {IUserDbModel} from "../models/userDb.model";
 import {IUserViewModel} from "../models/userView.model";
 import {IMeViewModel} from "../../auth/models/meView.model";
+import {IUserDbModel} from "../models/userDb.model";
 
 export const getUserViewModel = (data: IUserDbModel): IUserViewModel => {
     return {

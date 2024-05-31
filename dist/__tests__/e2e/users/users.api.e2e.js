@@ -18,13 +18,13 @@ const userManager_test_1 = require("./userManager.test");
 const http_status_codes_1 = require("http-status-codes");
 const userMappers_1 = require("../../../src/features/users/mappers/userMappers");
 const path_1 = require("../../../src/common/config/path");
+const user_dto_1 = require("../../../src/features/users/domain/user.dto");
 describe('user tests', () => {
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
         const mongod = yield mongodb_memory_server_1.MongoMemoryServer.create();
         const uri = mongod.getUri();
         yield db_1.db.run(uri);
     }));
-    //check pagination
     it('should get users with default pagination', () => __awaiter(void 0, void 0, void 0, function* () {
         yield db_1.db.drop();
         yield userManager_test_1.userManagerTest.createUsers(20);
@@ -44,12 +44,12 @@ describe('user tests', () => {
                 })
             ])
         });
-        const users = yield db_1.db.getCollection().usersCollection
+        const users = yield user_dto_1.UsersModel
             .find()
-            .sort('createdAt', 'desc')
+            .sort({ createdAt: 'desc' })
             .skip((1 - 1) * 10)
             .limit(10)
-            .toArray();
+            .lean();
         expect(users.map(userMappers_1.getUserViewModel)).toEqual(res.body.items);
     }));
     it('should get with input custom pagination', () => __awaiter(void 0, void 0, void 0, function* () {
@@ -65,25 +65,25 @@ describe('user tests', () => {
             searchLoginTerm: 'John',
             searchEmailTerm: '1'
         });
-        const users = yield db_1.db.getCollection().usersCollection
+        const users = yield user_dto_1.UsersModel
             .find({
             $or: [
                 { login: { $regex: 'John', $options: 'i' } },
                 { email: { $regex: '1', $options: 'i' } }
             ]
         })
-            .sort('login', 'asc')
+            .sort({ login: 'asc' })
             .skip((2 - 1) * 5)
             .limit(5)
-            .toArray();
-        const countUsers = yield db_1.db.getCollection().usersCollection
+            .lean();
+        const countUsers = yield user_dto_1.UsersModel
             .find({
             $or: [
                 { login: { $regex: 'John', $options: 'i' } },
                 { email: { $regex: '1', $options: 'i' } }
             ]
         })
-            .toArray();
+            .lean();
         expect(res.body).toEqual({
             pagesCount: Math.ceil(countUsers.length / 5),
             page: 2,
@@ -130,7 +130,7 @@ describe('user tests', () => {
         yield userManager_test_1.userManagerTest.deleteUser('aaaaa', settings_1.SETTINGS.ADMIN_AUTH, http_status_codes_1.StatusCodes.NOT_FOUND);
     }));
     it(`should delete user with correct id`, () => __awaiter(void 0, void 0, void 0, function* () {
-        const user = yield db_1.db.getCollection().usersCollection.findOne();
+        const user = yield user_dto_1.UsersModel.findOne();
         yield userManager_test_1.userManagerTest.deleteUser(user._id, settings_1.SETTINGS.ADMIN_AUTH);
     }));
     afterAll(() => __awaiter(void 0, void 0, void 0, function* () {

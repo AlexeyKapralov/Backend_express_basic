@@ -6,20 +6,22 @@ import { IPostViewModel } from '../../posts/models/postView.model'
 import { IQueryModel } from '../../../common/types/query.model'
 import {getBlogViewModel} from "../mappers/blogsMappers";
 import {getPostViewModel} from "../../posts/mappers/postMappers";
+import {BlogModel} from "../domain/blogs.dto";
+import {PostModel} from "../../posts/domain/post.dto";
 
 export const blogsQueryRepository = {
 	async getBlogs(query: IQueryModel): Promise<IPaginator<IBlogViewModel>> {
 
 		const newQuery = { name: { $regex: query.searchNameTerm ?? '', $options: 'i' } }
 
-		const res = await db.getCollection().blogsCollection
+		const res = await BlogModel
 			.find(newQuery)
-			.sort(query.sortBy!, query.sortDirection as SortDirection)
+			.sort( { [query.sortBy!]: query.sortDirection as SortDirection} )
 			.skip((query.pageNumber! - 1) * query.pageSize!)
 			.limit(query.pageSize!)
-			.toArray()
+			.lean()
 
-		const countDocs = await db.getCollection().blogsCollection
+		const countDocs = await BlogModel
 			.countDocuments(newQuery)
 
 		return {
@@ -32,7 +34,7 @@ export const blogsQueryRepository = {
 	},
 
 	async getBlogByID(id: string) {
-		const result = await db.getCollection().blogsCollection.findOne({
+		const result = await BlogModel.findOne({
 			_id: id
 		})
 		return result ? getBlogViewModel(result) : undefined
@@ -40,14 +42,14 @@ export const blogsQueryRepository = {
 
 	async getPostsByBlogID(id: string, query: IQueryModel): Promise<IPaginator<IPostViewModel> | undefined> {
 
-		const res = await db.getCollection().postsCollection
+		const res = await PostModel
 			.find({ blogId: id })
-			.sort(query.sortBy!, query.sortDirection as SortDirection)
+			.sort({[query.sortBy!]: query.sortDirection as SortDirection})
 			.skip((query.pageNumber! - 1) * query.pageSize!)
 			.limit(query.pageSize!)
-			.toArray()
+			.lean()
 
-		const countDocs = await db.getCollection().postsCollection
+		const countDocs = await PostModel
 			.countDocuments({ blogId: id })
 
 		if (res.length > 0) {

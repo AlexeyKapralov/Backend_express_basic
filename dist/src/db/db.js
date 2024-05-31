@@ -8,57 +8,69 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.db = void 0;
-const mongodb_1 = require("mongodb");
+const mongoose_1 = __importDefault(require("mongoose"));
 const settings_1 = require("../common/config/settings");
 exports.db = {
-    client: {},
-    getDbName() {
-        return this.client.db(settings_1.SETTINGS.DB_NAME);
-    },
     run(url) {
         return __awaiter(this, void 0, void 0, function* () {
+            const dbName = settings_1.SETTINGS.DB_NAME;
+            const mongoURI = `${url}/${dbName}`;
             try {
-                this.client = new mongodb_1.MongoClient(url);
-                yield this.client.connect();
-                yield this.getDbName().command({ ping: 1 });
-                console.log('Connected successfully to mongo server');
+                yield mongoose_1.default.connect(mongoURI);
+                console.log('it is ok');
             }
             catch (e) {
-                console.log('!!! Cannot connect to db', e);
-                yield this.client.close();
+                console.log('no connection');
+                yield mongoose_1.default.disconnect();
             }
         });
     },
+    // getDbName(): Db {
+    //     return this.client.db(SETTINGS.DB_NAME)
+    // },
+    //
+    // async run(url: string) {
+    //     try {
+    //         this.client = new MongoClient(url)
+    //         await this.client.connect()
+    //         await this.getDbName().command({ping: 1})
+    //         console.log('Connected successfully to mongo server')
+    //     } catch (e) {
+    //         console.log('!!! Cannot connect to db', e)
+    //         await this.client.close()
+    //     }
+    // },
     stop() {
         return __awaiter(this, void 0, void 0, function* () {
+            yield mongoose_1.default.connection.close();
             console.log('Connection successfully closed');
-            yield this.client.close();
         });
     },
     drop() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const collections = yield this.getDbName().listCollections().toArray();
-                for (const collection of collections) {
-                    yield this.getDbName().collection(collection.name).deleteMany({});
-                }
+                yield mongoose_1.default.connection.dropDatabase();
             }
             catch (error) {
                 console.log('Error in drop db', error);
                 yield this.stop();
             }
         });
-    },
-    getCollection() {
-        return {
-            usersCollection: this.getDbName().collection('users'),
-            blogsCollection: this.getDbName().collection('blogs'),
-            postsCollection: this.getDbName().collection('posts'),
-            commentsCollection: this.getDbName().collection('comments'),
-            rateLimitCollection: this.getDbName().collection('rateLimit'),
-            devices: this.getDbName().collection('devices')
-        };
     }
+    // ,
+    // getCollection() {
+    //     return {
+    // usersCollection: this.getDbName().collection<IUserDbModel>('users'),
+    // blogsCollection: this.getDbName().collection<IBlogDbModel>('blogs'),
+    // postsCollection: this.getDbName().collection<IPostDbModel>('posts'),
+    // commentsCollection: this.getDbName().collection<ICommentDbModel>('comments'),
+    // rateLimitCollection: this.getDbName().collection<IRateLimit>('rateLimit'),
+    // devices: this.getDbName().collection<IDeviceModel>('devices')
+    //     }
+    // }
 };

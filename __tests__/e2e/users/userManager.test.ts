@@ -5,7 +5,6 @@ import {app} from '../../../src/app'
 import {StatusCodes} from 'http-status-codes'
 import {db} from "../../../src/db/db";
 import {ObjectId} from "mongodb";
-import { IUserDbModel } from '../../../src/features/users/models/userDb.model'
 import { add } from 'date-fns'
 import { IUserViewModel } from '../../../src/features/users/models/userView.model'
 import {PATH} from "../../../src/common/config/path";
@@ -58,7 +57,7 @@ export const userManagerTest = {
     async createUsers(count: number) {
         // let users = [];
         for (let i = 0; i < count; i++) {
-            let user: IUserDbModel = {
+            let user: IUserDtoModel = {
                 _id: new ObjectId().toString(),
                 login: getRandomName() + i, // Добавляем к имени номер
                 email: `generatedEmail${i}@example.com`,
@@ -71,7 +70,7 @@ export const userManagerTest = {
             // users.push(user);
             // users = [...users, user];
 
-            await db.getCollection().usersCollection.insertOne(user)
+            await UserModel.create(user)
         }
     },
 
@@ -89,7 +88,7 @@ export const userManagerTest = {
         expect(result.status).toBe(expected_status)
 
         if (result.status === StatusCodes.NO_CONTENT) {
-            const res = await db.getCollection().usersCollection.findOne({_id: id})
+            const res = await UserModel.findOne({_id: id})
             expect(res).toBe(null)
         }
     },

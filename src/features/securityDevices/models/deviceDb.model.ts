@@ -1,4 +1,4 @@
-export interface IDeviceModel {
+export interface IDeviceDbModel {
     deviceId: string,
     userId: string,
     ip: string,
@@ -6,3 +6,4 @@ export interface IDeviceModel {
     iat: string,
     expirationDate: string
 }
+

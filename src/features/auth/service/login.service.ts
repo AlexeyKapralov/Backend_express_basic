@@ -13,6 +13,7 @@ import {jwtService} from "../../../common/adapters/jwt.service";
 import {IDeviceModel} from "../../../common/types/devices.model";
 import {devicesRepository} from "../../securityDevices/repository/devices.repository";
 import {devicesService} from "../../securityDevices/service/devicesService";
+import {UsersModel} from "../../users/domain/user.dto";
 
 export const loginService = {
     async registrationUser(data: IUserInputModel): Promise<ResultType> {
@@ -57,7 +58,7 @@ export const loginService = {
         if (user) {
             const code = uuidv4()
             const confirmationCodeExpiredNew = add(new Date(), SETTINGS.EXPIRED_LIFE)
-            await db.getCollection().usersCollection.updateOne(
+            await UsersModel.updateOne(
                 {_id: user._id},
                 {
                     $set:

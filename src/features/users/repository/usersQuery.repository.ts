@@ -4,6 +4,7 @@ import { SortDirection } from 'mongodb'
 import { IPaginator } from '../../../common/types/paginator'
 import { IQueryModel } from '../../../common/types/query.model'
 import {getUserViewModel} from "../mappers/userMappers";
+import {UsersModel} from "../domain/user.dto";
 
 export const usersQueryRepository = {
 	async findUsers(query: IQueryModel): Promise<IPaginator<IUserViewModel>> {
@@ -24,16 +25,16 @@ export const usersQueryRepository = {
 			newQuery = { $or: conditions }
 		}
 
-		const res = await db.getCollection().usersCollection
+		const res = await UsersModel
 			.find(newQuery)
-			.sort(query.sortBy!, query.sortDirection as SortDirection)
+			.sort({[query.sortBy!]: query.sortDirection! as SortDirection})
 			.skip((query.pageNumber! - 1) * query.pageSize!)
 			.limit(query.pageSize!)
-			.toArray()
+			.lean()
 
-		let resNoLimit = await db.getCollection().usersCollection
+		let resNoLimit = await UsersModel
 			.find(newQuery)
-			.toArray()
+			.lean()
 		const countDocs = resNoLimit.length
 
 		return {
@@ -45,7 +46,7 @@ export const usersQueryRepository = {
 		}
 	},
 	async findUserById(id: string): Promise<IUserViewModel | undefined> {
-		const res = await db.getCollection().usersCollection
+		const res = await UsersModel
 			.findOne({ _id: id })
 		return res ? getUserViewModel(res) : undefined
 	}

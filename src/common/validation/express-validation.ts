@@ -1,13 +1,15 @@
 import { body, param, query } from 'express-validator'
 import { db } from '../../db/db'
-import { IUserDbModel } from '../../features/users/models/userDb.model'
+import {UsersModel} from "../../features/users/domain/user.dto";
+import {BlogModel} from "../../features/blogs/domain/blogs.dto";
+import {IUserDbModel} from "../../features/users/models/userDb.model";
 
 export const loginValidation = body(['login'])
 	.trim()
 	.isLength({ min: 3, max: 10 })
 	.matches('^[a-zA-Z0-9_-]*$')
 	.custom(async (login: string) => {
-		const users = await db.getCollection().usersCollection.find({login: login}).toArray()
+		const users = await UsersModel.find({login: login}).lean()
 		if (users.length > 0) {
 			throw new Error('login already exist')
 		}
@@ -28,7 +30,7 @@ export const emailValidationForRegistration = body('email')
 	.isURL()
 	.isLength({min:1})
 	.custom(async (email: string) => {
-		const user:Array<IUserDbModel> = await db.getCollection().usersCollection.find({email: email}).toArray()
+		const user:Array<IUserDbModel> = await UsersModel.find({email: email}).lean()
 		if (user.length > 0) {
 			throw new Error('email already use')
 		}
@@ -38,7 +40,7 @@ export const emailValidationForResend = body('email')
 	.isURL()
 	.isLength({min:1})
 	.custom(async (email: string) => {
-		const user:Array<IUserDbModel> = await db.getCollection().usersCollection.find({email: email}).toArray()
+		const user:Array<IUserDbModel> = await UsersModel.find({email: email}).lean()
 		if (user.length === 0) {
 			throw new Error('email incorrect')
 		}
@@ -76,13 +78,13 @@ export const contentValidation = body('content').trim().isLength({ min: 1, max: 
 
 // так не делается, но для задачи нужно и по другому никак
 export const blogIdParamValidation = param('id').trim().custom(async value => {
-	const blog = await db.getCollection().blogsCollection.findOne({ _id: value })
+	const blog = await BlogModel.findOne({ _id: value })
 	if (!blog) {
 		throw new Error('blog not found')
 	}
 })
 export const blogIdInBodyValidation = body('blogId').trim().custom(async value => {
-	const blog = await db.getCollection().blogsCollection.findOne({ _id: value })
+	const blog = await BlogModel.findOne({ _id: value })
 	if (!blog) {
 		throw new Error('blog not found')
 	}
@@ -96,7 +98,7 @@ export const codeValidation = body('code')
 	.trim()
 	.isLength({min:1})
 	.custom(async code => {
-		const user = await db.getCollection().usersCollection.findOne({confirmationCode: code})
+		const user = await UsersModel.findOne({confirmationCode: code})
 		if (!user) {
 			throw new Error('user not found')
 		}

@@ -3,14 +3,14 @@ import {ICommentInputModel} from '../models/commentInput.model'
 import {ObjectId} from 'mongodb'
 import {db} from '../../../db/db'
 import {IPostDbModel} from "../../posts/models/postDb.model";
-import {IUserDbModel} from "../../users/models/userDb.model";
+import {IUserDto} from "../../users/models/userDb.model";
 
 export const commentsRepository = {
     async getCommentById(id: string): Promise<ICommentDbModel | undefined> {
         const result = await db.getCollection().commentsCollection.findOne({_id: id})
         return result ? result : undefined
     },
-    async createComment(user: IUserDbModel, post: IPostDbModel, data: ICommentInputModel): Promise<ICommentDbModel | undefined> {
+    async createComment(user: IUserDto, post: IPostDbModel, data: ICommentInputModel): Promise<ICommentDbModel | undefined> {
         const newComment = {
             _id: new ObjectId().toString(),
             content: data.content,

@@ -1,10 +1,10 @@
 import {jwtService} from "../../../src/common/adapters/jwt.service";
-import {IDeviceModel} from "../../../src/common/types/devices.model";
+import {IDeviceDbModel} from "../../../src/features/securityDevices/models/deviceDb.model";
 
 describe( 'refresh token test', () => {
     it.skip('should refresh token', () => {
 
-        jwtService.decodeToken = jest.fn().mockImplementation(():IDeviceModel => {
+        jwtService.decodeToken = jest.fn().mockImplementation(():IDeviceDbModel => {
             return{
                 deviceId : '123',
                 userId: '1',

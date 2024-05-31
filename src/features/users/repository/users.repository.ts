@@ -1,28 +1,28 @@
 import { ObjectId } from 'mongodb'
-import { IUserDbModel } from '../models/userDb.model'
 import { IUserInputModel } from '../models/userInput.model'
-import { db } from '../../../db/db'
 import { v4 as uuidv4 } from 'uuid'
 import { add } from 'date-fns'
 import { SETTINGS } from '../../../common/config/settings'
+import {UsersModel} from "../domain/user.dto";
+import {IUserDbModel} from "../models/userDb.model";
 
 export const usersRepository = {
 	async findUserWithPass(loginOrEmail: string): Promise<IUserDbModel | undefined> {
-		const result = await db.getCollection().usersCollection.findOne({
+		const result = await UsersModel.findOne({
 				$or: [{ login: loginOrEmail }, { email: loginOrEmail }]
 			}
 		)
 		return result !== null ? result : undefined
 	},
 	async findUserByLoginOrEmail(loginOrEmail: string): Promise<IUserDbModel | undefined> {
-		const result = await db.getCollection().usersCollection.findOne({
+		const result = await UsersModel.findOne({
 				$or: [{ login: loginOrEmail }, { email: loginOrEmail }]
 			}
 		)
 		return result !== null ? result : undefined
 	},
 	async findUserById(id: string): Promise<IUserDbModel | undefined> {
-		const res = await db.getCollection().usersCollection
+		const res = await UsersModel
 			.findOne({ _id: id })
 		return res ? res : undefined
 	},
@@ -37,12 +37,12 @@ export const usersRepository = {
 			confirmationCodeExpired: add(new Date(), SETTINGS.EXPIRED_LIFE),
 			isConfirmed: admin === 'admin'
 		}
-		const result = await db.getCollection().usersCollection.insertOne(user)
+		const createdUser = await UsersModel.create(user)
 
-		return result ? user : undefined
+		return createdUser ? user : undefined
 	},
 	async deleteUser(id: string) {
-		const result = await db.getCollection().usersCollection.deleteOne({
+		const result = await UsersModel.deleteOne({
 			_id: id
 		})
 		return result.deletedCount > 0
@@ -52,7 +52,7 @@ export const usersRepository = {
 		isConfirmed: boolean = true
 	) {
     const result =
-				await db.getCollection().usersCollection.updateOne({ confirmationCode: code }, {$set: { isConfirmed: isConfirmed }})
+				await UsersModel.updateOne({ confirmationCode: code }, {$set: { isConfirmed: isConfirmed }})
     return result.matchedCount > 0
 	}
 }

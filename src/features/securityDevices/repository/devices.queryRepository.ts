@@ -1,9 +1,10 @@
 import {db} from "../../../db/db";
 import {IDeviceViewModel} from "../models/deviceView.model";
+import {DeviceModel} from "../domain/devices.dto";
 
 export const devicesQueryRepository = {
     async getSecurityDevices(userId: string): Promise<Array<IDeviceViewModel>> {
-        return await db.getCollection().devices.aggregate([
+        return DeviceModel.aggregate([
             {$match: {userId}},
             {
                 $project: {
@@ -14,6 +15,6 @@ export const devicesQueryRepository = {
                     deviceId: 1
                 }
             }
-        ]).toArray() as Array<IDeviceViewModel>
+        ])
     }
 }

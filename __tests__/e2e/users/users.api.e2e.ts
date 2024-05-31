@@ -7,6 +7,7 @@ import {userManagerTest} from './userManager.test'
 import {StatusCodes} from 'http-status-codes'
 import {getUserViewModel} from "../../../src/features/users/mappers/userMappers";
 import {PATH} from "../../../src/common/config/path";
+import {UsersModel} from "../../../src/features/users/domain/user.dto";
 
 
 describe('user tests', () => {
@@ -16,7 +17,6 @@ describe('user tests', () => {
         await db.run(uri)
     })
 
-    //check pagination
     it('should get users with default pagination', async () => {
         await db.drop()
         await userManagerTest.createUsers(20)
@@ -39,12 +39,12 @@ describe('user tests', () => {
             ])
         })
 
-        const users = await db.getCollection().usersCollection
+        const users = await UsersModel
             .find()
-            .sort('createdAt', 'desc')
+            .sort({createdAt:'desc'})
             .skip((1 - 1) * 10)
             .limit(10)
-            .toArray()
+            .lean()
 
         expect(users.map(getUserViewModel)).toEqual(res.body.items)
 
@@ -66,25 +66,25 @@ describe('user tests', () => {
             })
 
 
-        const users = await db.getCollection().usersCollection
+        const users = await UsersModel
             .find({
                 $or: [
                     {login: {$regex: 'John', $options: 'i'}},
                     {email: {$regex: '1', $options: 'i'}}
                 ]
             })
-            .sort('login', 'asc')
+            .sort({login: 'asc'})
             .skip((2 - 1) * 5)
             .limit(5)
-            .toArray()
-        const countUsers = await db.getCollection().usersCollection
+            .lean()
+        const countUsers = await UsersModel
             .find({
                 $or: [
                     {login: {$regex: 'John', $options: 'i'}},
                     {email: {$regex: '1', $options: 'i'}}
                 ]
             })
-            .toArray()
+            .lean()
 
         expect(res.body).toEqual({
             pagesCount: Math.ceil(countUsers.length / 5),
@@ -144,7 +144,7 @@ describe('user tests', () => {
         await userManagerTest.deleteUser('aaaaa', SETTINGS.ADMIN_AUTH, StatusCodes.NOT_FOUND)
     })
     it(`should delete user with correct id`, async () => {
-        const user = await db.getCollection().usersCollection.findOne()
+        const user = await UsersModel.findOne()
         await userManagerTest.deleteUser(user!._id, SETTINGS.ADMIN_AUTH)
     })
 
