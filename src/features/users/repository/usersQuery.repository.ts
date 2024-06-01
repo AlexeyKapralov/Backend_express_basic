@@ -1,10 +1,9 @@
 import { IUserViewModel } from '../models/userView.model'
-import { db } from '../../../db/db'
 import { SortDirection } from 'mongodb'
 import { IPaginator } from '../../../common/types/paginator'
 import { IQueryModel } from '../../../common/types/query.model'
 import {getUserViewModel} from "../mappers/userMappers";
-import {UsersModel} from "../domain/user.dto";
+import {UsersModel} from "../domain/user.entity";
 
 export const usersQueryRepository = {
 	async findUsers(query: IQueryModel): Promise<IPaginator<IUserViewModel>> {

@@ -19,7 +19,7 @@ exports.db = {
     run(url) {
         return __awaiter(this, void 0, void 0, function* () {
             const dbName = settings_1.SETTINGS.DB_NAME;
-            const mongoURI = `${url}/${dbName}`;
+            const mongoURI = `${url}${dbName}`;
             try {
                 yield mongoose_1.default.connect(mongoURI);
                 console.log('it is ok');

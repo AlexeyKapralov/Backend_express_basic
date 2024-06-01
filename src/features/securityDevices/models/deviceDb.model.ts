@@ -4,6 +4,6 @@ export interface IDeviceDbModel {
     ip: string,
     deviceName: string,
     iat: string,
-    expirationDate: string
+    exp: string
 }
 

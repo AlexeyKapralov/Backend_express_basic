@@ -1,26 +1,27 @@
 import { IPaginator } from '../../../common/types/paginator'
 import { ICommentViewModel } from '../models/commentView.model'
-import { db } from '../../../db/db'
 import { SortDirection } from 'mongodb'
 import { IQueryModel } from '../../../common/types/query.model'
 import {getCommentView} from "../mappers/commentsMappers";
+import {PostModel} from "../../posts/domain/post.entity";
+import {CommentsModel} from "../domain/comments.entity";
 
 export const commentsQueryRepository = {
 	async getComments(postId: string, query: IQueryModel): Promise<IPaginator<ICommentViewModel> | undefined> {
-		const post = await db.getCollection().postsCollection.findOne({_id: postId})
+		const post = await PostModel.findOne({_id: postId})
 
 		if (!post) {
 			return undefined
 		}
 
-		const comments = await db.getCollection().commentsCollection
+		const comments = await CommentsModel
 			.find({postId:postId})
-			.sort(query.sortBy!, query.sortDirection! as SortDirection)
+			.sort({[query.sortBy!]: query.sortDirection! as SortDirection})
 			.skip((query.pageNumber! - 1) * query.pageSize!  )
 			.limit(query.pageSize!)
-			.toArray()
+			.lean()
 
-		const commentsCount = await db.getCollection().commentsCollection
+		const commentsCount = await CommentsModel
 			.countDocuments({postId:postId})
 
 		return {
@@ -32,7 +33,7 @@ export const commentsQueryRepository = {
 		}
 	},
 	async getCommentById(id:string): Promise<ICommentViewModel | undefined> {
-		const result = await db.getCollection().commentsCollection.findOne({_id: id})
+		const result = await CommentsModel.findOne({_id: id})
 		return result ? getCommentView(result) : undefined
 	}
 }

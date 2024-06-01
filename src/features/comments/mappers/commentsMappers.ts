@@ -3,9 +3,12 @@ import {ICommentViewModel} from "../models/commentView.model";
 
 export const getCommentView = (comment :ICommentDbModel): ICommentViewModel => {
     return {
-        id: comment._id,
+        id: comment._id.toString(),
         content: comment.content,
-        commentatorInfo: comment.commentatorInfo,
+        commentatorInfo: {
+            userId: comment.commentatorInfo.userId,
+            userLogin: comment.commentatorInfo.userLogin
+        },
         createdAt: comment.createdAt
     }
 }

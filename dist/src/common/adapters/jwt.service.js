@@ -10,9 +10,8 @@ exports.jwtService = {
     createAccessToken(userId) {
         return jsonwebtoken_1.default.sign({ userId }, settings_1.SETTINGS.SECRET_JWT, { expiresIn: settings_1.SETTINGS.EXPIRATION.ACCESS_TOKEN });
     },
-    //todo переписать чтобы хранился только device Id и userId
-    createRefreshToken(device) {
-        return jsonwebtoken_1.default.sign(device, settings_1.SETTINGS.SECRET_JWT, { expiresIn: settings_1.SETTINGS.EXPIRATION.REFRESH_TOKEN });
+    createRefreshToken(deviceId, userId) {
+        return jsonwebtoken_1.default.sign({ deviceId, userId }, settings_1.SETTINGS.SECRET_JWT, { expiresIn: settings_1.SETTINGS.EXPIRATION.REFRESH_TOKEN });
     },
     getUserIdByToken(token) {
         try {
@@ -23,16 +22,14 @@ exports.jwtService = {
             return null;
         }
     },
-    decodeToken(token) {
+    verifyAndDecodeToken(token) {
         try {
-            const result = jsonwebtoken_1.default.decode(token);
+            const result = jsonwebtoken_1.default.verify(token, settings_1.SETTINGS.SECRET_JWT);
             return {
                 deviceId: result.deviceId,
                 userId: result.userId,
-                deviceName: result.deviceName,
-                iat: new Date(result.iat * 1000).toISOString(),
-                ip: result.ip,
-                expirationDate: new Date(result.exp * 1000).toISOString()
+                iat: result.iat,
+                exp: result.exp
             };
         }
         catch (e) {

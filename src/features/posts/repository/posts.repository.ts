@@ -1,14 +1,14 @@
 import {IPostInputModel} from "../models/postInput.model";
 import {ObjectId} from "mongodb";
 import {IPostDbModel} from "../models/postDb.model";
-import {db} from "../../../db/db";
 import {IPostViewModel} from "../models/postView.model";
 import {blogsRepository} from "../../blogs/repository/blogs.repository";
 import {getPostViewModel} from "../mappers/postMappers";
+import {PostModel} from "../domain/post.entity";
 
 export const postsRepository = {
     async getPostById(id: string): Promise<IPostDbModel | undefined> {
-        const result = await db.getCollection().postsCollection.findOne({
+        const result = await PostModel.findOne({
             _id: id
         })
         return result ? result : undefined
@@ -24,8 +24,8 @@ export const postsRepository = {
             blogName: blogName,
             createdAt: new Date().toISOString()
         }
-        const result = await db.getCollection().postsCollection.insertOne(newPost)
-        return result.acknowledged ? getPostViewModel(newPost) : undefined
+        const result = await PostModel.create(newPost)
+        return !!result ? getPostViewModel(newPost) : undefined
     },
     async updatePost(id: string, body: IPostInputModel): Promise<boolean> {
 
@@ -33,7 +33,7 @@ export const postsRepository = {
 
         if (foundBlog) {
 
-            const result = await db.getCollection().postsCollection.updateOne({
+            const result = await PostModel.updateOne({
                 _id: id
             }, {
                 $set: {
@@ -49,7 +49,7 @@ export const postsRepository = {
         } else return false
     },
     async deletePost(id: string): Promise<boolean> {
-        const result = await db.getCollection().postsCollection.deleteOne({_id: id})
+        const result = await PostModel.deleteOne({_id: id})
         return result.deletedCount > 0
     }
 }

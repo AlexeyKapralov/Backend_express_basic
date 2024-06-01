@@ -1,14 +1,12 @@
 import jwt from "jsonwebtoken";
 import {SETTINGS} from "../config/settings";
-import {IDeviceModel} from "../types/devices.model";
 
 export const jwtService = {
     createAccessToken(userId: string): string {
         return jwt.sign({userId}, SETTINGS.SECRET_JWT, {expiresIn: SETTINGS.EXPIRATION.ACCESS_TOKEN});
     },
-    //todo переписать чтобы хранился только device Id и userId
-    createRefreshToken(device: Omit<IDeviceModel, 'iat' | 'expirationDate'>): string {
-        return jwt.sign(device, SETTINGS.SECRET_JWT, {expiresIn: SETTINGS.EXPIRATION.REFRESH_TOKEN});
+    createRefreshToken(deviceId: string, userId: string): string {
+        return jwt.sign({deviceId, userId}, SETTINGS.SECRET_JWT, {expiresIn: SETTINGS.EXPIRATION.REFRESH_TOKEN});
     },
     getUserIdByToken(token: string): string | null {
         try {
@@ -18,17 +16,16 @@ export const jwtService = {
             return null
         }
     },
-    decodeToken(token: string) {
+    verifyAndDecodeToken(token: string) {
         try {
-            const result:any = jwt.decode(token)
+            const result:any = jwt.verify(token, SETTINGS.SECRET_JWT)
+
             return {
                 deviceId: result.deviceId,
                 userId: result.userId,
-                deviceName: result.deviceName,
-                iat: new Date(result.iat * 1000).toISOString(),
-                ip: result.ip,
-                expirationDate: new Date(result.exp * 1000).toISOString()
-            } as IDeviceModel
+                iat: result.iat,
+                exp: result.exp
+            }
         } catch (e) {
             return null
         }

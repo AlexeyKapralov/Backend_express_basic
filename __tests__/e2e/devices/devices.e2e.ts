@@ -8,6 +8,7 @@ import {SETTINGS} from "../../../src/common/config/settings";
 import {jwtService} from "../../../src/common/adapters/jwt.service";
 import {userManagerTest} from "../users/userManager.test";
 import {PATH} from "../../../src/common/config/path";
+import {DeviceModel} from "../../../src/features/securityDevices/domain/devices.entity";
 
 describe('e2e test for devices', () => {
     let tokensUser1: { refreshToken: string, accessToken: string } | undefined
@@ -84,6 +85,7 @@ describe('e2e test for devices', () => {
             .get(`${PATH.SECURITY}/devices`)
             .set('Cookie', [`refreshToken=${refreshToken}`])
 
+        debugger
         expect(result.body.length).toBe(4)
     })
 
@@ -100,7 +102,7 @@ describe('e2e test for devices', () => {
 
         //смотрим что в базе остался один
         const userID = jwtService.getUserIdByToken(refreshToken)
-        const devices = await db.getCollection().devices.find({userId: userID!}).toArray()
+        const devices = await DeviceModel.find({userId: userID!}).lean()
         expect(devices.length).toBe(1)
     })
 
@@ -109,7 +111,7 @@ describe('e2e test for devices', () => {
         // удаляем девайсы
         const refreshToken = tokensAnotherUser1!.refreshToken
 
-        const device = jwtService.decodeToken(tokensUser1!.refreshToken)
+        const device = jwtService.verifyAndDecodeToken(tokensUser1!.refreshToken)
 
         const result = await agent(app)
             .delete(`${PATH.SECURITY}/devices/${device!.deviceId}`)
@@ -129,7 +131,7 @@ describe('e2e test for devices', () => {
         // удаляем девайсы
         const refreshToken = tokensUser1!.refreshToken
 
-        const device = jwtService.decodeToken(tokensUser1!.refreshToken)
+        const device = jwtService.verifyAndDecodeToken(tokensUser1!.refreshToken)
 
         const result = await agent(app)
             .delete(`${PATH.SECURITY}/devices/${device!.deviceId}`)

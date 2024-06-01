@@ -1,14 +1,13 @@
-import {jwtService} from "../../../common/adapters/jwt.service";
 import {IDeviceViewModel} from "../models/deviceView.model";
 import {devicesQueryRepository} from "../repository/devices.queryRepository";
 import {ResultType} from "../../../common/types/result.type";
 import {ResultStatus} from "../../../common/types/resultStatus.type";
 import {devicesRepository} from "../repository/devices.repository";
-import {IDeviceModel} from "../../../common/types/devices.model";
+import {IDeviceDbModel} from "../models/deviceDb.model";
 
 export const devicesService = {
-    async getDevice(device: IDeviceModel): Promise<ResultType<IDeviceModel | null>> {
-        const result = await devicesRepository.findDevice(device)
+    async getDevice(deviceId: string, userId: string, iat: number): Promise<ResultType<IDeviceDbModel | null>> {
+        const result = await devicesRepository.findDevice(deviceId, userId, iat)
         return result
             ? {
                 status: ResultStatus.Success,
@@ -37,37 +36,21 @@ export const devicesService = {
         }
 
     },
-    async deleteAllSecurityDevices(refreshToken: string): Promise<ResultType> {
-        const device = jwtService.decodeToken(refreshToken)
+    async deleteAllSecurityDevices(deviceId: string, userId: string): Promise<ResultType> {
 
-        if (device) {
-            if (await devicesRepository.deleteAllAnotherDevices(device)) {
-                return {
-                    status: ResultStatus.Success,
-                    data: null
-                }
-            }
+        if (await devicesRepository.deleteAllAnotherDevices(deviceId, userId)) {
             return {
-                status: ResultStatus.BadRequest,
+                status: ResultStatus.Success,
                 data: null
             }
         }
         return {
-            status: ResultStatus.Unauthorized,
+            status: ResultStatus.BadRequest,
             data: null
         }
 
     },
-    async deleteDevice(deviceId: string, refreshToken: string): Promise<ResultType>  {
-        const userId = jwtService.getUserIdByToken(refreshToken)
-
-
-        if (!userId) {
-            return {
-                status: ResultStatus.Unauthorized,
-                data: null
-            }
-        }
+    async deleteDevice(deviceId: string, userId: string): Promise<ResultType>  {
 
         const device = await devicesRepository.findDeviceById(deviceId)
 

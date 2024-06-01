@@ -11,13 +11,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.postsManagerTest = void 0;
 const mongodb_1 = require("mongodb");
-const db_1 = require("../../../src/db/db");
 const supertest_1 = require("supertest");
 const app_1 = require("../../../src/app");
 const http_status_codes_1 = require("http-status-codes");
 const blogsManager_test_1 = require("../blogs/blogsManager.test");
 const generators_1 = require("../../../src/common/utils/generators");
 const path_1 = require("../../../src/common/config/path");
+const post_entity_1 = require("../../../src/features/posts/domain/post.entity");
 exports.postsManagerTest = {
     deletePost(id_1, accessToken_1) {
         return __awaiter(this, arguments, void 0, function* (id, accessToken, expectedStatus = http_status_codes_1.StatusCodes.NO_CONTENT) {
@@ -25,7 +25,7 @@ exports.postsManagerTest = {
                 .delete(`${path_1.PATH.POSTS}/${id}`)
                 .set({ authorization: `Bearer ${accessToken}` })
                 .expect(expectedStatus);
-            expect(yield db_1.db.getCollection().postsCollection.find({ _id: id }).toArray()).toEqual([]);
+            expect(yield post_entity_1.PostModel.find({ _id: id }).lean()).toEqual([]);
         });
     },
     createPosts(count) {
@@ -40,7 +40,7 @@ exports.postsManagerTest = {
                     content: `generated content ${i}`,
                     shortDescription: `generated description ${i}`
                 };
-                yield db_1.db.getCollection().postsCollection.insertOne(post);
+                yield post_entity_1.PostModel.create(post);
             }
         });
     },

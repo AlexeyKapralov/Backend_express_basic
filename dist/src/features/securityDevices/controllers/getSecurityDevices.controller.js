@@ -16,11 +16,12 @@ const http_status_codes_1 = require("http-status-codes");
 const jwt_service_1 = require("../../../common/adapters/jwt.service");
 const getSecurityDevicesController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const refreshToken = req.cookies.refreshToken;
-    const device = jwt_service_1.jwtService.decodeToken(refreshToken);
+    const device = jwt_service_1.jwtService.verifyAndDecodeToken(refreshToken);
     if (!device) {
         res.status(http_status_codes_1.StatusCodes.UNAUTHORIZED).send();
+        return;
     }
-    const result = yield devicesService_1.devicesService.getSecurityDevices(refreshToken);
+    const result = yield devicesService_1.devicesService.getSecurityDevices(device.userId);
     result.status == resultStatus_type_1.ResultStatus.Success
         ? res.status(http_status_codes_1.StatusCodes.OK).send(result.data)
         : res.status(http_status_codes_1.StatusCodes.UNAUTHORIZED).send();

@@ -1,13 +1,13 @@
 import {agent} from 'supertest'
 import {IUserInputModel} from '../../../src/features/users/models/userInput.model'
-import {SETTINGS} from '../../../src/common/config/settings'
 import {app} from '../../../src/app'
 import {StatusCodes} from 'http-status-codes'
-import {db} from "../../../src/db/db";
 import {ObjectId} from "mongodb";
 import { add } from 'date-fns'
 import { IUserViewModel } from '../../../src/features/users/models/userView.model'
 import {PATH} from "../../../src/common/config/path";
+import {IUserDbModel} from "../../../src/features/users/models/userDb.model";
+import {UsersModel} from "../../../src/features/users/domain/user.entity";
 
 const getRandomName = () => {
     const names = ["John", "Alice", "Bob", "Eva", "Michael", "Emma", "David", "Sophia", "James", "Olivia"];
@@ -57,7 +57,7 @@ export const userManagerTest = {
     async createUsers(count: number) {
         // let users = [];
         for (let i = 0; i < count; i++) {
-            let user: IUserDtoModel = {
+            let user: IUserDbModel = {
                 _id: new ObjectId().toString(),
                 login: getRandomName() + i, // Добавляем к имени номер
                 email: `generatedEmail${i}@example.com`,
@@ -70,7 +70,7 @@ export const userManagerTest = {
             // users.push(user);
             // users = [...users, user];
 
-            await UserModel.create(user)
+            await UsersModel.create(user)
         }
     },
 
@@ -88,7 +88,7 @@ export const userManagerTest = {
         expect(result.status).toBe(expected_status)
 
         if (result.status === StatusCodes.NO_CONTENT) {
-            const res = await UserModel.findOne({_id: id})
+            const res = await UsersModel.findOne({_id: id})
             expect(res).toBe(null)
         }
     },

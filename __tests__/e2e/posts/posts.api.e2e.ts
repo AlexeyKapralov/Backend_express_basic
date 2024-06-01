@@ -2,7 +2,6 @@ import { MongoMemoryServer } from 'mongodb-memory-server'
 import { db } from '../../../src/db/db'
 import { agent } from 'supertest'
 import { app } from '../../../src/app'
-import { SETTINGS } from '../../../src/common/config/settings'
 import { postsManagerTest } from './postsManager.test'
 import { IQueryModel } from '../../../src/common/types/query.model'
 import { StatusCodes } from 'http-status-codes'
@@ -12,6 +11,7 @@ import { IPostInputModel } from '../../../src/features/posts/models/postInput.mo
 import { IBlogViewModel } from '../../../src/features/blogs/models/blogView.model'
 import {getPostViewModel} from "../../../src/features/posts/mappers/postMappers";
 import {PATH} from "../../../src/common/config/path";
+import {PostModel} from "../../../src/features/posts/domain/post.entity";
 
 describe('posts tests', () => {
 	beforeAll(async () => {
@@ -69,12 +69,12 @@ describe('posts tests', () => {
 			])
 		})
 
-		const posts = await db.getCollection().postsCollection
+		const posts = await PostModel
 			.find()
-			.sort('createdAt', 'desc')
+			.sort({'createdAt': 'desc'})
 			.skip((1 - 1) * 10)
 			.limit(10)
-			.toArray()
+			.lean()
 
 		expect(posts.map(getPostViewModel)).toEqual(res.body.items)
 	})
@@ -113,12 +113,12 @@ describe('posts tests', () => {
 			])
 		})
 
-		const posts = await db.getCollection().postsCollection
+		const posts = await PostModel
 			.find()
-			.sort('title', 'asc')
+			.sort({'title': 'asc'})
 			.skip((3 - 1) * 6)
 			.limit(6)
-			.toArray()
+			.lean()
 
 		expect(posts.map(getPostViewModel)).toEqual(res.body.items)
 	})
@@ -259,7 +259,7 @@ describe('posts tests', () => {
 	});
 
 	afterAll(async () => {
-		db.stop()
+		await db.stop()
 	})
 
 	afterAll(done => {

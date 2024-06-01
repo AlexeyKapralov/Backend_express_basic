@@ -2,12 +2,18 @@ import {Request, Response} from "express";
 import {devicesService} from "../service/devicesService";
 import {ResultStatus} from "../../../common/types/resultStatus.type";
 import {StatusCodes} from "http-status-codes";
+import {jwtService} from "../../../common/adapters/jwt.service";
 
 export const deleteSecurityDeviceByIdController = async (req: Request<{deviceId: string}>, res: Response) => {
     const refreshToken = req.cookies.refreshToken
 
-    const result = await devicesService.deleteDevice(req.params.deviceId, refreshToken)
+    const userId = jwtService.getUserIdByToken(refreshToken)
+    if (!userId) {
+        res.status(StatusCodes.FORBIDDEN).send()
+        return
+    }
 
+    const result = await devicesService.deleteDevice(req.params.deviceId, userId)
 
     if (result.status === ResultStatus.Success) {
         res.status(StatusCodes.NO_CONTENT).send()

@@ -1,6 +1,5 @@
-import {db} from "../../../db/db";
 import {IDeviceViewModel} from "../models/deviceView.model";
-import {DeviceModel} from "../domain/devices.dto";
+import {DeviceModel} from "../domain/devices.entity";
 
 export const devicesQueryRepository = {
     async getSecurityDevices(userId: string): Promise<Array<IDeviceViewModel>> {

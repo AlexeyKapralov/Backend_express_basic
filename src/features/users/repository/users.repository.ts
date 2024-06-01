@@ -3,7 +3,7 @@ import { IUserInputModel } from '../models/userInput.model'
 import { v4 as uuidv4 } from 'uuid'
 import { add } from 'date-fns'
 import { SETTINGS } from '../../../common/config/settings'
-import {UsersModel} from "../domain/user.dto";
+import {UsersModel} from "../domain/user.entity";
 import {IUserDbModel} from "../models/userDb.model";
 
 export const usersRepository = {

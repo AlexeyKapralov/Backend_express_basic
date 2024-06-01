@@ -1,14 +1,14 @@
-import {db} from "../../../db/db";
 import {IBlogDbModel} from "../models/blogDb.model";
 import {IBlogInputModel} from "../models/blogInput.model";
+import {BlogModel} from "../domain/blogs.entity";
 
 export const blogsRepository = {
     async createBlog(body: IBlogDbModel) {
-        const result = await db.getCollection().blogsCollection.insertOne(body)
-        return result.acknowledged
+        const result = await BlogModel.create(body)
+        return !!result
     },
     async updateBlogByID(id: string, body: IBlogInputModel): Promise<boolean> {
-        const result = await db.getCollection().blogsCollection.updateOne({
+        const result = await BlogModel.updateOne({
             _id: id
         }, {
             $set: {
@@ -20,11 +20,11 @@ export const blogsRepository = {
         return result.modifiedCount > 0
     },
     async deleteBlogByID(id: string): Promise<boolean> {
-        const result = await db.getCollection().blogsCollection.deleteOne({_id: id})
+        const result = await BlogModel.deleteOne({_id: id})
         return result.deletedCount > 0
     },
     async getBlogByID(id: string) {
-        const result = await db.getCollection().blogsCollection.findOne({
+        const result = await BlogModel.findOne({
             _id: id
         })
         return result ? result : undefined

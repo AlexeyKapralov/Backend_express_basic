@@ -10,14 +10,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.devicesService = void 0;
-const jwt_service_1 = require("../../../common/adapters/jwt.service");
 const devices_queryRepository_1 = require("../repository/devices.queryRepository");
 const resultStatus_type_1 = require("../../../common/types/resultStatus.type");
 const devices_repository_1 = require("../repository/devices.repository");
 exports.devicesService = {
-    getDevice(device) {
+    getDevice(deviceId, userId, iat) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield devices_repository_1.devicesRepository.findDevice(device);
+            const result = yield devices_repository_1.devicesRepository.findDevice(deviceId, userId, iat);
             return result
                 ? {
                     status: resultStatus_type_1.ResultStatus.Success,
@@ -44,36 +43,22 @@ exports.devicesService = {
             };
         });
     },
-    deleteAllSecurityDevices(refreshToken) {
+    deleteAllSecurityDevices(deviceId, userId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const device = jwt_service_1.jwtService.decodeToken(refreshToken);
-            if (device) {
-                if (yield devices_repository_1.devicesRepository.deleteAllAnotherDevices(device)) {
-                    return {
-                        status: resultStatus_type_1.ResultStatus.Success,
-                        data: null
-                    };
-                }
+            if (yield devices_repository_1.devicesRepository.deleteAllAnotherDevices(deviceId, userId)) {
                 return {
-                    status: resultStatus_type_1.ResultStatus.BadRequest,
+                    status: resultStatus_type_1.ResultStatus.Success,
                     data: null
                 };
             }
             return {
-                status: resultStatus_type_1.ResultStatus.Unauthorized,
+                status: resultStatus_type_1.ResultStatus.BadRequest,
                 data: null
             };
         });
     },
-    deleteDevice(deviceId, refreshToken) {
+    deleteDevice(deviceId, userId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userId = jwt_service_1.jwtService.getUserIdByToken(refreshToken);
-            if (!userId) {
-                return {
-                    status: resultStatus_type_1.ResultStatus.Unauthorized,
-                    data: null
-                };
-            }
             const device = yield devices_repository_1.devicesRepository.findDeviceById(deviceId);
             if (!device) {
                 return {

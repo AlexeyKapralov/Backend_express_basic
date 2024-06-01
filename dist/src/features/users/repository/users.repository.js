@@ -14,11 +14,11 @@ const mongodb_1 = require("mongodb");
 const uuid_1 = require("uuid");
 const date_fns_1 = require("date-fns");
 const settings_1 = require("../../../common/config/settings");
-const user_dto_1 = require("../domain/user.dto");
+const user_entity_1 = require("../domain/user.entity");
 exports.usersRepository = {
     findUserWithPass(loginOrEmail) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield user_dto_1.UsersModel.findOne({
+            const result = yield user_entity_1.UsersModel.findOne({
                 $or: [{ login: loginOrEmail }, { email: loginOrEmail }]
             });
             return result !== null ? result : undefined;
@@ -26,7 +26,7 @@ exports.usersRepository = {
     },
     findUserByLoginOrEmail(loginOrEmail) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield user_dto_1.UsersModel.findOne({
+            const result = yield user_entity_1.UsersModel.findOne({
                 $or: [{ login: loginOrEmail }, { email: loginOrEmail }]
             });
             return result !== null ? result : undefined;
@@ -34,7 +34,7 @@ exports.usersRepository = {
     },
     findUserById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const res = yield user_dto_1.UsersModel
+            const res = yield user_entity_1.UsersModel
                 .findOne({ _id: id });
             return res ? res : undefined;
         });
@@ -51,13 +51,13 @@ exports.usersRepository = {
                 confirmationCodeExpired: (0, date_fns_1.add)(new Date(), settings_1.SETTINGS.EXPIRED_LIFE),
                 isConfirmed: admin === 'admin'
             };
-            const createdUser = yield user_dto_1.UsersModel.create(user);
+            const createdUser = yield user_entity_1.UsersModel.create(user);
             return createdUser ? user : undefined;
         });
     },
     deleteUser(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield user_dto_1.UsersModel.deleteOne({
+            const result = yield user_entity_1.UsersModel.deleteOne({
                 _id: id
             });
             return result.deletedCount > 0;
@@ -65,7 +65,7 @@ exports.usersRepository = {
     },
     updateUserConfirm(code_1) {
         return __awaiter(this, arguments, void 0, function* (code, isConfirmed = true) {
-            const result = yield user_dto_1.UsersModel.updateOne({ confirmationCode: code }, { $set: { isConfirmed: isConfirmed } });
+            const result = yield user_entity_1.UsersModel.updateOne({ confirmationCode: code }, { $set: { isConfirmed: isConfirmed } });
             return result.matchedCount > 0;
         });
     }

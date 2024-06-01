@@ -10,34 +10,31 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.devicesRepository = void 0;
-const devices_dto_1 = require("../domain/devices.dto");
+const devices_entity_1 = require("../domain/devices.entity");
 exports.devicesRepository = {
     findDeviceId(userId, ip, deviceName) {
         return __awaiter(this, void 0, void 0, function* () {
-            const device = yield devices_dto_1.DeviceModel.findOne({ userId, ip, deviceName });
+            const device = yield devices_entity_1.DeviceModel.findOne({ userId, ip, deviceName });
             return device ? device.deviceId : null;
         });
     },
-    findDevice(device) {
+    findDevice(deviceId, userId, iat) {
         return __awaiter(this, void 0, void 0, function* () {
-            const deviceDb = yield devices_dto_1.DeviceModel.aggregate([
+            const deviceDb = yield devices_entity_1.DeviceModel.aggregate([
                 { $match: {
-                        userId: device.userId,
-                        ip: device.ip,
-                        deviceId: device.deviceId,
-                        deviceName: device.deviceName,
-                        iat: device.iat,
-                        expirationDate: device.expirationDate
+                        userId: userId,
+                        deviceId: deviceId,
+                        iat: String(iat)
                     }
                 },
-                { $project: { _ip: 0 } }
+                { $project: { _id: 0 } }
             ]);
             return deviceDb[0];
         });
     },
     findDeviceById(deviceId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const device = yield devices_dto_1.DeviceModel.findOne({ deviceId });
+            const device = yield devices_entity_1.DeviceModel.findOne({ deviceId });
             return device ? device : null;
         });
     },
@@ -45,25 +42,26 @@ exports.devicesRepository = {
         return __awaiter(this, void 0, void 0, function* () {
             const foundDeviceId = yield this.findDeviceId(device.userId, device.ip, device.deviceName);
             if (foundDeviceId) {
-                const isUpdatedDevice = yield devices_dto_1.DeviceModel.updateOne({ userId: device.userId, ip: device.ip, deviceName: device.deviceName, deviceId: foundDeviceId }, { $set: { iat: device.iat, expirationDate: device.expirationDate } });
+                const isUpdatedDevice = yield devices_entity_1.DeviceModel.updateOne({ deviceId: foundDeviceId }, { $set: { iat: String(device.iat), exp: String(device.exp) } });
                 return isUpdatedDevice.modifiedCount > 0;
             }
             else {
-                return yield devices_dto_1.DeviceModel.create(device);
+                const createdDevice = yield devices_entity_1.DeviceModel.create(device);
+                return createdDevice;
             }
         });
     },
     deleteDeviceById(deviceId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield devices_dto_1.DeviceModel.deleteOne({ deviceId: deviceId });
+            const result = yield devices_entity_1.DeviceModel.deleteOne({ deviceId: deviceId });
             return result.deletedCount > 0;
         });
     },
-    deleteAllAnotherDevices(device) {
+    deleteAllAnotherDevices(deviceId, userId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const isDeleted = yield devices_dto_1.DeviceModel.deleteMany({
-                userId: device.userId,
-                deviceId: { $ne: device.deviceId }
+            const isDeleted = yield devices_entity_1.DeviceModel.deleteMany({
+                userId: userId,
+                deviceId: { $ne: deviceId }
             });
             return isDeleted.acknowledged;
         });

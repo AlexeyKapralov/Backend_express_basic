@@ -14,9 +14,9 @@ const supertest_1 = require("supertest");
 const app_1 = require("../../../src/app");
 const http_status_codes_1 = require("http-status-codes");
 const mongodb_1 = require("mongodb");
-const db_1 = require("../../../src/db/db");
 const generators_1 = require("../../../src/common/utils/generators");
 const path_1 = require("../../../src/common/config/path");
+const blogs_entity_1 = require("../../../src/features/blogs/domain/blogs.entity");
 exports.blogsManagerTest = {
     createBlog() {
         return __awaiter(this, arguments, void 0, function* (data = 'default', accessToken, expectedStatus = http_status_codes_1.StatusCodes.CREATED) {
@@ -57,7 +57,7 @@ exports.blogsManagerTest = {
                     description: randomTitle + ' : description about it',
                     createdAt: new Date().toISOString(),
                 };
-                yield db_1.db.getCollection().blogsCollection.insertOne(blog);
+                yield blogs_entity_1.BlogModel.create(blog);
             }
         });
     }

@@ -23,7 +23,7 @@ describe('refresh Token e2e test', () => {
         yield db_1.db.drop();
     }));
     afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
-        db_1.db.stop();
+        yield db_1.db.stop();
     }));
     afterAll(done => {
         done();

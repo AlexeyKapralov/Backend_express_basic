@@ -31,7 +31,7 @@ describe('integration test delete device', () => {
             loginOrEmail: userData.email,
             password: userData.password
         })
-        device = jwtService.decodeToken(tokens!.refreshToken)
+        device = jwtService.verifyAndDecodeToken(tokens!.refreshToken)
 
         const userData2 = {
             login: 'login2',
@@ -58,7 +58,8 @@ describe('integration test delete device', () => {
     })
 
     it('should return success with correct token + deviceID', async () => {
-        const res = await devicesService.deleteDevice(device!.deviceId, tokens!.refreshToken)
+        const userId = jwtService.getUserIdByToken(tokens!.refreshToken)
+        const res = await devicesService.deleteDevice(device!.deviceId, userId!)
         expect(res.status === ResultStatus.Success)
     });
     it('should return unauthorized with incorrect token', async () => {
@@ -66,11 +67,13 @@ describe('integration test delete device', () => {
         expect(res.status === ResultStatus.Unauthorized)
     });
     it('should return unauthorized with incorrect deviceId', async () => {
-        const res = await devicesService.deleteDevice('123', tokens!.refreshToken)
+        const userId = jwtService.getUserIdByToken(tokens!.refreshToken)
+        const res = await devicesService.deleteDevice('123', userId!)
         expect(res.status === ResultStatus.Unauthorized)
     });
     it('should return forbidden with another deviceID', async () => {
-        const res = await devicesService.deleteDevice(device!.deviceId, tokens2!.refreshToken)
+        const userId = jwtService.getUserIdByToken(tokens!.refreshToken)
+        const res = await devicesService.deleteDevice(device!.deviceId, userId!)
         expect(res.status === ResultStatus.Forbidden)
     });
 })

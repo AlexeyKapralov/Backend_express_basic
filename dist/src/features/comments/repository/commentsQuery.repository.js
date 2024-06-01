@@ -10,22 +10,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.commentsQueryRepository = void 0;
-const db_1 = require("../../../db/db");
 const commentsMappers_1 = require("../mappers/commentsMappers");
+const post_entity_1 = require("../../posts/domain/post.entity");
+const comments_entity_1 = require("../domain/comments.entity");
 exports.commentsQueryRepository = {
     getComments(postId, query) {
         return __awaiter(this, void 0, void 0, function* () {
-            const post = yield db_1.db.getCollection().postsCollection.findOne({ _id: postId });
+            const post = yield post_entity_1.PostModel.findOne({ _id: postId });
             if (!post) {
                 return undefined;
             }
-            const comments = yield db_1.db.getCollection().commentsCollection
+            const comments = yield comments_entity_1.CommentsModel
                 .find({ postId: postId })
-                .sort(query.sortBy, query.sortDirection)
+                .sort({ [query.sortBy]: query.sortDirection })
                 .skip((query.pageNumber - 1) * query.pageSize)
                 .limit(query.pageSize)
-                .toArray();
-            const commentsCount = yield db_1.db.getCollection().commentsCollection
+                .lean();
+            const commentsCount = yield comments_entity_1.CommentsModel
                 .countDocuments({ postId: postId });
             return {
                 pagesCount: Math.ceil(commentsCount / query.pageSize),
@@ -38,7 +39,7 @@ exports.commentsQueryRepository = {
     },
     getCommentById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield db_1.db.getCollection().commentsCollection.findOne({ _id: id });
+            const result = yield comments_entity_1.CommentsModel.findOne({ _id: id });
             return result ? (0, commentsMappers_1.getCommentView)(result) : undefined;
         });
     }

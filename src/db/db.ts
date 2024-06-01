@@ -1,4 +1,3 @@
-import {Db, MongoClient} from 'mongodb'
 import mongoose from 'mongoose'
 import {SETTINGS} from '../common/config/settings'
 
@@ -6,7 +5,8 @@ export const db = {
 
     async run(url: string) {
         const dbName = SETTINGS.DB_NAME
-        const mongoURI = `${url}/${dbName}`
+
+        const mongoURI = `${url}${dbName}`
 
         try {
             await mongoose.connect(mongoURI)

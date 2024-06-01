@@ -1,6 +1,6 @@
 import {ICommentDbModel} from "../../../src/features/comments/models/commentDb.model";
 import {ObjectId} from "mongodb";
-import {db} from "../../../src/db/db";
+import {CommentsModel} from "../../../src/features/comments/domain/comments.entity";
 
 export const commentsManagerTest = {
     async createComments(count: number, postId: string = 'post') {
@@ -18,7 +18,7 @@ export const commentsManagerTest = {
                     ? `postID`
                     : postId
             }
-            await db.getCollection().commentsCollection.insertOne(comment)
+            await CommentsModel.create(comment)
         }
     }
 }

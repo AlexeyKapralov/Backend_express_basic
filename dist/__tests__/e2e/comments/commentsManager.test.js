@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.commentsManagerTest = void 0;
 const mongodb_1 = require("mongodb");
-const db_1 = require("../../../src/db/db");
+const comments_entity_1 = require("../../../src/features/comments/domain/comments.entity");
 exports.commentsManagerTest = {
     createComments(count_1) {
         return __awaiter(this, arguments, void 0, function* (count, postId = 'post') {
@@ -29,7 +29,7 @@ exports.commentsManagerTest = {
                         ? `postID`
                         : postId
                 };
-                yield db_1.db.getCollection().commentsCollection.insertOne(comment);
+                yield comments_entity_1.CommentsModel.create(comment);
             }
         });
     }

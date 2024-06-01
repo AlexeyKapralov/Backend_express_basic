@@ -18,7 +18,7 @@ const userManager_test_1 = require("./userManager.test");
 const http_status_codes_1 = require("http-status-codes");
 const userMappers_1 = require("../../../src/features/users/mappers/userMappers");
 const path_1 = require("../../../src/common/config/path");
-const user_dto_1 = require("../../../src/features/users/domain/user.dto");
+const user_entity_1 = require("../../../src/features/users/domain/user.entity");
 describe('user tests', () => {
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
         const mongod = yield mongodb_memory_server_1.MongoMemoryServer.create();
@@ -44,7 +44,7 @@ describe('user tests', () => {
                 })
             ])
         });
-        const users = yield user_dto_1.UsersModel
+        const users = yield user_entity_1.UsersModel
             .find()
             .sort({ createdAt: 'desc' })
             .skip((1 - 1) * 10)
@@ -65,7 +65,7 @@ describe('user tests', () => {
             searchLoginTerm: 'John',
             searchEmailTerm: '1'
         });
-        const users = yield user_dto_1.UsersModel
+        const users = yield user_entity_1.UsersModel
             .find({
             $or: [
                 { login: { $regex: 'John', $options: 'i' } },
@@ -76,7 +76,7 @@ describe('user tests', () => {
             .skip((2 - 1) * 5)
             .limit(5)
             .lean();
-        const countUsers = yield user_dto_1.UsersModel
+        const countUsers = yield user_entity_1.UsersModel
             .find({
             $or: [
                 { login: { $regex: 'John', $options: 'i' } },
@@ -130,7 +130,7 @@ describe('user tests', () => {
         yield userManager_test_1.userManagerTest.deleteUser('aaaaa', settings_1.SETTINGS.ADMIN_AUTH, http_status_codes_1.StatusCodes.NOT_FOUND);
     }));
     it(`should delete user with correct id`, () => __awaiter(void 0, void 0, void 0, function* () {
-        const user = yield user_dto_1.UsersModel.findOne();
+        const user = yield user_entity_1.UsersModel.findOne();
         yield userManager_test_1.userManagerTest.deleteUser(user._id, settings_1.SETTINGS.ADMIN_AUTH);
     }));
     afterAll(() => __awaiter(void 0, void 0, void 0, function* () {

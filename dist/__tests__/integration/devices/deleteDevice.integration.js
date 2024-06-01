@@ -39,7 +39,7 @@ describe('integration test delete device', () => {
             loginOrEmail: userData.email,
             password: userData.password
         });
-        device = jwt_service_1.jwtService.decodeToken(tokens.refreshToken);
+        device = jwt_service_1.jwtService.verifyAndDecodeToken(tokens.refreshToken);
         const userData2 = {
             login: 'login2',
             password: 'qwert1234',
@@ -61,7 +61,8 @@ describe('integration test delete device', () => {
         done();
     });
     it('should return success with correct token + deviceID', () => __awaiter(void 0, void 0, void 0, function* () {
-        const res = yield devicesService_1.devicesService.deleteDevice(device.deviceId, tokens.refreshToken);
+        const userId = jwt_service_1.jwtService.getUserIdByToken(tokens.refreshToken);
+        const res = yield devicesService_1.devicesService.deleteDevice(device.deviceId, userId);
         expect(res.status === resultStatus_type_1.ResultStatus.Success);
     }));
     it('should return unauthorized with incorrect token', () => __awaiter(void 0, void 0, void 0, function* () {
@@ -69,11 +70,13 @@ describe('integration test delete device', () => {
         expect(res.status === resultStatus_type_1.ResultStatus.Unauthorized);
     }));
     it('should return unauthorized with incorrect deviceId', () => __awaiter(void 0, void 0, void 0, function* () {
-        const res = yield devicesService_1.devicesService.deleteDevice('123', tokens.refreshToken);
+        const userId = jwt_service_1.jwtService.getUserIdByToken(tokens.refreshToken);
+        const res = yield devicesService_1.devicesService.deleteDevice('123', userId);
         expect(res.status === resultStatus_type_1.ResultStatus.Unauthorized);
     }));
     it('should return forbidden with another deviceID', () => __awaiter(void 0, void 0, void 0, function* () {
-        const res = yield devicesService_1.devicesService.deleteDevice(device.deviceId, tokens2.refreshToken);
+        const userId = jwt_service_1.jwtService.getUserIdByToken(tokens.refreshToken);
+        const res = yield devicesService_1.devicesService.deleteDevice(device.deviceId, userId);
         expect(res.status === resultStatus_type_1.ResultStatus.Forbidden);
     }));
 });

@@ -7,12 +7,13 @@ import {jwtService} from "../../../common/adapters/jwt.service";
 export const getSecurityDevicesController = async (req: Request, res: Response) => {
     const refreshToken = req.cookies.refreshToken
 
-    const device = jwtService.decodeToken(refreshToken)
+    const device = jwtService.verifyAndDecodeToken(refreshToken)
 
     if (!device) {
         res.status(StatusCodes.UNAUTHORIZED).send()
+        return
     }
-    const result = await devicesService.getSecurityDevices(refreshToken)
+    const result = await devicesService.getSecurityDevices(device.userId)
 
     result.status == ResultStatus.Success
         ? res.status(StatusCodes.OK).send(result.data)

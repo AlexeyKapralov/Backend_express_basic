@@ -18,6 +18,7 @@ const postsManager_test_1 = require("../../e2e/posts/postsManager.test");
 const jwt_service_1 = require("../../../src/common/adapters/jwt.service");
 const resultStatus_type_1 = require("../../../src/common/types/resultStatus.type");
 const comments_service_1 = require("../../../src/features/comments/service/comments.service");
+const comments_entity_1 = require("../../../src/features/comments/domain/comments.entity");
 describe('comments integration tests', () => {
     let tokens;
     let blog;
@@ -85,7 +86,7 @@ describe('comments integration tests', () => {
         if (result.data !== null) {
             yield comments_service_1.commentsService.updateComment(userId, result.data.id, newBody);
         }
-        const updatedComment = yield db_1.db.getCollection().commentsCollection.findOne({ _id: result.data.id });
+        const updatedComment = yield comments_entity_1.CommentsModel.findOne({ _id: result.data.id });
         expect(updatedComment.content).toBe(newBody.content);
     }));
     it(`shouldn't delete comment with another userId`, () => __awaiter(void 0, void 0, void 0, function* () {
@@ -109,7 +110,7 @@ describe('comments integration tests', () => {
         if (result.data !== null) {
             yield comments_service_1.commentsService.deleteComment(userId, result.data.id);
         }
-        const isDeleted = yield db_1.db.getCollection().commentsCollection.findOne({ _id: result.data.id });
+        const isDeleted = yield comments_entity_1.CommentsModel.findOne({ _id: result.data.id });
         expect(isDeleted).toBe(null);
     }));
 });

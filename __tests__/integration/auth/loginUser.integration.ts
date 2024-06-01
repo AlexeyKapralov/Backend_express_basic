@@ -6,8 +6,8 @@ import {bcryptService} from "../../../src/common/adapters/bcrypt.service";
 import {userManagerTest} from "../../e2e/users/userManager.test";
 import {authManagerTest} from "../../e2e/auth/authManager.test";
 import {SETTINGS} from "../../../src/common/config/settings";
-import {ResultStatus} from "../../../src/common/types/resultStatus.type";
 import {usersRepository} from "../../../src/features/users/repository/users.repository";
+import {jwtService} from "../../../src/common/adapters/jwt.service";
 
 describe('Login User', () => {
     beforeAll(async () => {
@@ -50,7 +50,7 @@ describe('Login User', () => {
         bcryptService.comparePasswordsHash = jest.fn<typeof bcryptService.comparePasswordsHash>()
             .mockImplementation(async (reqPassPlainText: string, dbPassHash: string) => {
                 return true
-        })
+            })
 
         const result = await loginService.loginUser({loginOrEmail: 'login', password: '123'}, 'Chrome', '0.0.0.1')
 
@@ -84,7 +84,9 @@ describe('Login User', () => {
         const tokens = await authManagerTest.authUser(loginInputData)
 
         await new Promise(resolve => setTimeout(resolve, 1000))
-        const result = await loginService.refreshToken(tokens!.refreshToken)
+
+        const tokenPayload = jwtService.verifyAndDecodeToken(tokens!.refreshToken)
+        const result = await loginService.refreshToken(tokenPayload!.deviceId, tokenPayload!.userId, tokenPayload!.iat)
 
         expect(tokens!.refreshToken).not.toBe(result.data!.refreshToken)
 
@@ -108,16 +110,12 @@ describe('Login User', () => {
 
         const tokens = await authManagerTest.authUser(loginInputData)
 
-        let result
-        await new Promise(res => {
-            setTimeout(async () => {
-                result = await loginService.refreshToken(tokens!.refreshToken)
-                res(result)
-            }, 2000)
-            // jest.advanceTimersByTime(2000)
-        })
+        await new Promise(resolve => setTimeout(resolve, 2000))
 
-        expect(result!.status).toBe(ResultStatus.Unauthorized)
+        const tokenPayload = jwtService.verifyAndDecodeToken(tokens!.refreshToken)
+
+
+        expect(tokenPayload).toBeNull()
 
     })
 })

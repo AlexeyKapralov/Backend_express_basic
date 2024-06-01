@@ -5,6 +5,7 @@ import { IUserInputModel } from '../../../src/features/users/models/userInput.mo
 import { emailService } from '../../../src/common/adapters/email.service'
 import { ResultType } from '../../../src/common/types/result.type'
 import { ResultStatus } from '../../../src/common/types/resultStatus.type'
+import {UsersModel} from "../../../src/features/users/domain/user.entity";
 
 describe('Integration Auth', () => {
 	beforeAll(async () => {
@@ -41,7 +42,7 @@ describe('Integration Auth', () => {
 			data: null
 		})
 
-		const dbUser = db.getCollection().usersCollection.find({login: data.login, email: data.email})
+		const dbUser = UsersModel.find({login: data.login, email: data.email})
 
 		expect(dbUser).toBeDefined()
 

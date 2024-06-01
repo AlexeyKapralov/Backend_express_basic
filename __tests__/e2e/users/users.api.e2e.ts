@@ -7,7 +7,7 @@ import {userManagerTest} from './userManager.test'
 import {StatusCodes} from 'http-status-codes'
 import {getUserViewModel} from "../../../src/features/users/mappers/userMappers";
 import {PATH} from "../../../src/common/config/path";
-import {UsersModel} from "../../../src/features/users/domain/user.dto";
+import {UsersModel} from "../../../src/features/users/domain/user.entity";
 
 
 describe('user tests', () => {

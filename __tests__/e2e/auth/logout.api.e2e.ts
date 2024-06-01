@@ -12,7 +12,7 @@ describe('auth test', () => {
 	})
 
 	afterAll(async () => {
-		db.stop()
+		await db.stop()
 	})
 
 	afterAll(done => {

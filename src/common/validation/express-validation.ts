@@ -1,7 +1,6 @@
 import { body, param, query } from 'express-validator'
-import { db } from '../../db/db'
-import {UsersModel} from "../../features/users/domain/user.dto";
-import {BlogModel} from "../../features/blogs/domain/blogs.dto";
+import {UsersModel} from "../../features/users/domain/user.entity";
+import {BlogModel} from "../../features/blogs/domain/blogs.entity";
 import {IUserDbModel} from "../../features/users/models/userDb.model";
 
 export const loginValidation = body(['login'])

@@ -12,18 +12,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.rateLimitMiddleware = void 0;
 const http_status_codes_1 = require("http-status-codes");
 const date_fns_1 = require("date-fns");
-const db_1 = require("../db/db");
+const rateLimits_entity_1 = require("../features/rateLimits/domain/rateLimits.entity");
 const rateLimitMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const ip = req.ip || '';
     const url = req.url;
     const dateRequest = (0, date_fns_1.addSeconds)(new Date(), -10);
     //todo возможно стоит переписать чтобы здесь не было обращения к бд а сделать через сервис
-    const limitRequest = yield db_1.db.getCollection().rateLimitCollection.find({ ip, url, date: { $gt: dateRequest } }).toArray();
+    const limitRequest = yield rateLimits_entity_1.RateLimitModel.find({ ip, url, date: { $gt: dateRequest } }).lean();
     if (limitRequest.length >= 5) {
         res.status(http_status_codes_1.StatusCodes.TOO_MANY_REQUESTS).send();
         return;
     }
-    yield db_1.db.getCollection().rateLimitCollection.insertOne({ ip, url, date: new Date() });
+    yield rateLimits_entity_1.RateLimitModel.create({ ip, url, date: new Date() });
     next();
 });
 exports.rateLimitMiddleware = rateLimitMiddleware;

@@ -19,6 +19,7 @@ const settings_1 = require("../../../src/common/config/settings");
 const jwt_service_1 = require("../../../src/common/adapters/jwt.service");
 const userManager_test_1 = require("../users/userManager.test");
 const path_1 = require("../../../src/common/config/path");
+const devices_entity_1 = require("../../../src/features/securityDevices/domain/devices.entity");
 describe('e2e test for devices', () => {
     let tokensUser1;
     let tokensUser2;
@@ -65,6 +66,7 @@ describe('e2e test for devices', () => {
         const result = yield (0, supertest_1.agent)(app_1.app)
             .get(`${path_1.PATH.SECURITY}/devices`)
             .set('Cookie', [`refreshToken=${refreshToken}`]);
+        debugger;
         expect(result.body.length).toBe(4);
     }));
     it('Should delete another devices', () => __awaiter(void 0, void 0, void 0, function* () {
@@ -77,13 +79,13 @@ describe('e2e test for devices', () => {
         expect(result.status).toBe(http_status_codes_1.StatusCodes.NO_CONTENT);
         //смотрим что в базе остался один
         const userID = jwt_service_1.jwtService.getUserIdByToken(refreshToken);
-        const devices = yield db_1.db.getCollection().devices.find({ userId: userID }).toArray();
+        const devices = yield devices_entity_1.DeviceModel.find({ userId: userID }).lean();
         expect(devices.length).toBe(1);
     }));
     it(`Shouldn't delete device with token from another user`, () => __awaiter(void 0, void 0, void 0, function* () {
         // удаляем девайсы
         const refreshToken = tokensAnotherUser1.refreshToken;
-        const device = jwt_service_1.jwtService.decodeToken(tokensUser1.refreshToken);
+        const device = jwt_service_1.jwtService.verifyAndDecodeToken(tokensUser1.refreshToken);
         const result = yield (0, supertest_1.agent)(app_1.app)
             .delete(`${path_1.PATH.SECURITY}/devices/${device.deviceId}`)
             .set('Cookie', [`refreshToken=${refreshToken}`]);
@@ -97,7 +99,7 @@ describe('e2e test for devices', () => {
     it(`Should delete device`, () => __awaiter(void 0, void 0, void 0, function* () {
         // удаляем девайсы
         const refreshToken = tokensUser1.refreshToken;
-        const device = jwt_service_1.jwtService.decodeToken(tokensUser1.refreshToken);
+        const device = jwt_service_1.jwtService.verifyAndDecodeToken(tokensUser1.refreshToken);
         const result = yield (0, supertest_1.agent)(app_1.app)
             .delete(`${path_1.PATH.SECURITY}/devices/${device.deviceId}`)
             .set('Cookie', [`refreshToken=${refreshToken}`]);

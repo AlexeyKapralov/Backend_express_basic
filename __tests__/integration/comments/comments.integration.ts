@@ -10,6 +10,7 @@ import {ResultStatus} from "../../../src/common/types/resultStatus.type";
 import {ICommentViewModel} from "../../../src/features/comments/models/commentView.model";
 import {ICommentatorInfo} from "../../../src/features/comments/models/commentatorInfo.model";
 import {commentsService} from "../../../src/features/comments/service/comments.service";
+import {CommentsModel} from "../../../src/features/comments/domain/comments.entity";
 
 describe('comments integration tests', () => {
     let tokens
@@ -95,7 +96,7 @@ describe('comments integration tests', () => {
         if (result.data !== null) {
             await commentsService.updateComment(userId!, result.data.id, newBody)
         }
-        const updatedComment = await db.getCollection().commentsCollection.findOne({_id: result.data!.id})
+        const updatedComment = await CommentsModel.findOne({_id: result.data!.id})
 
         expect(updatedComment!.content).toBe(newBody.content)
     })
@@ -127,7 +128,7 @@ describe('comments integration tests', () => {
         if (result.data !== null) {
             await commentsService.deleteComment(userId!, result.data.id)
         }
-        const isDeleted = await db.getCollection().commentsCollection.findOne({_id: result.data!.id})
+        const isDeleted = await CommentsModel.findOne({_id: result.data!.id})
 
         expect(isDeleted).toBe(null)
     })

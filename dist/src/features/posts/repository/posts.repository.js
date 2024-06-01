@@ -11,13 +11,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.postsRepository = void 0;
 const mongodb_1 = require("mongodb");
-const db_1 = require("../../../db/db");
 const blogs_repository_1 = require("../../blogs/repository/blogs.repository");
 const postMappers_1 = require("../mappers/postMappers");
+const post_entity_1 = require("../domain/post.entity");
 exports.postsRepository = {
     getPostById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield db_1.db.getCollection().postsCollection.findOne({
+            const result = yield post_entity_1.PostModel.findOne({
                 _id: id
             });
             return result ? result : undefined;
@@ -34,15 +34,15 @@ exports.postsRepository = {
                 blogName: blogName,
                 createdAt: new Date().toISOString()
             };
-            const result = yield db_1.db.getCollection().postsCollection.insertOne(newPost);
-            return result.acknowledged ? (0, postMappers_1.getPostViewModel)(newPost) : undefined;
+            const result = yield post_entity_1.PostModel.create(newPost);
+            return !!result ? (0, postMappers_1.getPostViewModel)(newPost) : undefined;
         });
     },
     updatePost(id, body) {
         return __awaiter(this, void 0, void 0, function* () {
             const foundBlog = yield blogs_repository_1.blogsRepository.getBlogByID(body.blogId);
             if (foundBlog) {
-                const result = yield db_1.db.getCollection().postsCollection.updateOne({
+                const result = yield post_entity_1.PostModel.updateOne({
                     _id: id
                 }, {
                     $set: {
@@ -61,7 +61,7 @@ exports.postsRepository = {
     },
     deletePost(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield db_1.db.getCollection().postsCollection.deleteOne({ _id: id });
+            const result = yield post_entity_1.PostModel.deleteOne({ _id: id });
             return result.deletedCount > 0;
         });
     }

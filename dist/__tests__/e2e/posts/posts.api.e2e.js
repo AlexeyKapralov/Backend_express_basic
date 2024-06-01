@@ -19,6 +19,7 @@ const authManager_test_1 = require("../auth/authManager.test");
 const blogsManager_test_1 = require("../blogs/blogsManager.test");
 const postMappers_1 = require("../../../src/features/posts/mappers/postMappers");
 const path_1 = require("../../../src/common/config/path");
+const post_entity_1 = require("../../../src/features/posts/domain/post.entity");
 describe('posts tests', () => {
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
         const mongod = yield mongodb_memory_server_1.MongoMemoryServer.create();
@@ -67,12 +68,12 @@ describe('posts tests', () => {
                 })
             ])
         });
-        const posts = yield db_1.db.getCollection().postsCollection
+        const posts = yield post_entity_1.PostModel
             .find()
-            .sort('createdAt', 'desc')
+            .sort({ 'createdAt': 'desc' })
             .skip((1 - 1) * 10)
             .limit(10)
-            .toArray();
+            .lean();
         expect(posts.map(postMappers_1.getPostViewModel)).toEqual(res.body.items);
     }));
     it('should get posts with custom pagination', () => __awaiter(void 0, void 0, void 0, function* () {
@@ -104,12 +105,12 @@ describe('posts tests', () => {
                 })
             ])
         });
-        const posts = yield db_1.db.getCollection().postsCollection
+        const posts = yield post_entity_1.PostModel
             .find()
-            .sort('title', 'asc')
+            .sort({ 'title': 'asc' })
             .skip((3 - 1) * 6)
             .limit(6)
-            .toArray();
+            .lean();
         expect(posts.map(postMappers_1.getPostViewModel)).toEqual(res.body.items);
     }));
     it(`shouldn't create post with no auth`, () => __awaiter(void 0, void 0, void 0, function* () {
@@ -230,7 +231,7 @@ describe('posts tests', () => {
         }
     }));
     afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
-        db_1.db.stop();
+        yield db_1.db.stop();
     }));
     afterAll(done => {
         done();

@@ -14,6 +14,7 @@ const db_1 = require("../../../src/db/db");
 const login_service_1 = require("../../../src/features/auth/service/login.service");
 const email_service_1 = require("../../../src/common/adapters/email.service");
 const resultStatus_type_1 = require("../../../src/common/types/resultStatus.type");
+const user_entity_1 = require("../../../src/features/users/domain/user.entity");
 describe('Integration Auth', () => {
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
         const mongod = yield mongodb_memory_server_1.MongoMemoryServer.create();
@@ -43,7 +44,7 @@ describe('Integration Auth', () => {
             status: resultStatus_type_1.ResultStatus.Success,
             data: null
         });
-        const dbUser = db_1.db.getCollection().usersCollection.find({ login: data.login, email: data.email });
+        const dbUser = user_entity_1.UsersModel.find({ login: data.login, email: data.email });
         expect(dbUser).toBeDefined();
         expect(email_service_1.emailService.sendConfirmationCode).toHaveBeenCalled();
         expect(email_service_1.emailService.sendConfirmationCode).toHaveBeenCalledTimes(1);

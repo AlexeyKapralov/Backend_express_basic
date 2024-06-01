@@ -1,9 +1,7 @@
 import {ObjectId} from 'mongodb'
-import {db} from '../../../src/db/db'
 import {IPostDbModel} from '../../../src/features/posts/models/postDb.model'
 import {agent} from 'supertest'
 import {app} from '../../../src/app'
-import {SETTINGS} from '../../../src/common/config/settings'
 import {StatusCodes} from 'http-status-codes'
 import {IPostInputModel} from '../../../src/features/posts/models/postInput.model'
 import {blogsManagerTest} from '../blogs/blogsManager.test'
@@ -11,6 +9,7 @@ import {IPostViewModel} from '../../../src/features/posts/models/postView.model'
 import {IBlogViewModel} from '../../../src/features/blogs/models/blogView.model'
 import {getRandomTitle} from '../../../src/common/utils/generators'
 import {PATH} from "../../../src/common/config/path";
+import {PostModel} from "../../../src/features/posts/domain/post.entity";
 
 
 export const postsManagerTest = {
@@ -21,7 +20,7 @@ export const postsManagerTest = {
             .set({authorization: `Bearer ${accessToken}`})
             .expect(expectedStatus)
 
-        expect(await db.getCollection().postsCollection.find({_id: id}).toArray()).toEqual([])
+        expect(await PostModel.find({_id: id}).lean()).toEqual([])
     },
     async createPosts(count: number) {
         for (let i = 0; i < count; i++) {
@@ -36,7 +35,7 @@ export const postsManagerTest = {
                 shortDescription: `generated description ${i}`
             }
 
-            await db.getCollection().postsCollection.insertOne(post)
+            await PostModel.create(post)
         }
     },
     async createPost(

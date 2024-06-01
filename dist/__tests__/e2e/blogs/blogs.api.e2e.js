@@ -18,6 +18,7 @@ const authManager_test_1 = require("../auth/authManager.test");
 const http_status_codes_1 = require("http-status-codes");
 const blogsMappers_1 = require("../../../src/features/blogs/mappers/blogsMappers");
 const path_1 = require("../../../src/common/config/path");
+const blogs_entity_1 = require("../../../src/features/blogs/domain/blogs.entity");
 describe('blogs tests', () => {
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
         const mongod = yield mongodb_memory_server_1.MongoMemoryServer.create();
@@ -55,14 +56,14 @@ describe('blogs tests', () => {
         const res = yield (0, supertest_1.agent)(app_1.app)
             .get(path_1.PATH.BLOGS)
             .query(query);
-        const totalCount = yield db_1.db.getCollection().blogsCollection
+        const totalCount = yield blogs_entity_1.BlogModel
             .countDocuments({ name: { $regex: query.searchNameTerm, $options: 'i' } });
-        const blogs = yield db_1.db.getCollection().blogsCollection
+        const blogs = yield blogs_entity_1.BlogModel
             .find({ name: { $regex: query.searchNameTerm, $options: 'i' } })
-            .sort(query.sortBy, query.sortDirection)
+            .sort({ [query.sortBy]: query.sortDirection })
             .skip((query.pageNumber - 1) * query.pageSize)
             .limit(query.pageSize)
-            .toArray();
+            .lean();
         expect(res.body).toEqual({
             pagesCount: Math.ceil((totalCount / query.pageSize)),
             page: query.pageNumber,
@@ -118,15 +119,15 @@ describe('blogs tests', () => {
         if (accessToken) {
             yield blogsManager_test_1.blogsManagerTest.createBlog(data, accessToken);
         }
-        const blog = yield db_1.db.getCollection().blogsCollection.findOne({ name: data.name });
-        expect(blog).toEqual({
+        const blog = yield blogs_entity_1.BlogModel.findOne({ name: data.name });
+        expect(blog).toEqual(expect.objectContaining({
             createdAt: expect.stringMatching(/\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)/),
             _id: expect.any(String),
             name: data.name,
             description: data.description,
             websiteUrl: data.websiteUrl,
             isMembership: expect.any(Boolean)
-        });
+        }));
     }));
     //TODO: тесты для get post by blog id
     //TODO: тесты для create post by blog id
@@ -134,7 +135,7 @@ describe('blogs tests', () => {
     //TODO: тесты для put blog by id
     //TODO: тесты для delete blog by id
     afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
-        db_1.db.stop();
+        yield db_1.db.stop();
     }));
     afterAll(done => {
         done();

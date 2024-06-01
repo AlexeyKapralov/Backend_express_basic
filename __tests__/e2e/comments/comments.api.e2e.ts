@@ -3,11 +3,12 @@ import {MongoMemoryServer} from "mongodb-memory-server";
 import {commentsManagerTest} from "./commentsManager.test";
 import {agent} from "supertest";
 import {app} from "../../../src/app";
-import {SETTINGS} from "../../../src/common/config/settings";
 import {postsManagerTest} from "../posts/postsManager.test";
 import {IQueryModel} from "../../../src/common/types/query.model";
 import {getCommentView} from "../../../src/features/comments/mappers/commentsMappers";
 import {PATH} from "../../../src/common/config/path";
+import {CommentsModel} from "../../../src/features/comments/domain/comments.entity";
+import {PostModel} from "../../../src/features/posts/domain/post.entity";
 
 describe('comments e2e tests', () => {
 
@@ -30,7 +31,7 @@ describe('comments e2e tests', () => {
     })
 
     it('should get empty array with default pagination', async () => {
-        const posts = await db.getCollection().postsCollection.find().toArray()
+        const posts = await PostModel.find().lean()
         const result = await agent(app)
             .get(`${PATH.POSTS}/${posts[0]._id}/comments`)
 
@@ -44,7 +45,7 @@ describe('comments e2e tests', () => {
     })
 
     it('should get comments array with custom pagination', async () => {
-        const posts = await db.getCollection().postsCollection.find().toArray()
+        const posts = await PostModel.find().lean()
         await commentsManagerTest.createComments(25, posts[0]._id)
         const query:IQueryModel = {
             sortBy: 'content',
@@ -56,13 +57,13 @@ describe('comments e2e tests', () => {
             .get(`${PATH.POSTS}/${posts[0]._id}/comments`)
             .query(query)
 
-        const comments = await db.getCollection().commentsCollection.find()
-            .sort(query.sortBy!, query.sortDirection!)
+        const comments = await CommentsModel.find()
+            .sort({[query.sortBy!]: query.sortDirection!})
             .limit(query.pageSize!)
             .skip((query.pageNumber! - 1) * query.pageSize!)
-            .toArray()
+            .lean()
 
-        const commentsCount = await db.getCollection().commentsCollection.countDocuments()
+        const commentsCount = await CommentsModel.countDocuments()
 
         expect(result.body).toEqual({
             "pagesCount": Math.ceil( commentsCount / query.pageSize! ),

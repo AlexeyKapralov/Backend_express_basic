@@ -17,6 +17,8 @@ const app_1 = require("../../../src/app");
 const postsManager_test_1 = require("../posts/postsManager.test");
 const commentsMappers_1 = require("../../../src/features/comments/mappers/commentsMappers");
 const path_1 = require("../../../src/common/config/path");
+const comments_entity_1 = require("../../../src/features/comments/domain/comments.entity");
+const post_entity_1 = require("../../../src/features/posts/domain/post.entity");
 describe('comments e2e tests', () => {
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
         const mongod = yield mongodb_memory_server_1.MongoMemoryServer.create();
@@ -34,7 +36,7 @@ describe('comments e2e tests', () => {
         done();
     });
     it('should get empty array with default pagination', () => __awaiter(void 0, void 0, void 0, function* () {
-        const posts = yield db_1.db.getCollection().postsCollection.find().toArray();
+        const posts = yield post_entity_1.PostModel.find().lean();
         const result = yield (0, supertest_1.agent)(app_1.app)
             .get(`${path_1.PATH.POSTS}/${posts[0]._id}/comments`);
         expect(result.body).toEqual({
@@ -46,7 +48,7 @@ describe('comments e2e tests', () => {
         });
     }));
     it('should get comments array with custom pagination', () => __awaiter(void 0, void 0, void 0, function* () {
-        const posts = yield db_1.db.getCollection().postsCollection.find().toArray();
+        const posts = yield post_entity_1.PostModel.find().lean();
         yield commentsManager_test_1.commentsManagerTest.createComments(25, posts[0]._id);
         const query = {
             sortBy: 'content',
@@ -57,12 +59,12 @@ describe('comments e2e tests', () => {
         const result = yield (0, supertest_1.agent)(app_1.app)
             .get(`${path_1.PATH.POSTS}/${posts[0]._id}/comments`)
             .query(query);
-        const comments = yield db_1.db.getCollection().commentsCollection.find()
-            .sort(query.sortBy, query.sortDirection)
+        const comments = yield comments_entity_1.CommentsModel.find()
+            .sort({ [query.sortBy]: query.sortDirection })
             .limit(query.pageSize)
             .skip((query.pageNumber - 1) * query.pageSize)
-            .toArray();
-        const commentsCount = yield db_1.db.getCollection().commentsCollection.countDocuments();
+            .lean();
+        const commentsCount = yield comments_entity_1.CommentsModel.countDocuments();
         expect(result.body).toEqual({
             "pagesCount": Math.ceil(commentsCount / query.pageSize),
             "page": query.pageNumber,

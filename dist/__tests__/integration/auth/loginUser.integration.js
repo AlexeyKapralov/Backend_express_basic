@@ -17,8 +17,8 @@ const bcrypt_service_1 = require("../../../src/common/adapters/bcrypt.service");
 const userManager_test_1 = require("../../e2e/users/userManager.test");
 const authManager_test_1 = require("../../e2e/auth/authManager.test");
 const settings_1 = require("../../../src/common/config/settings");
-const resultStatus_type_1 = require("../../../src/common/types/resultStatus.type");
 const users_repository_1 = require("../../../src/features/users/repository/users.repository");
+const jwt_service_1 = require("../../../src/common/adapters/jwt.service");
 describe('Login User', () => {
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
         const mongod = yield mongodb_memory_server_1.MongoMemoryServer.create();
@@ -76,7 +76,8 @@ describe('Login User', () => {
         };
         const tokens = yield authManager_test_1.authManagerTest.authUser(loginInputData);
         yield new Promise(resolve => setTimeout(resolve, 1000));
-        const result = yield login_service_1.loginService.refreshToken(tokens.refreshToken);
+        const tokenPayload = jwt_service_1.jwtService.verifyAndDecodeToken(tokens.refreshToken);
+        const result = yield login_service_1.loginService.refreshToken(tokenPayload.deviceId, tokenPayload.userId, tokenPayload.iat);
         expect(tokens.refreshToken).not.toBe(result.data.refreshToken);
     }));
     it(`shouldn't update refresh token after expired time`, () => __awaiter(void 0, void 0, void 0, function* () {
@@ -92,14 +93,8 @@ describe('Login User', () => {
             password: user.password
         };
         const tokens = yield authManager_test_1.authManagerTest.authUser(loginInputData);
-        let result;
-        yield new Promise(res => {
-            setTimeout(() => __awaiter(void 0, void 0, void 0, function* () {
-                result = yield login_service_1.loginService.refreshToken(tokens.refreshToken);
-                res(result);
-            }), 2000);
-            // jest.advanceTimersByTime(2000)
-        });
-        expect(result.status).toBe(resultStatus_type_1.ResultStatus.Unauthorized);
+        yield new Promise(resolve => setTimeout(resolve, 2000));
+        const tokenPayload = jwt_service_1.jwtService.verifyAndDecodeToken(tokens.refreshToken);
+        expect(tokenPayload).toBeNull();
     }));
 });

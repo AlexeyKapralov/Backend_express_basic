@@ -16,6 +16,7 @@ const http_status_codes_1 = require("http-status-codes");
 const mongodb_1 = require("mongodb");
 const date_fns_1 = require("date-fns");
 const path_1 = require("../../../src/common/config/path");
+const user_entity_1 = require("../../../src/features/users/domain/user.entity");
 const getRandomName = () => {
     const names = ["John", "Alice", "Bob", "Eva", "Michael", "Emma", "David", "Sophia", "James", "Olivia"];
     const randomIndex = Math.floor(Math.random() * names.length);
@@ -69,7 +70,7 @@ exports.userManagerTest = {
                 };
                 // users.push(user);
                 // users = [...users, user];
-                yield UserModel.create(user);
+                yield user_entity_1.UsersModel.create(user);
             }
         });
     },
@@ -82,7 +83,7 @@ exports.userManagerTest = {
                 .set({ authorization: `Basic ${decodedAuth}` });
             expect(result.status).toBe(expected_status);
             if (result.status === http_status_codes_1.StatusCodes.NO_CONTENT) {
-                const res = yield UserModel.findOne({ _id: id });
+                const res = yield user_entity_1.UsersModel.findOne({ _id: id });
                 expect(res).toBe(null);
             }
         });

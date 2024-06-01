@@ -5,15 +5,14 @@ import {ResultType} from '../../../common/types/result.type'
 import {ResultStatus} from '../../../common/types/resultStatus.type'
 import {IUserInputModel} from '../../users/models/userInput.model'
 import {emailService} from '../../../common/adapters/email.service'
-import {db} from '../../../db/db'
 import {v4 as uuidv4} from 'uuid'
 import {add} from 'date-fns'
 import {SETTINGS} from '../../../common/config/settings'
 import {jwtService} from "../../../common/adapters/jwt.service";
-import {IDeviceModel} from "../../../common/types/devices.model";
 import {devicesRepository} from "../../securityDevices/repository/devices.repository";
 import {devicesService} from "../../securityDevices/service/devicesService";
-import {UsersModel} from "../../users/domain/user.dto";
+import {UsersModel} from "../../users/domain/user.entity";
+import {IDeviceDbModel} from "../../securityDevices/models/deviceDb.model";
 
 export const loginService = {
     async registrationUser(data: IUserInputModel): Promise<ResultType> {
@@ -94,73 +93,75 @@ export const loginService = {
         refreshToken: string
     } | null>> {
         const user = await usersRepository.findUserWithPass(data.loginOrEmail)
-
         if (!user) {
             return {
                 data: null,
                 status: ResultStatus.NotFound
             }
+        }
+        const isTrueHash = await bcryptService.comparePasswordsHash(data.password, user.password)
+        if (!isTrueHash) {
+            return {
+                status: ResultStatus.BadRequest,
+                data: null
+            }
+        }
+
+        const deviceId = await devicesRepository.findDeviceId(user._id, ip, deviceName)
+
+        const device: Omit<IDeviceDbModel, 'iat' | 'exp'> = {
+            userId: user._id,
+            deviceId: deviceId === null ? uuidv4() : deviceId!,
+            deviceName: deviceName,
+            ip: ip
+        }
+
+        const accessToken = jwtService.createAccessToken(user._id)
+        const refreshToken = jwtService.createRefreshToken(device.deviceId, device.userId)
+
+        const refreshTokenPayload = jwtService.verifyAndDecodeToken(refreshToken)
+        if (!refreshTokenPayload) {
+            return {
+                status: ResultStatus.Unauthorized,
+                data: null
+            }
+        }
+
+        const fullDevice: IDeviceDbModel = {
+            userId: device.userId,
+            deviceId: device.deviceId,
+            deviceName: device.deviceName,
+            ip: device.ip,
+            exp: refreshTokenPayload.exp,
+            iat: refreshTokenPayload.iat
+        }
+
+        if (await devicesRepository.createOrUpdateDevice(fullDevice)) {
+            return {
+                status: ResultStatus.Success,
+                data: {accessToken, refreshToken}
+            }
         } else {
-            const isTrueHash = await bcryptService.comparePasswordsHash(data.password, user.password)
-            const deviceId = await devicesRepository.findDeviceId(user._id, ip, deviceName)
-
-            const device: Omit<IDeviceModel, 'iat' | 'expirationDate'> = {
-                userId: user._id,
-                deviceId: deviceId === null ? uuidv4() : deviceId!,
-                deviceName: deviceName,
-                ip: ip
+            return {
+                status: ResultStatus.BadRequest,
+                data: null
             }
-
-            const accessToken = jwtService.createAccessToken(user._id)
-            const refreshToken = jwtService.createRefreshToken(device)
-
-            if (isTrueHash) {
-                const refreshTokenPayload = jwtService.decodeToken(refreshToken)
-
-                if (await devicesRepository.createOrUpdateDevice(refreshTokenPayload!)) {
-                    return {
-                        status: ResultStatus.Success,
-                        data: {accessToken, refreshToken}
-                    }
-                } else {
-                    return {
-                        status: ResultStatus.BadRequest,
-                        data: null
-                    }
-                }
-            } else {
-                return {
-                    status: ResultStatus.BadRequest,
-                    data: null
-                }
-            }
-
-
         }
+
     },
-    //todo не использовать refreshtoken, а сделать чтобы сюда приходил device id и userId
-    async logout(refreshToken: string): Promise<ResultType> {
-        const deviceData = jwtService.decodeToken(refreshToken)
+    async logout(deviceId: string, userId: string, iat: number): Promise<ResultType> {
 
-        if (!deviceData) {
+        const currentDevice =  await devicesService.getDevice(deviceId, userId, iat)
+
+        if (currentDevice.status === ResultStatus.NotFound) {
             return {
                 status: ResultStatus.Unauthorized,
-                errorMessage: 'invalid refresh token',
+                errorMessage: 'invalid data',
                 data: null
             }
         }
 
-        const currentDevice =  await devicesService.getDevice(deviceData)
-
-        if (!deviceData || currentDevice.status === ResultStatus.NotFound) {
-            return {
-                status: ResultStatus.Unauthorized,
-                errorMessage: 'invalid refresh token',
-                data: null
-            }
-        }
-
-        const isDeleted = await devicesRepository.deleteDeviceById(deviceData.deviceId)
+        const isDeleted = await devicesRepository.deleteDeviceById(deviceId)
 
         return isDeleted
             ? {
@@ -172,24 +173,13 @@ export const loginService = {
                 data: null
             }
     },
-    //todo не использовать refreshtoken, а сделать чтобы сюда приходил device id и userId
-    async refreshToken(refreshToken: string): Promise<ResultType<{
+    async refreshToken(deviceId: string, userId: string, iat: number): Promise<ResultType<{
         accessToken: string,
         refreshToken: string
     } | null>> {
-        //TODO в качестве аргументов получаем deviceId и userId
 
-        const deviceInfo = jwtService.decodeToken(refreshToken)
-
-        if (!deviceInfo) {
-            return {
-                status: ResultStatus.Unauthorized,
-                data: null
-            }
-        }
-
-        let device = await devicesRepository.findDevice(deviceInfo)
-        if (!device) {
+        let device = await devicesRepository.findDevice(deviceId, userId, iat)
+        if (!device || String(iat) !== device.iat) {
             return {
                 status: ResultStatus.Unauthorized,
                 data: null
@@ -197,21 +187,31 @@ export const loginService = {
         }
 
         const newAccessToken = jwtService.createAccessToken(device.userId)
-        const newRefreshToken = jwtService.createRefreshToken({
+        const newRefreshToken = jwtService.createRefreshToken(device.deviceId, device.userId)
+
+        const newPayload = jwtService.verifyAndDecodeToken(newRefreshToken)
+
+        const fullDevice: IDeviceDbModel = {
             userId: device.userId,
-            deviceName: device.deviceName,
             deviceId: device.deviceId,
-            ip: device.ip
-        })
-
-        const newDevice = jwtService.decodeToken(newRefreshToken)
-
-        await devicesRepository.createOrUpdateDevice(newDevice!)
-
-        return {
-            status: ResultStatus.Success,
-            data: {accessToken: newAccessToken, refreshToken: newRefreshToken}
+            deviceName: device.deviceName,
+            ip: device.ip,
+            exp: newPayload!.exp,
+            iat: newPayload!.iat
         }
 
+        const isUpdatedDevice = await devicesRepository.createOrUpdateDevice(fullDevice)
+
+        if (isUpdatedDevice) {
+            return {
+                status: ResultStatus.Success,
+                data: {accessToken: newAccessToken, refreshToken: newRefreshToken}
+            }
+        } else {
+            return {
+                status: ResultStatus.BadRequest,
+                data: null
+            }
+        }
     }
 }

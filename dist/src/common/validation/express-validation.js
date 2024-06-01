@@ -11,14 +11,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.codeValidation = exports.contentCommentValidation = exports.blogIdInBodyValidation = exports.blogIdParamValidation = exports.contentValidation = exports.shortDescriptionValidation = exports.titleValidation = exports.websiteUrlValidation = exports.descriptionValidation = exports.nameValidation = exports.searchNameTermValidation = exports.searchEmailTermValidation = exports.searchLoginTermValidation = exports.pageSizeValidation = exports.pageNumberValidation = exports.sortDirectionValidation = exports.sortByValidation = exports.emailValidationForResend = exports.emailValidationForRegistration = exports.passwordValidation = exports.loginOrEmailValidation = exports.loginValidation = void 0;
 const express_validator_1 = require("express-validator");
-const user_dto_1 = require("../../features/users/domain/user.dto");
-const blogs_dto_1 = require("../../features/blogs/domain/blogs.dto");
+const user_entity_1 = require("../../features/users/domain/user.entity");
+const blogs_entity_1 = require("../../features/blogs/domain/blogs.entity");
 exports.loginValidation = (0, express_validator_1.body)(['login'])
     .trim()
     .isLength({ min: 3, max: 10 })
     .matches('^[a-zA-Z0-9_-]*$')
     .custom((login) => __awaiter(void 0, void 0, void 0, function* () {
-    const users = yield user_dto_1.UsersModel.find({ login: login }).lean();
+    const users = yield user_entity_1.UsersModel.find({ login: login }).lean();
     if (users.length > 0) {
         throw new Error('login already exist');
     }
@@ -36,7 +36,7 @@ exports.emailValidationForRegistration = (0, express_validator_1.body)('email')
     .isURL()
     .isLength({ min: 1 })
     .custom((email) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = yield user_dto_1.UsersModel.find({ email: email }).lean();
+    const user = yield user_entity_1.UsersModel.find({ email: email }).lean();
     if (user.length > 0) {
         throw new Error('email already use');
     }
@@ -46,7 +46,7 @@ exports.emailValidationForResend = (0, express_validator_1.body)('email')
     .isURL()
     .isLength({ min: 1 })
     .custom((email) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = yield user_dto_1.UsersModel.find({ email: email }).lean();
+    const user = yield user_entity_1.UsersModel.find({ email: email }).lean();
     if (user.length === 0) {
         throw new Error('email incorrect');
     }
@@ -81,13 +81,13 @@ exports.shortDescriptionValidation = (0, express_validator_1.body)('shortDescrip
 exports.contentValidation = (0, express_validator_1.body)('content').trim().isLength({ min: 1, max: 1000 });
 // так не делается, но для задачи нужно и по другому никак
 exports.blogIdParamValidation = (0, express_validator_1.param)('id').trim().custom((value) => __awaiter(void 0, void 0, void 0, function* () {
-    const blog = yield blogs_dto_1.BlogModel.findOne({ _id: value });
+    const blog = yield blogs_entity_1.BlogModel.findOne({ _id: value });
     if (!blog) {
         throw new Error('blog not found');
     }
 }));
 exports.blogIdInBodyValidation = (0, express_validator_1.body)('blogId').trim().custom((value) => __awaiter(void 0, void 0, void 0, function* () {
-    const blog = yield blogs_dto_1.BlogModel.findOne({ _id: value });
+    const blog = yield blogs_entity_1.BlogModel.findOne({ _id: value });
     if (!blog) {
         throw new Error('blog not found');
     }
@@ -99,7 +99,7 @@ exports.codeValidation = (0, express_validator_1.body)('code')
     .trim()
     .isLength({ min: 1 })
     .custom((code) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = yield user_dto_1.UsersModel.findOne({ confirmationCode: code });
+    const user = yield user_entity_1.UsersModel.findOne({ confirmationCode: code });
     if (!user) {
         throw new Error('user not found');
     }

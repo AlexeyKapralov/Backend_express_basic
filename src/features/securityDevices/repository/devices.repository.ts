@@ -1,26 +1,25 @@
-import {db} from "../../../db/db";
-import {IDeviceModel} from "../../../common/types/devices.model";
-import {DeviceModel} from "../domain/devices.dto";
+import {DeviceModel} from "../domain/devices.entity";
+import {IDeviceDbModel} from "../models/deviceDb.model";
 
 export const devicesRepository = {
     async findDeviceId(userId: string, ip: string, deviceName: string) {
         const device = await DeviceModel.findOne({userId, ip, deviceName})
 
+
+
         return device ? device.deviceId : null
     },
-    async findDevice(device: IDeviceModel): Promise<IDeviceModel | null> {
-        const deviceDb: IDeviceModel[] = await DeviceModel.aggregate( [
+    async findDevice(deviceId: string, userId: string, iat: number): Promise<IDeviceDbModel | null> {
+
+        const deviceDb: IDeviceDbModel[] = await DeviceModel.aggregate( [
             { $match:
                 {
-                    userId: device.userId,
-                    ip: device.ip,
-                    deviceId: device.deviceId,
-                    deviceName: device.deviceName,
-                    iat: device.iat,
-                    expirationDate: device.expirationDate
+                    userId: userId,
+                    deviceId: deviceId,
+                    iat: String(iat)
                 }
             },
-            {$project: {_ip:0} }
+            {$project: {_id:0} }
         ])
 
         return deviceDb[0]
@@ -29,16 +28,19 @@ export const devicesRepository = {
         const device = await DeviceModel.findOne({deviceId})
         return device ? device : null
     },
-    async createOrUpdateDevice(device: IDeviceModel) {
+    async createOrUpdateDevice(device: IDeviceDbModel) {
         const foundDeviceId = await this.findDeviceId(device.userId, device.ip, device.deviceName)
 
         if (foundDeviceId) {
+
             const isUpdatedDevice = await DeviceModel.updateOne(
-                {userId: device.userId, ip: device.ip, deviceName: device.deviceName, deviceId: foundDeviceId},
-                {$set: {iat: device.iat, expirationDate: device.expirationDate}}
+                {deviceId: foundDeviceId},
+                {$set: {iat: String(device.iat), exp: String( device.exp )}}
             )
+
             return isUpdatedDevice.modifiedCount > 0
         } else {
+
             return await DeviceModel.create(device)
         }
     },
@@ -50,10 +52,10 @@ export const devicesRepository = {
         return result.deletedCount > 0
 
     },
-    async deleteAllAnotherDevices(device: IDeviceModel) {
+    async deleteAllAnotherDevices(deviceId: string, userId: string) {
         const isDeleted = await DeviceModel.deleteMany({
-            userId: device.userId,
-            deviceId: {$ne: device.deviceId}
+            userId: userId,
+            deviceId: {$ne: deviceId}
         })
 
         return isDeleted.acknowledged

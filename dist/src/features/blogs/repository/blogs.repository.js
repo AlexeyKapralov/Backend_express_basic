@@ -10,17 +10,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.blogsRepository = void 0;
-const db_1 = require("../../../db/db");
+const blogs_entity_1 = require("../domain/blogs.entity");
 exports.blogsRepository = {
     createBlog(body) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield db_1.db.getCollection().blogsCollection.insertOne(body);
-            return result.acknowledged;
+            const result = yield blogs_entity_1.BlogModel.create(body);
+            return !!result;
         });
     },
     updateBlogByID(id, body) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield db_1.db.getCollection().blogsCollection.updateOne({
+            const result = yield blogs_entity_1.BlogModel.updateOne({
                 _id: id
             }, {
                 $set: {
@@ -34,13 +34,13 @@ exports.blogsRepository = {
     },
     deleteBlogByID(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield db_1.db.getCollection().blogsCollection.deleteOne({ _id: id });
+            const result = yield blogs_entity_1.BlogModel.deleteOne({ _id: id });
             return result.deletedCount > 0;
         });
     },
     getBlogByID(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield db_1.db.getCollection().blogsCollection.findOne({
+            const result = yield blogs_entity_1.BlogModel.findOne({
                 _id: id
             });
             return result ? result : undefined;

@@ -1,14 +1,13 @@
 import {IBlogInputModel} from '../../../src/features/blogs/models/blogInput.model'
 import {agent} from 'supertest'
 import {app} from '../../../src/app'
-import {SETTINGS} from '../../../src/common/config/settings'
 import {StatusCodes} from 'http-status-codes'
 import {ObjectId} from 'mongodb'
-import {db} from '../../../src/db/db'
 import {IBlogDbModel} from '../../../src/features/blogs/models/blogDb.model'
 import {getRandomTitle} from '../../../src/common/utils/generators'
 import {IBlogViewModel} from "../../../src/features/blogs/models/blogView.model";
 import {PATH} from "../../../src/common/config/path";
+import {BlogModel} from "../../../src/features/blogs/domain/blogs.entity";
 
 export const blogsManagerTest = {
     async createBlog(
@@ -56,7 +55,7 @@ export const blogsManagerTest = {
                 createdAt: new Date().toISOString(),
             }
 
-            await db.getCollection().blogsCollection.insertOne(blog)
+            await BlogModel.create(blog)
         }
     }
 }

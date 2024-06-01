@@ -5,6 +5,7 @@ import {db} from "../../../src/db/db";
 import {MongoMemoryServer} from "mongodb-memory-server";
 import {userManagerTest} from "../../e2e/users/userManager.test";
 import {SETTINGS} from "../../../src/common/config/settings";
+import {jwtService} from "../../../src/common/adapters/jwt.service";
 
 describe('logout user integration test', () => {
     beforeAll(async () => {
@@ -27,7 +28,7 @@ describe('logout user integration test', () => {
 
     it(`shouldn't logout user with incorrect token`, async () => {
 
-        const isLogout = await loginService.logout('123')
+        const isLogout = await loginService.logout('123', '1234', 10)
 
         expect(isLogout.status).toBe(ResultStatus.Unauthorized)
     });
@@ -37,8 +38,9 @@ describe('logout user integration test', () => {
 
 
         if (tokens) {
-            const isLogout = await loginService.logout(tokens.refreshToken)
-            expect(isLogout.status).toBe(ResultStatus.Success)
+            const tokenPayload = jwtService.verifyAndDecodeToken(tokens.refreshToken)
+            const logoutResult = await loginService.logout(tokenPayload!.deviceId, tokenPayload!.userId, tokenPayload!.iat)
+            expect(logoutResult.status).toBe(ResultStatus.Success)
         }
     });
 
@@ -47,9 +49,11 @@ describe('logout user integration test', () => {
 
 
         if (tokens) {
-            const isLogout = await loginService.logout(tokens.refreshToken)
 
-            const refreshTokens = await loginService.refreshToken(tokens.refreshToken)
+            const tokenPayload = jwtService.verifyAndDecodeToken(tokens!.refreshToken)
+            const isLogout = await loginService.logout(tokenPayload!.deviceId, tokenPayload!.userId, tokenPayload!.iat)
+
+            const refreshTokens = await loginService.refreshToken(tokenPayload!.deviceId, tokenPayload!.userId, tokenPayload!.iat)
 
             expect(refreshTokens.status).toBe(ResultStatus.Unauthorized)
             expect(isLogout.status).toBe(ResultStatus.Success)
@@ -61,20 +65,36 @@ describe('logout user integration test', () => {
             loginOrEmail: 'login',
             password: 'qwert1234',
         }
-
         await userManagerTest.createUser('default', SETTINGS.ADMIN_AUTH)
-        const tokens = await authManagerTest.authUser(inputData)
+
+        const tokens1 = await authManagerTest.authUser(inputData)
+        const tokenPayload1 = jwtService.verifyAndDecodeToken(tokens1!.refreshToken)
+
+
         await new Promise(resolve => setTimeout(resolve, 1000))
-        const newTokens = await loginService.refreshToken(tokens!.refreshToken)
 
-        expect(tokens!.refreshToken).not.toBe(newTokens.data!.refreshToken)
+        const tokens2 = await loginService.refreshToken(tokenPayload1!.deviceId, tokenPayload1!.userId, tokenPayload1!.iat)
+        const tokenPayload2 = jwtService.verifyAndDecodeToken(tokens2.data!.refreshToken)
+        expect(tokens1!.refreshToken).not.toBe(tokens2.data!.refreshToken)
 
-        let isRefreshed = await loginService.refreshToken(tokens!.refreshToken)
 
-        expect(isRefreshed!.status).toBe(ResultStatus.Unauthorized)
+        await new Promise(resolve => setTimeout(resolve, 1000))
 
-        const result = await loginService.logout(tokens!.refreshToken)
-        expect(result.status).toBe(ResultStatus.Unauthorized)
+        const tokens2Repeat = await loginService.refreshToken(tokenPayload1!.deviceId, tokenPayload1!.userId, tokenPayload1!.iat)
 
+        const tokens3 = await loginService.refreshToken(tokenPayload2!.deviceId, tokenPayload2!.userId, tokenPayload2!.iat)
+
+        const tokenPayload3 = jwtService.verifyAndDecodeToken(tokens3.data!.refreshToken)
+
+        expect(tokens2Repeat!.status).toBe(ResultStatus.Unauthorized)
+        expect(tokens3!.status).toBe(ResultStatus.Success)
+
+        const logoutResult1 = await loginService.logout(tokenPayload1!.deviceId, tokenPayload1!.userId, tokenPayload1!.iat)
+        const logoutResult2 = await loginService.logout(tokenPayload2!.deviceId, tokenPayload2!.userId, tokenPayload2!.iat)
+        const logoutResult3 = await loginService.logout(tokenPayload3!.deviceId, tokenPayload3!.userId, tokenPayload3!.iat)
+
+        expect(logoutResult1.status).toBe(ResultStatus.Unauthorized)
+        expect(logoutResult2.status).toBe(ResultStatus.Unauthorized)
+        expect(logoutResult3.status).toBe(ResultStatus.Success)
     });
 })

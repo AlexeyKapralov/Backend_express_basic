@@ -2,16 +2,16 @@ import { MongoMemoryServer } from 'mongodb-memory-server'
 import { db } from '../../../src/db/db'
 import { agent } from 'supertest'
 import { app } from '../../../src/app'
-import { SETTINGS } from '../../../src/common/config/settings'
 import { blogsManagerTest } from './blogsManager.test'
 import { IBlogViewModel } from '../../../src/features/blogs/models/blogView.model'
 import { IQueryModel } from '../../../src/common/types/query.model'
 import { authManagerTest } from '../auth/authManager.test'
 import { IBlogInputModel } from '../../../src/features/blogs/models/blogInput.model'
 import { StatusCodes } from 'http-status-codes'
-import { IBlogDbModel } from '../../../src/features/blogs/models/blogDb.model'
 import {getBlogViewModel} from "../../../src/features/blogs/mappers/blogsMappers";
 import {PATH} from "../../../src/common/config/path";
+import {BlogModel} from "../../../src/features/blogs/domain/blogs.entity";
+import {SortDirection} from "mongodb";
 
 describe('blogs tests', () => {
 	beforeAll(async () => {
@@ -58,15 +58,15 @@ describe('blogs tests', () => {
 			.get(PATH.BLOGS)
 			.query(query)
 
-		const totalCount = await db.getCollection().blogsCollection
+		const totalCount = await BlogModel
 			.countDocuments({ name: { $regex: query.searchNameTerm, $options: 'i' } })
 
-		const blogs = await db.getCollection().blogsCollection
+		const blogs = await BlogModel
 			.find({ name: { $regex: query.searchNameTerm, $options: 'i' } })
-			.sort(query.sortBy!, query.sortDirection)
+			.sort({[query.sortBy!]: query.sortDirection as SortDirection})
 			.skip((query.pageNumber! - 1) * query.pageSize!)
 			.limit(query.pageSize!)
-			.toArray()
+			.lean()
 
 		expect(res.body).toEqual({
 			pagesCount: Math.ceil((totalCount / query.pageSize!)),
@@ -118,6 +118,7 @@ describe('blogs tests', () => {
 		}
 	})
 	it(`should create blog`, async () => {
+
 		const tokens = await authManagerTest.createAndAuthUser()
 		let accessToken
 		tokens ?  accessToken = tokens.accessToken : accessToken = ''
@@ -130,16 +131,17 @@ describe('blogs tests', () => {
 			await blogsManagerTest.createBlog(data, accessToken)
 		}
 
-		const blog = await db.getCollection().blogsCollection.findOne({name: data.name})
+		const blog = await BlogModel.findOne({name: data.name})
 
-		expect(blog).toEqual<IBlogDbModel>({
+		expect(blog).toEqual(expect.objectContaining({
 			createdAt: expect.stringMatching(/\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)/),
 			_id: expect.any(String),
 			name: data.name,
 			description: data.description,
 			websiteUrl: data.websiteUrl,
 			isMembership: expect.any(Boolean)
-		})
+		}))
+
 	})
 	//TODO: тесты для get post by blog id
 	//TODO: тесты для create post by blog id
@@ -148,7 +150,7 @@ describe('blogs tests', () => {
 	//TODO: тесты для delete blog by id
 
 	afterAll(async () => {
-		db.stop()
+		await db.stop()
 	})
 
 	afterAll(done => {

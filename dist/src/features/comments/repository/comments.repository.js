@@ -11,11 +11,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.commentsRepository = void 0;
 const mongodb_1 = require("mongodb");
-const db_1 = require("../../../db/db");
+const comments_entity_1 = require("../domain/comments.entity");
 exports.commentsRepository = {
     getCommentById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield db_1.db.getCollection().commentsCollection.findOne({ _id: id });
+            const result = yield comments_entity_1.CommentsModel.findOne({ _id: id });
             return result ? result : undefined;
         });
     },
@@ -31,13 +31,13 @@ exports.commentsRepository = {
                 createdAt: new Date().toISOString(),
                 postId: post._id
             };
-            const result = yield db_1.db.getCollection().commentsCollection.insertOne(newComment);
-            return result.acknowledged ? newComment : undefined;
+            const result = yield comments_entity_1.CommentsModel.create(newComment);
+            return !!result ? newComment : undefined;
         });
     },
     updateComment(commentId, data) {
         return __awaiter(this, void 0, void 0, function* () {
-            const isUpdatedComment = yield db_1.db.getCollection().commentsCollection
+            const isUpdatedComment = yield comments_entity_1.CommentsModel
                 .updateOne({ _id: commentId }, {
                 $set: {
                     content: data.content
@@ -48,7 +48,7 @@ exports.commentsRepository = {
     },
     deleteComment(commentId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const isDeleted = yield db_1.db.getCollection().commentsCollection.deleteOne({ _id: commentId });
+            const isDeleted = yield comments_entity_1.CommentsModel.deleteOne({ _id: commentId });
             return isDeleted.deletedCount > 0;
         });
     }

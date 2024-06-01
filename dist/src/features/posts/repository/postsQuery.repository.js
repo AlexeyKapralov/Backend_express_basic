@@ -10,18 +10,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.postsQueryRepository = void 0;
-const db_1 = require("../../../db/db");
 const postMappers_1 = require("../mappers/postMappers");
+const post_entity_1 = require("../domain/post.entity");
 exports.postsQueryRepository = {
     getPosts(query) {
         return __awaiter(this, void 0, void 0, function* () {
-            const posts = yield db_1.db.getCollection().postsCollection
+            const posts = yield post_entity_1.PostModel
                 .find()
                 .skip((query.pageNumber - 1) * query.pageSize)
                 .limit(query.pageSize)
-                .sort(query.sortBy, query.sortDirection)
-                .toArray();
-            const countDocs = yield db_1.db.getCollection().postsCollection.countDocuments();
+                .sort({ [query.sortBy]: query.sortDirection })
+                .lean();
+            const countDocs = yield post_entity_1.PostModel.countDocuments();
             return {
                 pagesCount: Math.ceil(countDocs / query.pageSize),
                 page: query.pageNumber,
@@ -33,7 +33,7 @@ exports.postsQueryRepository = {
     },
     getPostById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield db_1.db.getCollection().postsCollection.findOne({
+            const result = yield post_entity_1.PostModel.findOne({
                 _id: id
             });
             return result ? (0, postMappers_1.getPostViewModel)(result) : undefined;
