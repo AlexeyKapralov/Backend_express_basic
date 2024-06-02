@@ -29,7 +29,7 @@ exports.commentsRepository = {
                     userLogin: user.login
                 },
                 createdAt: new Date().toISOString(),
-                postId: post._id
+                postId: post._id.toString()
             };
             const result = yield comments_entity_1.CommentsModel.create(newComment);
             return !!result ? newComment : undefined;

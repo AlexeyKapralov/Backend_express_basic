@@ -46,8 +46,7 @@ exports.devicesRepository = {
                 return isUpdatedDevice.modifiedCount > 0;
             }
             else {
-                const createdDevice = yield devices_entity_1.DeviceModel.create(device);
-                return createdDevice;
+                return yield devices_entity_1.DeviceModel.create(device);
             }
         });
     },

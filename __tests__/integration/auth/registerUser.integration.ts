@@ -1,10 +1,10 @@
-import { MongoMemoryServer } from 'mongodb-memory-server'
-import { db } from '../../../src/db/db'
-import { loginService } from '../../../src/features/auth/service/login.service'
-import { IUserInputModel } from '../../../src/features/users/models/userInput.model'
-import { emailService } from '../../../src/common/adapters/email.service'
-import { ResultType } from '../../../src/common/types/result.type'
-import { ResultStatus } from '../../../src/common/types/resultStatus.type'
+import {MongoMemoryServer} from 'mongodb-memory-server'
+import {db} from '../../../src/db/db'
+import {authService} from '../../../src/features/auth/service/auth.service'
+import {IUserInputModel} from '../../../src/features/users/models/userInput.model'
+import {emailService} from '../../../src/common/adapters/email.service'
+import {ResultType} from '../../../src/common/types/result.type'
+import {ResultStatus} from '../../../src/common/types/resultStatus.type'
 import {UsersModel} from "../../../src/features/users/domain/user.entity";
 
 describe('Integration Auth', () => {
@@ -35,7 +35,7 @@ describe('Integration Auth', () => {
 			email: 'alewka24@gmail.com',
 			password: 'qwerty1234@'
 		}
-		const result:ResultType = await loginService.registrationUser(data)
+		const result:ResultType = await authService.registrationUser(data)
 
 		expect(result).toEqual({
 			status: ResultStatus.Success,

@@ -10,11 +10,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.registrationConfirmationController = void 0;
-const login_service_1 = require("../service/login.service");
+const auth_service_1 = require("../service/auth.service");
 const resultStatus_type_1 = require("../../../common/types/resultStatus.type");
 const http_status_codes_1 = require("http-status-codes");
 const registrationConfirmationController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield login_service_1.loginService.confirmationCode(req.body.code);
+    const result = yield auth_service_1.authService.updateUserConfirm(req.body.code);
     result.status === resultStatus_type_1.ResultStatus.Success
         ? res.status(http_status_codes_1.StatusCodes.NO_CONTENT).json()
         : res.status(http_status_codes_1.StatusCodes.NOT_FOUND).json();

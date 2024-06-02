@@ -1,6 +1,6 @@
 import {ICommentDbModel} from '../models/commentDb.model'
 import {ICommentInputModel} from '../models/commentInput.model'
-import {ObjectId} from 'mongodb'
+import {ObjectId, WithId} from 'mongodb'
 import {IPostDbModel} from "../../posts/models/postDb.model";
 import {CommentsModel} from "../domain/comments.entity";
 import {IUserDbModel} from "../../users/models/userDb.model";
@@ -10,7 +10,7 @@ export const commentsRepository = {
         const result = await CommentsModel.findOne({_id: id})
         return result ? result : undefined
     },
-    async createComment(user: IUserDbModel, post: IPostDbModel, data: ICommentInputModel): Promise<ICommentDbModel | undefined> {
+    async createComment(user: IUserDbModel, post: WithId<IPostDbModel>, data: ICommentInputModel): Promise<ICommentDbModel | undefined> {
         const newComment = {
             _id: new ObjectId().toString(),
             content: data.content,
@@ -19,7 +19,7 @@ export const commentsRepository = {
                 userLogin: user.login
             },
             createdAt: new Date().toISOString(),
-            postId: post._id
+            postId: post._id.toString()
         }
 
         const result = await CommentsModel.create(newComment)

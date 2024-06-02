@@ -9,10 +9,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.codeValidation = exports.contentCommentValidation = exports.blogIdInBodyValidation = exports.blogIdParamValidation = exports.contentValidation = exports.shortDescriptionValidation = exports.titleValidation = exports.websiteUrlValidation = exports.descriptionValidation = exports.nameValidation = exports.searchNameTermValidation = exports.searchEmailTermValidation = exports.searchLoginTermValidation = exports.pageSizeValidation = exports.pageNumberValidation = exports.sortDirectionValidation = exports.sortByValidation = exports.emailValidationForResend = exports.emailValidationForRegistration = exports.passwordValidation = exports.loginOrEmailValidation = exports.loginValidation = void 0;
+exports.codeValidation = exports.contentCommentValidation = exports.blogIdInBodyValidation = exports.blogIdParamValidation = exports.contentValidation = exports.shortDescriptionValidation = exports.titleValidation = exports.websiteUrlValidation = exports.descriptionValidation = exports.nameValidation = exports.searchNameTermValidation = exports.searchEmailTermValidation = exports.searchLoginTermValidation = exports.pageSizeValidation = exports.pageNumberValidation = exports.sortDirectionValidation = exports.sortByValidation = exports.recoveryCodeValidation = exports.emailValidationForResend = exports.emailValidationForRegistration = exports.emailValidationForRecovery = exports.passwordValidation = exports.loginOrEmailValidation = exports.loginValidation = void 0;
 const express_validator_1 = require("express-validator");
 const user_entity_1 = require("../../features/users/domain/user.entity");
 const blogs_entity_1 = require("../../features/blogs/domain/blogs.entity");
+const users_repository_1 = require("../../features/users/repository/users.repository");
 exports.loginValidation = (0, express_validator_1.body)(['login'])
     .trim()
     .isLength({ min: 3, max: 10 })
@@ -31,6 +32,10 @@ exports.passwordValidation = (0, express_validator_1.body)('password')
     .trim()
     .isLength({ min: 6, max: 20 })
     .exists();
+exports.emailValidationForRecovery = (0, express_validator_1.body)('email')
+    .trim()
+    .isEmail()
+    .isLength({ min: 1 });
 exports.emailValidationForRegistration = (0, express_validator_1.body)('email')
     .trim()
     .isURL()
@@ -52,6 +57,15 @@ exports.emailValidationForResend = (0, express_validator_1.body)('email')
     }
     if (user[0].isConfirmed) {
         throw new Error('email already is confirmed');
+    }
+}));
+exports.recoveryCodeValidation = (0, express_validator_1.body)('recoveryCode')
+    .trim()
+    .isLength({ min: 1 })
+    .custom((recoveryCode) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield users_repository_1.usersRepository.findUserByRecoveryCode(recoveryCode);
+    if (!user || user.confirmationCodeExpired < new Date()) {
+        throw new Error('confirmation code invalid');
     }
 }));
 exports.sortByValidation = (0, express_validator_1.query)('sortBy').trim().default('createdAt');

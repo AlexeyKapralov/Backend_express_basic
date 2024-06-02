@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const authManager_test_1 = require("../../e2e/auth/authManager.test");
-const login_service_1 = require("../../../src/features/auth/service/login.service");
+const auth_service_1 = require("../../../src/features/auth/service/auth.service");
 const resultStatus_type_1 = require("../../../src/common/types/resultStatus.type");
 const db_1 = require("../../../src/db/db");
 const mongodb_memory_server_1 = require("mongodb-memory-server");
@@ -33,14 +33,14 @@ describe('logout user integration test', () => {
         done();
     });
     it(`shouldn't logout user with incorrect token`, () => __awaiter(void 0, void 0, void 0, function* () {
-        const isLogout = yield login_service_1.loginService.logout('123', '1234', 10);
+        const isLogout = yield auth_service_1.authService.logout('123', '1234', 10);
         expect(isLogout.status).toBe(resultStatus_type_1.ResultStatus.Unauthorized);
     }));
     it('should logout user', () => __awaiter(void 0, void 0, void 0, function* () {
         const tokens = yield authManager_test_1.authManagerTest.createAndAuthUser();
         if (tokens) {
             const tokenPayload = jwt_service_1.jwtService.verifyAndDecodeToken(tokens.refreshToken);
-            const logoutResult = yield login_service_1.loginService.logout(tokenPayload.deviceId, tokenPayload.userId, tokenPayload.iat);
+            const logoutResult = yield auth_service_1.authService.logout(tokenPayload.deviceId, tokenPayload.userId, tokenPayload.iat);
             expect(logoutResult.status).toBe(resultStatus_type_1.ResultStatus.Success);
         }
     }));
@@ -48,8 +48,8 @@ describe('logout user integration test', () => {
         const tokens = yield authManager_test_1.authManagerTest.createAndAuthUser();
         if (tokens) {
             const tokenPayload = jwt_service_1.jwtService.verifyAndDecodeToken(tokens.refreshToken);
-            const isLogout = yield login_service_1.loginService.logout(tokenPayload.deviceId, tokenPayload.userId, tokenPayload.iat);
-            const refreshTokens = yield login_service_1.loginService.refreshToken(tokenPayload.deviceId, tokenPayload.userId, tokenPayload.iat);
+            const isLogout = yield auth_service_1.authService.logout(tokenPayload.deviceId, tokenPayload.userId, tokenPayload.iat);
+            const refreshTokens = yield auth_service_1.authService.refreshToken(tokenPayload.deviceId, tokenPayload.userId, tokenPayload.iat);
             expect(refreshTokens.status).toBe(resultStatus_type_1.ResultStatus.Unauthorized);
             expect(isLogout.status).toBe(resultStatus_type_1.ResultStatus.Success);
         }
@@ -63,18 +63,18 @@ describe('logout user integration test', () => {
         const tokens1 = yield authManager_test_1.authManagerTest.authUser(inputData);
         const tokenPayload1 = jwt_service_1.jwtService.verifyAndDecodeToken(tokens1.refreshToken);
         yield new Promise(resolve => setTimeout(resolve, 1000));
-        const tokens2 = yield login_service_1.loginService.refreshToken(tokenPayload1.deviceId, tokenPayload1.userId, tokenPayload1.iat);
+        const tokens2 = yield auth_service_1.authService.refreshToken(tokenPayload1.deviceId, tokenPayload1.userId, tokenPayload1.iat);
         const tokenPayload2 = jwt_service_1.jwtService.verifyAndDecodeToken(tokens2.data.refreshToken);
         expect(tokens1.refreshToken).not.toBe(tokens2.data.refreshToken);
         yield new Promise(resolve => setTimeout(resolve, 1000));
-        const tokens2Repeat = yield login_service_1.loginService.refreshToken(tokenPayload1.deviceId, tokenPayload1.userId, tokenPayload1.iat);
-        const tokens3 = yield login_service_1.loginService.refreshToken(tokenPayload2.deviceId, tokenPayload2.userId, tokenPayload2.iat);
+        const tokens2Repeat = yield auth_service_1.authService.refreshToken(tokenPayload1.deviceId, tokenPayload1.userId, tokenPayload1.iat);
+        const tokens3 = yield auth_service_1.authService.refreshToken(tokenPayload2.deviceId, tokenPayload2.userId, tokenPayload2.iat);
         const tokenPayload3 = jwt_service_1.jwtService.verifyAndDecodeToken(tokens3.data.refreshToken);
         expect(tokens2Repeat.status).toBe(resultStatus_type_1.ResultStatus.Unauthorized);
         expect(tokens3.status).toBe(resultStatus_type_1.ResultStatus.Success);
-        const logoutResult1 = yield login_service_1.loginService.logout(tokenPayload1.deviceId, tokenPayload1.userId, tokenPayload1.iat);
-        const logoutResult2 = yield login_service_1.loginService.logout(tokenPayload2.deviceId, tokenPayload2.userId, tokenPayload2.iat);
-        const logoutResult3 = yield login_service_1.loginService.logout(tokenPayload3.deviceId, tokenPayload3.userId, tokenPayload3.iat);
+        const logoutResult1 = yield auth_service_1.authService.logout(tokenPayload1.deviceId, tokenPayload1.userId, tokenPayload1.iat);
+        const logoutResult2 = yield auth_service_1.authService.logout(tokenPayload2.deviceId, tokenPayload2.userId, tokenPayload2.iat);
+        const logoutResult3 = yield auth_service_1.authService.logout(tokenPayload3.deviceId, tokenPayload3.userId, tokenPayload3.iat);
         expect(logoutResult1.status).toBe(resultStatus_type_1.ResultStatus.Unauthorized);
         expect(logoutResult2.status).toBe(resultStatus_type_1.ResultStatus.Unauthorized);
         expect(logoutResult3.status).toBe(resultStatus_type_1.ResultStatus.Success);

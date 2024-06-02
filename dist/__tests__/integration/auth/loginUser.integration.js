@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongodb_memory_server_1 = require("mongodb-memory-server");
 const db_1 = require("../../../src/db/db");
-const login_service_1 = require("../../../src/features/auth/service/login.service");
+const auth_service_1 = require("../../../src/features/auth/service/auth.service");
 const globals_1 = require("@jest/globals");
 const bcrypt_service_1 = require("../../../src/common/adapters/bcrypt.service");
 const userManager_test_1 = require("../../e2e/users/userManager.test");
@@ -55,7 +55,7 @@ describe('Login User', () => {
             .mockImplementation((reqPassPlainText, dbPassHash) => __awaiter(void 0, void 0, void 0, function* () {
             return true;
         }));
-        const result = yield login_service_1.loginService.loginUser({ loginOrEmail: 'login', password: '123' }, 'Chrome', '0.0.0.1');
+        const result = yield auth_service_1.authService.loginUser({ loginOrEmail: 'login', password: '123' }, 'Chrome', '0.0.0.1');
         expect(users_repository_1.usersRepository.findUserWithPass).toHaveBeenCalled();
         expect(users_repository_1.usersRepository.findUserWithPass).toHaveBeenCalledTimes(1);
         expect(result.data).toEqual({
@@ -77,7 +77,7 @@ describe('Login User', () => {
         const tokens = yield authManager_test_1.authManagerTest.authUser(loginInputData);
         yield new Promise(resolve => setTimeout(resolve, 1000));
         const tokenPayload = jwt_service_1.jwtService.verifyAndDecodeToken(tokens.refreshToken);
-        const result = yield login_service_1.loginService.refreshToken(tokenPayload.deviceId, tokenPayload.userId, tokenPayload.iat);
+        const result = yield auth_service_1.authService.refreshToken(tokenPayload.deviceId, tokenPayload.userId, tokenPayload.iat);
         expect(tokens.refreshToken).not.toBe(result.data.refreshToken);
     }));
     it(`shouldn't update refresh token after expired time`, () => __awaiter(void 0, void 0, void 0, function* () {

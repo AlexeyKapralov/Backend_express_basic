@@ -9,6 +9,6 @@ const inputValidation_middleware_1 = require("../../middlewares/inputValidation.
 const getUsers_controller_1 = require("./controllers/getUsers.controller");
 const deleteUserController_1 = require("./controllers/deleteUserController");
 exports.usersRouter = (0, express_1.Router)({});
-exports.usersRouter.post('/', auth_middleware_1.authMiddleware, express_validation_1.loginValidation, express_validation_1.passwordValidation, express_validation_1.emailValidationForRegistration, inputValidation_middleware_1.inputValidationMiddleware, createUserController_1.createUserController);
 exports.usersRouter.get('/', express_validation_1.sortByValidation, express_validation_1.sortDirectionValidation, express_validation_1.pageNumberValidation, express_validation_1.pageSizeValidation, express_validation_1.searchLoginTermValidation, express_validation_1.searchEmailTermValidation, inputValidation_middleware_1.inputValidationMiddleware, getUsers_controller_1.getUsersController);
+exports.usersRouter.post('/', auth_middleware_1.authMiddleware, express_validation_1.loginValidation, express_validation_1.passwordValidation, express_validation_1.emailValidationForRegistration, inputValidation_middleware_1.inputValidationMiddleware, createUserController_1.createUserController);
 exports.usersRouter.delete('/:id', auth_middleware_1.authMiddleware, deleteUserController_1.deleteUserController);

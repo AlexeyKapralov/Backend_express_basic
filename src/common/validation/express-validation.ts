@@ -1,7 +1,8 @@
-import { body, param, query } from 'express-validator'
+import {body, param, query} from 'express-validator'
 import {UsersModel} from "../../features/users/domain/user.entity";
 import {BlogModel} from "../../features/blogs/domain/blogs.entity";
 import {IUserDbModel} from "../../features/users/models/userDb.model";
+import {usersRepository} from "../../features/users/repository/users.repository";
 
 export const loginValidation = body(['login'])
 	.trim()
@@ -24,6 +25,10 @@ export const passwordValidation = body('password')
 	.isLength({ min: 6, max: 20 })
 	.exists()
 
+export const emailValidationForRecovery = body('email')
+	.trim()
+	.isEmail()
+	.isLength({ min: 1})
 export const emailValidationForRegistration = body('email')
 	.trim()
 	.isURL()
@@ -45,6 +50,16 @@ export const emailValidationForResend = body('email')
 		}
 		if (user[0].isConfirmed) {
 			throw new Error('email already is confirmed')
+		}
+	})
+export const recoveryCodeValidation = body('recoveryCode')
+	.trim()
+	.isLength({min:1})
+	.custom(async (recoveryCode: string) => {
+		const user = await usersRepository.findUserByRecoveryCode(recoveryCode)
+
+		if (!user || user.confirmationCodeExpired < new Date()) {
+			throw new Error('confirmation code invalid')
 		}
 	})
 

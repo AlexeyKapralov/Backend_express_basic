@@ -1,5 +1,5 @@
 import {Request, Response} from 'express'
-import {loginService} from '../service/login.service'
+import {authService} from '../service/auth.service'
 import {StatusCodes} from 'http-status-codes'
 import {ILoginInputModel} from "../models/loginInput.model";
 import {ResultType} from "../../../common/types/result.type";
@@ -12,7 +12,7 @@ export const loginController = async (
     res: Response<ILoginSuccessViewModel>
 ) => {
     const result: ResultType<{ accessToken: string; refreshToken: string } | null> =
-        await loginService.loginUser(
+        await authService.loginUser(
             req.body,
             req.headers['user-agent'] || 'unknown Device Name',
             req.ip || 'Unknown IP'

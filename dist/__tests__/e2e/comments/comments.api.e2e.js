@@ -49,7 +49,7 @@ describe('comments e2e tests', () => {
     }));
     it('should get comments array with custom pagination', () => __awaiter(void 0, void 0, void 0, function* () {
         const posts = yield post_entity_1.PostModel.find().lean();
-        yield commentsManager_test_1.commentsManagerTest.createComments(25, posts[0]._id);
+        yield commentsManager_test_1.commentsManagerTest.createComments(25, posts[0]._id.toString());
         const query = {
             sortBy: 'content',
             sortDirection: 'asc',

@@ -32,7 +32,7 @@ exports.postsManagerTest = {
         return __awaiter(this, void 0, void 0, function* () {
             for (let i = 0; i < count; i++) {
                 let post = {
-                    _id: new mongodb_1.ObjectId().toString(),
+                    _id: new mongodb_1.ObjectId(),
                     title: (0, generators_1.getRandomTitle)() + i,
                     createdAt: new Date().toISOString(),
                     blogId: i % 2 === 0 ? `generatedBlogId ${i + 1}` : `generatedBlogId ${i}`,

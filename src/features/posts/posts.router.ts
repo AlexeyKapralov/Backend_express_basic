@@ -22,6 +22,21 @@ import { getCommentsController } from './controllers/getComments.controller'
 export const postsRouter = Router({})
 
 
+postsRouter.get('/:id/comments',
+    pageNumberValidation,
+    pageSizeValidation,
+    sortByValidation,
+    sortDirectionValidation,
+    getCommentsController
+)
+
+postsRouter.post('/:postId/comments',
+    authMiddleware,
+    contentCommentValidation,
+    inputValidationMiddleware,
+    createCommentForPost,
+)
+
 postsRouter.get('/',
     pageNumberValidation,
     pageSizeValidation,
@@ -30,16 +45,18 @@ postsRouter.get('/',
     getPostsController
 )
 
-postsRouter.get('/:id',
-    getPostByIdController
+postsRouter.post('/',
+    authMiddleware,
+    titleValidation,
+    shortDescriptionValidation,
+    contentValidation,
+    blogIdInBodyValidation,
+    inputValidationMiddleware,
+    createPostController,
 )
 
-postsRouter.get('/:id/comments',
-  pageNumberValidation,
-  pageSizeValidation,
-  sortByValidation,
-  sortDirectionValidation,
-  getCommentsController
+postsRouter.get('/:id',
+    getPostByIdController
 )
 
 postsRouter.put('/:id',
@@ -56,23 +73,6 @@ postsRouter.delete('/:id',
     authMiddleware,
     titleValidation,
     deletePostController
-)
-
-postsRouter.post('/',
-    authMiddleware,
-    titleValidation,
-    shortDescriptionValidation,
-    contentValidation,
-    blogIdInBodyValidation,
-    inputValidationMiddleware,
-    createPostController,
-)
-
-postsRouter.post('/:postId/comments',
-  authMiddleware,
-  contentCommentValidation,
-  inputValidationMiddleware,
-  createCommentForPost,
 )
 
 

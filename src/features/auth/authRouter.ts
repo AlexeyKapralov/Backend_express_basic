@@ -3,7 +3,7 @@ import {loginController} from './controllers/loginController'
 import {getUserInfoController} from './controllers/getUserInfo'
 import {authMiddleware} from '../../middlewares/auth.middleware'
 import {
-    codeValidation,
+    codeValidation, emailValidationForRecovery,
     emailValidationForRegistration, emailValidationForResend,
     loginOrEmailValidation,
     loginValidation,
@@ -17,6 +17,8 @@ import {refreshTokenController} from "./controllers/refreshToken.controller";
 import {logoutController} from "./controllers/logout.controller";
 import {rateLimitMiddleware} from "../../middlewares/rateLimit.middleware";
 import {checkCookieMiddleware} from "../../middlewares/checkCookie.middleware";
+import {passwordRecoveryController} from "./controllers/passwordRecovery.controller";
+import {newPasswordController} from "./controllers/newPassword.controller";
 
 export const authRouter = Router({})
 
@@ -26,6 +28,21 @@ authRouter.post('/login',
     passwordValidation,
     inputValidationMiddleware,
     loginController
+)
+
+authRouter.post(
+    '/password-recovery',
+    rateLimitMiddleware,
+    emailValidationForRecovery,
+    inputValidationMiddleware,
+    passwordRecoveryController
+)
+
+authRouter.post('/new-password',
+    rateLimitMiddleware,
+    passwordValidation,
+    inputValidationMiddleware,
+    newPasswordController
 )
 
 authRouter.post('/refresh-token',

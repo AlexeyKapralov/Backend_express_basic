@@ -14,7 +14,7 @@ const db_1 = require("../../../src/db/db");
 const userManager_test_1 = require("../../e2e/users/userManager.test");
 const settings_1 = require("../../../src/common/config/settings");
 const authManager_test_1 = require("../../e2e/auth/authManager.test");
-const login_service_1 = require("../../../src/features/auth/service/login.service");
+const auth_service_1 = require("../../../src/features/auth/service/auth.service");
 const resultStatus_type_1 = require("../../../src/common/types/resultStatus.type");
 const jwt_service_1 = require("../../../src/common/adapters/jwt.service");
 describe('refresh Token integration test', () => {
@@ -44,7 +44,7 @@ describe('refresh Token integration test', () => {
         // const {deviceId, userId} = jwtService.verifyAndDecodeToken(tokens!.refreshToken)
         const tokenPayload = jwt_service_1.jwtService.verifyAndDecodeToken(tokens.refreshToken);
         yield new Promise(resolve => setTimeout(resolve, 1000));
-        let newTokens = yield login_service_1.loginService.refreshToken(tokenPayload.deviceId, tokenPayload.userId, tokenPayload.iat);
+        let newTokens = yield auth_service_1.authService.refreshToken(tokenPayload.deviceId, tokenPayload.userId, tokenPayload.iat);
         expect(newTokens.data).not.toBe(tokens);
         expect(newTokens.status).toBe(resultStatus_type_1.ResultStatus.Success);
     }));

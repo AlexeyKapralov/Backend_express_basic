@@ -1,6 +1,6 @@
 import {MongoMemoryServer} from 'mongodb-memory-server'
 import {db} from '../../../src/db/db'
-import {loginService} from '../../../src/features/auth/service/login.service'
+import {authService} from '../../../src/features/auth/service/auth.service'
 import {jest} from "@jest/globals";
 import {bcryptService} from "../../../src/common/adapters/bcrypt.service";
 import {userManagerTest} from "../../e2e/users/userManager.test";
@@ -52,7 +52,7 @@ describe('Login User', () => {
                 return true
             })
 
-        const result = await loginService.loginUser({loginOrEmail: 'login', password: '123'}, 'Chrome', '0.0.0.1')
+        const result = await authService.loginUser({loginOrEmail: 'login', password: '123'}, 'Chrome', '0.0.0.1')
 
         expect(usersRepository.findUserWithPass).toHaveBeenCalled()
 
@@ -86,7 +86,7 @@ describe('Login User', () => {
         await new Promise(resolve => setTimeout(resolve, 1000))
 
         const tokenPayload = jwtService.verifyAndDecodeToken(tokens!.refreshToken)
-        const result = await loginService.refreshToken(tokenPayload!.deviceId, tokenPayload!.userId, tokenPayload!.iat)
+        const result = await authService.refreshToken(tokenPayload!.deviceId, tokenPayload!.userId, tokenPayload!.iat)
 
         expect(tokens!.refreshToken).not.toBe(result.data!.refreshToken)
 

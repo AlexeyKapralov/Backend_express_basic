@@ -1,5 +1,5 @@
 import {Request, Response} from "express";
-import {loginService} from "../service/login.service";
+import {authService} from "../service/auth.service";
 import {ResultStatus} from "../../../common/types/resultStatus.type";
 import {StatusCodes} from "http-status-codes";
 import {jwtService} from "../../../common/adapters/jwt.service";
@@ -9,7 +9,7 @@ export const logoutController = async (req: Request, res: Response) => {
 
     const tokenPayload = jwtService.verifyAndDecodeToken(refreshToken)
 
-    const result = await loginService.logout(tokenPayload!.deviceId, tokenPayload!.userId, tokenPayload!.iat)
+    const result = await authService.logout(tokenPayload!.deviceId, tokenPayload!.userId, tokenPayload!.iat)
 
     if (result.status === ResultStatus.Success) {
         res.status(StatusCodes.NO_CONTENT).json()

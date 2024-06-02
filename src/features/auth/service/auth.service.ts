@@ -13,8 +13,9 @@ import {devicesRepository} from "../../securityDevices/repository/devices.reposi
 import {devicesService} from "../../securityDevices/service/devicesService";
 import {UsersModel} from "../../users/domain/user.entity";
 import {IDeviceDbModel} from "../../securityDevices/models/deviceDb.model";
+import {IUserDbModel} from "../../users/models/userDb.model";
 
-export const loginService = {
+export const authService = {
     async registrationUser(data: IUserInputModel): Promise<ResultType> {
         const passwordHash = await bcryptService.createPasswordHash(data.password)
         const user = await usersRepository.createUser(data, passwordHash)
@@ -43,8 +44,8 @@ export const loginService = {
             }
         }
     },
-    async confirmationCode(code: string): Promise<ResultType> {
-        await usersRepository.updateUserConfirm(code)
+    async updateUserConfirm(confirmationCode: string): Promise<ResultType> {
+        await usersRepository.updateUserConfirm(confirmationCode)
         return {
             status: ResultStatus.Success,
             data: null
@@ -85,6 +86,77 @@ export const loginService = {
             }
         } else return {
             status: ResultStatus.NotFound,
+            data: null
+        }
+    },
+    async recoveryPassword(email: string): Promise<ResultType> {
+        const user: IUserDbModel | undefined = await usersRepository.findUserByLoginOrEmail(email)
+        if (!user) {
+            return {
+                status: ResultStatus.NotFound,
+                data: null
+            }
+        }
+
+        const confirmationCode = uuidv4()
+        const confirmationCodeExpired = add(new Date(), SETTINGS.EXPIRED_LIFE)
+
+        const isUnconfirmed = await usersRepository.setUnconfirmed(user._id, confirmationCode, confirmationCodeExpired)
+        if (!isUnconfirmed) {
+            return {
+                status: ResultStatus.BadRequest,
+                data:  null
+            }
+        }
+
+        const html = `
+            <h1>Password recovery</h1>
+           <p>To finish password recovery please follow the link below:
+              <a href='https://somesite.com/password-recovery?recoveryCode=${confirmationCode}'>recovery password</a>
+          </p>
+        `
+
+        try {
+            emailService.sendConfirmationCode(email, 'Password recovery', html)
+        } catch (e) {
+            console.error(`some problems with send confirm code ${e}`)
+        }
+
+        return {
+            status: ResultStatus.Success,
+            data: null
+        }
+    },
+    async setNewPassword(recoveryCode: string, password: string): Promise<ResultType> {
+        const user = await usersRepository.findUserByRecoveryCode(recoveryCode)
+
+        if (!user || user.confirmationCodeExpired < new Date()) {
+            return {
+                status: ResultStatus.NotFound,
+                data: null
+            }
+        }
+
+        const isNewPassword = bcryptService.comparePasswordsHash(password, user.password)
+        if (!isNewPassword) {
+            return {
+                status: ResultStatus.Forbidden,
+                errorMessage: 'password already used',
+                data: null
+            }
+        }
+
+        const passwordHash = await bcryptService.createPasswordHash(password)
+        const isUpdatePassword = await usersRepository.updatePassword(user._id, passwordHash)
+
+        if (!isUpdatePassword) {
+            return {
+                status: ResultStatus.BadRequest,
+                data: null
+            }
+        }
+        return {
+            status: ResultStatus.Success,
             data: null
         }
     },

@@ -1,5 +1,5 @@
 import {IPostInputModel} from "../models/postInput.model";
-import {ObjectId} from "mongodb";
+import {ObjectId, WithId} from "mongodb";
 import {IPostDbModel} from "../models/postDb.model";
 import {IPostViewModel} from "../models/postView.model";
 import {blogsRepository} from "../../blogs/repository/blogs.repository";
@@ -7,7 +7,7 @@ import {getPostViewModel} from "../mappers/postMappers";
 import {PostModel} from "../domain/post.entity";
 
 export const postsRepository = {
-    async getPostById(id: string): Promise<IPostDbModel | undefined> {
+    async getPostById(id: string): Promise<WithId<IPostDbModel> | undefined> {
         const result = await PostModel.findOne({
             _id: id
         })
@@ -15,8 +15,8 @@ export const postsRepository = {
     },
     async createPost(body: IPostInputModel, blogName: string): Promise<IPostViewModel | undefined> {
 
-        const newPost: IPostDbModel = {
-            _id: new ObjectId().toString(),
+        const newPost: WithId<IPostDbModel> = {
+            _id: new ObjectId(),
             title: body.title,
             shortDescription: body.shortDescription,
             content: body.content,

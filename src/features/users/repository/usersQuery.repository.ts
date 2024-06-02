@@ -1,7 +1,7 @@
-import { IUserViewModel } from '../models/userView.model'
-import { SortDirection } from 'mongodb'
-import { IPaginator } from '../../../common/types/paginator'
-import { IQueryModel } from '../../../common/types/query.model'
+import {IUserViewModel} from '../models/userView.model'
+import {SortDirection} from 'mongodb'
+import {IPaginator} from '../../../common/types/paginator'
+import {IQueryModel} from '../../../common/types/query.model'
 import {getUserViewModel} from "../mappers/userMappers";
 import {UsersModel} from "../domain/user.entity";
 
@@ -48,5 +48,12 @@ export const usersQueryRepository = {
 		const res = await UsersModel
 			.findOne({ _id: id })
 		return res ? getUserViewModel(res) : undefined
-	}
+	},
+	async findUserByLoginOrEmail(loginOrEmail: string): Promise<IUserViewModel | undefined> {
+		const user = await UsersModel.findOne({
+				$or: [{ login: loginOrEmail }, { email: loginOrEmail }]
+			}
+		)
+		return user !== null ? getUserViewModel(user) : undefined
+	},
 }

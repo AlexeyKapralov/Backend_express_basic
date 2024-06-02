@@ -9,17 +9,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.registrationController = void 0;
-const http_status_codes_1 = require("http-status-codes");
+exports.newPasswordController = void 0;
 const auth_service_1 = require("../service/auth.service");
 const resultStatus_type_1 = require("../../../common/types/resultStatus.type");
-const registrationController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield auth_service_1.authService.registrationUser(req.body);
-    if (result.status === resultStatus_type_1.ResultStatus.Success) {
-        res.status(http_status_codes_1.StatusCodes.NO_CONTENT).json();
+const http_status_codes_1 = require("http-status-codes");
+const newPasswordController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const newPassword = req.body.newPassword;
+    const recoveryCode = req.body.recoveryCode;
+    const updatedPasswordStatus = yield auth_service_1.authService.setNewPassword(recoveryCode, newPassword);
+    if (updatedPasswordStatus.status === resultStatus_type_1.ResultStatus.Success) {
+        res.status(http_status_codes_1.StatusCodes.NO_CONTENT).send();
+        return;
     }
-    if (result.status === resultStatus_type_1.ResultStatus.BadRequest) {
-        res.status(http_status_codes_1.StatusCodes.BAD_REQUEST).json();
-    }
+    res.status(http_status_codes_1.StatusCodes.BAD_REQUEST).send();
 });
-exports.registrationController = registrationController;
+exports.newPasswordController = newPasswordController;

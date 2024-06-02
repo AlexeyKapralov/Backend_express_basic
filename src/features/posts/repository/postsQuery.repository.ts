@@ -1,13 +1,14 @@
-import { SortDirection } from 'mongodb'
+import {SortDirection, WithId} from 'mongodb'
 import { IPostViewModel } from '../models/postView.model'
 import { IPaginator } from '../../../common/types/paginator'
 import { IQueryModel } from '../../../common/types/query.model'
 import {getPostViewModel} from "../mappers/postMappers";
 import {PostModel} from "../domain/post.entity";
+import {IPostDbModel} from "../models/postDb.model";
 
 export const postsQueryRepository = {
 	async getPosts(query: IQueryModel): Promise<IPaginator<IPostViewModel>> {
-		const posts = await PostModel
+		const posts: WithId<IPostDbModel>[] = await PostModel
 			.find()
 			.skip((query.pageNumber! - 1) * query.pageSize!)
 			.limit(query.pageSize!)
@@ -26,7 +27,7 @@ export const postsQueryRepository = {
 
 	},
 	async getPostById(id: string): Promise<IPostViewModel | undefined> {
-		const result = await PostModel.findOne({
+		const result: WithId<IPostDbModel> | null = await PostModel.findOne({
 			_id: id
 		})
 		return result ? getPostViewModel(result) : undefined

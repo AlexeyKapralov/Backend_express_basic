@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getPostViewModel = void 0;
 const getPostViewModel = (data) => {
     return {
-        id: data._id,
+        id: data._id.toString(),
         title: data.title,
         shortDescription: data.shortDescription,
         content: data.content,

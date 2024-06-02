@@ -46,7 +46,7 @@ describe('comments e2e tests', () => {
 
     it('should get comments array with custom pagination', async () => {
         const posts = await PostModel.find().lean()
-        await commentsManagerTest.createComments(25, posts[0]._id)
+        await commentsManagerTest.createComments(25, posts[0]._id.toString())
         const query:IQueryModel = {
             sortBy: 'content',
             sortDirection: 'asc',

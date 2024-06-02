@@ -24,6 +24,20 @@ exports.usersRepository = {
             return result !== null ? result : undefined;
         });
     },
+    findUserByRecoveryCode(recoveryCode) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const user = yield user_entity_1.UsersModel.findOne({
+                confirmationCode: recoveryCode
+            });
+            return user !== null ? user : undefined;
+        });
+    },
+    updatePassword(userId, passwordHash) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const updatedUser = yield user_entity_1.UsersModel.updateOne({ _id: userId }, { $set: { password: passwordHash } });
+            return updatedUser.modifiedCount > 0;
+        });
+    },
     findUserByLoginOrEmail(loginOrEmail) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield user_entity_1.UsersModel.findOne({
@@ -67,6 +81,18 @@ exports.usersRepository = {
         return __awaiter(this, arguments, void 0, function* (code, isConfirmed = true) {
             const result = yield user_entity_1.UsersModel.updateOne({ confirmationCode: code }, { $set: { isConfirmed: isConfirmed } });
             return result.matchedCount > 0;
+        });
+    },
+    setUnconfirmed(userId, confirmationCode, confirmationCodeExpired) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const updateResult = yield user_entity_1.UsersModel.updateOne({ _id: userId }, {
+                $set: {
+                    confirmationCodeExpired,
+                    confirmationCode,
+                    isConfirmed: false
+                }
+            }).exec();
+            return updateResult.modifiedCount > 0;
         });
     }
 };

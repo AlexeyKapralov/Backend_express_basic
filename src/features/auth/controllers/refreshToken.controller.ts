@@ -1,5 +1,5 @@
 import {Request, Response} from "express";
-import {loginService} from "../service/login.service";
+import {authService} from "../service/auth.service";
 import {ResultStatus} from "../../../common/types/resultStatus.type";
 import {StatusCodes} from "http-status-codes";
 import {setCookie} from "../../../common/utils/generators";
@@ -13,7 +13,7 @@ export const refreshTokenController = async (req: Request, res: Response) => {
         return
     }
 
-    const result = await loginService.refreshToken(tokenPayload.deviceId, tokenPayload.userId, tokenPayload.iat)
+    const result = await authService.refreshToken(tokenPayload.deviceId, tokenPayload.userId, tokenPayload.iat)
     if (result.status === ResultStatus.Success) {
         setCookie(res, result.data!.refreshToken)
         res.status(StatusCodes.OK)

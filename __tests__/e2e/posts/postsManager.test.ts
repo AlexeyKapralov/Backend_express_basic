@@ -1,4 +1,4 @@
-import {ObjectId} from 'mongodb'
+import {ObjectId, WithId} from 'mongodb'
 import {IPostDbModel} from '../../../src/features/posts/models/postDb.model'
 import {agent} from 'supertest'
 import {app} from '../../../src/app'
@@ -25,8 +25,8 @@ export const postsManagerTest = {
     async createPosts(count: number) {
         for (let i = 0; i < count; i++) {
 
-            let post: IPostDbModel = {
-                _id: new ObjectId().toString(),
+            let post: WithId<IPostDbModel> = {
+                _id: new ObjectId(),
                 title: getRandomTitle() + i,
                 createdAt: new Date().toISOString(),
                 blogId: i % 2 === 0 ? `generatedBlogId ${i + 1}` : `generatedBlogId ${i}`,

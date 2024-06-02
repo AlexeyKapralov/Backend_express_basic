@@ -1,9 +1,10 @@
 import {IPostDbModel} from "../models/postDb.model";
 import {IPostViewModel} from "../models/postView.model";
+import {WithId} from "mongodb";
 
-export const getPostViewModel = (data: IPostDbModel): IPostViewModel => {
+export const getPostViewModel = (data: WithId<IPostDbModel>): IPostViewModel => {
     return {
-        id: data._id,
+        id: data._id.toString(),
         title: data.title,
         shortDescription: data.shortDescription,
         content: data.content,

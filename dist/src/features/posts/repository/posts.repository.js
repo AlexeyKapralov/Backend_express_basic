@@ -26,7 +26,7 @@ exports.postsRepository = {
     createPost(body, blogName) {
         return __awaiter(this, void 0, void 0, function* () {
             const newPost = {
-                _id: new mongodb_1.ObjectId().toString(),
+                _id: new mongodb_1.ObjectId(),
                 title: body.title,
                 shortDescription: body.shortDescription,
                 content: body.content,

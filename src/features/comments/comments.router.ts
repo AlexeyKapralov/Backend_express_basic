@@ -8,7 +8,6 @@ import { inputValidationMiddleware } from '../../middlewares/inputValidation.mid
 
 export const commentsRouter = Router({})
 
-commentsRouter.get(`/:commentId`, getCommentByIdController)
 commentsRouter.put(`/:commentId`,
 	authMiddleware,
 	contentCommentValidation,
@@ -19,3 +18,4 @@ commentsRouter.delete(`/:commentId`,
 	authMiddleware,
 	deleteCommentByIdController
 )
+commentsRouter.get(`/:commentId`, getCommentByIdController)

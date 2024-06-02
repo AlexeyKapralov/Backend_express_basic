@@ -18,16 +18,6 @@ import {deleteUserController} from "./controllers/deleteUserController";
 
 export const usersRouter = Router({})
 
-usersRouter.post(
-    '/',
-    authMiddleware,
-    loginValidation,
-    passwordValidation,
-    emailValidationForRegistration,
-    inputValidationMiddleware,
-    createUserController
-)
-
 usersRouter.get(
     '/',
     sortByValidation,
@@ -38,6 +28,16 @@ usersRouter.get(
     searchEmailTermValidation,
     inputValidationMiddleware,
     getUsersController
+)
+
+usersRouter.post(
+    '/',
+    authMiddleware,
+    loginValidation,
+    passwordValidation,
+    emailValidationForRegistration,
+    inputValidationMiddleware,
+    createUserController
 )
 
 usersRouter.delete(

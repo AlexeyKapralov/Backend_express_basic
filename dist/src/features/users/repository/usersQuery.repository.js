@@ -51,5 +51,13 @@ exports.usersQueryRepository = {
                 .findOne({ _id: id });
             return res ? (0, userMappers_1.getUserViewModel)(res) : undefined;
         });
-    }
+    },
+    findUserByLoginOrEmail(loginOrEmail) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const user = yield user_entity_1.UsersModel.findOne({
+                $or: [{ login: loginOrEmail }, { email: loginOrEmail }]
+            });
+            return user !== null ? (0, userMappers_1.getUserViewModel)(user) : undefined;
+        });
+    },
 };
