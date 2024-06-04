@@ -161,22 +161,7 @@ describe('posts tests', () => {
         }
     }));
     it(`shouldn't get post by id with incorrect id`, () => __awaiter(void 0, void 0, void 0, function* () {
-        const tokens = yield authManager_test_1.authManagerTest.createAndAuthUser();
-        let accessToken;
-        tokens ? accessToken = tokens.accessToken : accessToken = '';
-        const createdBlog = yield blogsManager_test_1.blogsManagerTest.createBlog('default', accessToken);
-        if (createdBlog) {
-            const requestBody = {
-                'title': 'string8',
-                'shortDescription': 'string2',
-                'content': 'string',
-                'blogId': createdBlog.id
-            };
-            const post = yield postsManager_test_1.postsManagerTest.createPost(requestBody, accessToken, http_status_codes_1.StatusCodes.CREATED, createdBlog);
-            if (post) {
-                yield postsManager_test_1.postsManagerTest.getPostById('random text', http_status_codes_1.StatusCodes.NOT_FOUND);
-            }
-        }
+        yield postsManager_test_1.postsManagerTest.getPostById('random text', http_status_codes_1.StatusCodes.BAD_REQUEST);
     }));
     it(`should get post by id`, () => __awaiter(void 0, void 0, void 0, function* () {
         const tokens = yield authManager_test_1.authManagerTest.createAndAuthUser();

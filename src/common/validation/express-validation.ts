@@ -20,7 +20,12 @@ export const loginOrEmailValidation = body(['loginOrEmail'])
 	.isLength({ min: 3, max: 20 })
 	.exists()
 
-export const passwordValidation = body('password')
+export const passwordValidation = body(['password'])
+	.trim()
+	.isLength({ min: 6, max: 20 })
+	.exists()
+
+export const newPasswordValidation = body(['newPassword'])
 	.trim()
 	.isLength({ min: 6, max: 20 })
 	.exists()
@@ -103,6 +108,11 @@ export const blogIdInBodyValidation = body('blogId').trim().custom(async value =
 		throw new Error('blog not found')
 	}
 })
+
+export const postIdValidation = param('id')
+	.trim()
+	.isLength({min: 1})
+	.isMongoId()
 
 export const contentCommentValidation = body('content')
 	.trim()

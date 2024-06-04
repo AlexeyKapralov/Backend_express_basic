@@ -5,7 +5,7 @@ import {
     blogIdInBodyValidation, contentCommentValidation,
     contentValidation,
     pageNumberValidation,
-    pageSizeValidation,
+    pageSizeValidation, postIdValidation,
     shortDescriptionValidation,
     sortByValidation,
     sortDirectionValidation,
@@ -56,6 +56,8 @@ postsRouter.post('/',
 )
 
 postsRouter.get('/:id',
+    postIdValidation,
+    inputValidationMiddleware,
     getPostByIdController
 )
 

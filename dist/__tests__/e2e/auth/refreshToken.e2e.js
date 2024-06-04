@@ -14,6 +14,7 @@ const db_1 = require("../../../src/db/db");
 const app_1 = require("../../../src/app");
 const supertest_1 = require("supertest");
 describe('refresh Token e2e test', () => {
+    //todo написать тест для проверки отправки настоящего письма
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
         const mongod = yield mongodb_memory_server_1.MongoMemoryServer.create();
         const uri = mongod.getUri();

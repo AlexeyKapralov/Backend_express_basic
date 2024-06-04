@@ -6,8 +6,8 @@ import {
     codeValidation, emailValidationForRecovery,
     emailValidationForRegistration, emailValidationForResend,
     loginOrEmailValidation,
-    loginValidation,
-    passwordValidation
+    loginValidation, newPasswordValidation,
+    passwordValidation, recoveryCodeValidation
 } from '../../common/validation/express-validation'
 import {inputValidationMiddleware} from '../../middlewares/inputValidation.middleware'
 import {registrationController} from './controllers/registration.controller'
@@ -40,7 +40,8 @@ authRouter.post(
 
 authRouter.post('/new-password',
     rateLimitMiddleware,
-    passwordValidation,
+    newPasswordValidation,
+    recoveryCodeValidation,
     inputValidationMiddleware,
     newPasswordController
 )
