@@ -1,8 +1,8 @@
 import {Request, Response} from 'express'
 import {newPasswordRecoveryInputModel} from "../models/newPasswordRecoveryInput.model";
-import {authService} from "../service/auth.service";
 import {ResultStatus} from "../../../common/types/resultStatus.type";
 import {StatusCodes} from "http-status-codes";
+import {authService} from "../authCompositionRoot";
 
 export const newPasswordController = async (req: Request<{},{},newPasswordRecoveryInputModel>, res: Response) => {
     const newPassword = req.body.newPassword

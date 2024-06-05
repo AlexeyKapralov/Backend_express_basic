@@ -1,9 +1,9 @@
 import {Request, Response} from "express";
-import {authService} from "../service/auth.service";
 import {ResultStatus} from "../../../common/types/resultStatus.type";
 import {StatusCodes} from "http-status-codes";
 import {setCookie} from "../../../common/utils/generators";
 import {jwtService} from "../../../common/adapters/jwt.service";
+import {authService} from "../authCompositionRoot";
 export const refreshTokenController = async (req: Request, res: Response) => {
     const refreshToken = req.cookies.refreshToken
 

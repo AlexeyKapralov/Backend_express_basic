@@ -2,7 +2,6 @@ import {body, param, query} from 'express-validator'
 import {UsersModel} from "../../features/users/domain/user.entity";
 import {BlogModel} from "../../features/blogs/domain/blogs.entity";
 import {IUserDbModel} from "../../features/users/models/userDb.model";
-import {usersRepository} from "../../features/users/repository/users.repository";
 
 export const loginValidation = body(['login'])
 	.trim()
@@ -61,8 +60,10 @@ export const recoveryCodeValidation = body('recoveryCode')
 	.trim()
 	.isLength({min:1})
 	.custom(async (recoveryCode: string) => {
-		const user = await usersRepository.findUserByRecoveryCode(recoveryCode)
-
+		const user = await UsersModel.findOne({
+				confirmationCode: recoveryCode
+			}
+		)
 		if (!user || user.confirmationCodeExpired < new Date()) {
 			throw new Error('confirmation code invalid')
 		}

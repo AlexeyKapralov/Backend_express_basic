@@ -1,7 +1,7 @@
 import {IDeviceViewModel} from "../models/deviceView.model";
 import {DeviceModel} from "../domain/devices.entity";
 
-export const devicesQueryRepository = {
+export class DevicesQueryRepository {
     async getSecurityDevices(userId: string): Promise<Array<IDeviceViewModel>> {
         return DeviceModel.aggregate([
             {$match: {userId}},

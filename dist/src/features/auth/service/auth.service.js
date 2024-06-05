@@ -9,23 +9,25 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.authService = void 0;
+exports.AuthService = void 0;
 const bcrypt_service_1 = require("../../../common/adapters/bcrypt.service");
-const users_repository_1 = require("../../users/repository/users.repository");
 const resultStatus_type_1 = require("../../../common/types/resultStatus.type");
 const email_service_1 = require("../../../common/adapters/email.service");
 const uuid_1 = require("uuid");
 const date_fns_1 = require("date-fns");
 const settings_1 = require("../../../common/config/settings");
 const jwt_service_1 = require("../../../common/adapters/jwt.service");
-const devices_repository_1 = require("../../securityDevices/repository/devices.repository");
-const devicesService_1 = require("../../securityDevices/service/devicesService");
 const user_entity_1 = require("../../users/domain/user.entity");
-exports.authService = {
+const devicesCompositionRoot_1 = require("../../securityDevices/devicesCompositionRoot");
+class AuthService {
+    constructor(usersRepository, devicesRepository) {
+        this.usersRepository = usersRepository;
+        this.devicesRepository = devicesRepository;
+    }
     registrationUser(data) {
         return __awaiter(this, void 0, void 0, function* () {
             const passwordHash = yield bcrypt_service_1.bcryptService.createPasswordHash(data.password);
-            const user = yield users_repository_1.usersRepository.createUser(data, passwordHash);
+            const user = yield this.usersRepository.createUser(data, passwordHash);
             if (user) {
                 const html = `
 				 <h1>Thank you for registration</h1>
@@ -51,19 +53,19 @@ exports.authService = {
                 };
             }
         });
-    },
+    }
     updateUserConfirm(confirmationCode) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield users_repository_1.usersRepository.updateUserConfirm(confirmationCode);
+            yield this.usersRepository.updateUserConfirm(confirmationCode);
             return {
                 status: resultStatus_type_1.ResultStatus.Success,
                 data: null
             };
         });
-    },
+    }
     resendConfirmationCode(email) {
         return __awaiter(this, void 0, void 0, function* () {
-            const user = yield users_repository_1.usersRepository.findUserByLoginOrEmail(email);
+            const user = yield this.usersRepository.findUserByLoginOrEmail(email);
             if (user) {
                 const code = (0, uuid_1.v4)();
                 const confirmationCodeExpiredNew = (0, date_fns_1.add)(new Date(), settings_1.SETTINGS.EXPIRED_LIFE);
@@ -96,10 +98,10 @@ exports.authService = {
                     data: null
                 };
         });
-    },
+    }
     recoveryPassword(email) {
         return __awaiter(this, void 0, void 0, function* () {
-            const user = yield users_repository_1.usersRepository.findUserByLoginOrEmail(email);
+            const user = yield this.usersRepository.findUserByLoginOrEmail(email);
             if (!user) {
                 return {
                     status: resultStatus_type_1.ResultStatus.NotFound,
@@ -108,7 +110,7 @@ exports.authService = {
             }
             const confirmationCode = (0, uuid_1.v4)();
             const confirmationCodeExpired = (0, date_fns_1.add)(new Date(), settings_1.SETTINGS.EXPIRED_LIFE);
-            const isUnconfirmed = yield users_repository_1.usersRepository.setUnconfirmed(user._id, confirmationCode, confirmationCodeExpired);
+            const isUnconfirmed = yield this.usersRepository.setUnconfirmed(user._id, confirmationCode, confirmationCodeExpired);
             if (!isUnconfirmed) {
                 return {
                     status: resultStatus_type_1.ResultStatus.BadRequest,
@@ -132,10 +134,10 @@ exports.authService = {
                 data: null
             };
         });
-    },
+    }
     setNewPassword(recoveryCode, password) {
         return __awaiter(this, void 0, void 0, function* () {
-            const user = yield users_repository_1.usersRepository.findUserByRecoveryCode(recoveryCode);
+            const user = yield this.usersRepository.findUserByRecoveryCode(recoveryCode);
             if (!user || user.confirmationCodeExpired < new Date()) {
                 return {
                     status: resultStatus_type_1.ResultStatus.NotFound,
@@ -151,7 +153,7 @@ exports.authService = {
                 };
             }
             const passwordHash = yield bcrypt_service_1.bcryptService.createPasswordHash(password);
-            const isUpdatePassword = yield users_repository_1.usersRepository.updatePassword(user._id, passwordHash);
+            const isUpdatePassword = yield this.usersRepository.updatePassword(user._id, passwordHash);
             if (!isUpdatePassword) {
                 return {
                     status: resultStatus_type_1.ResultStatus.BadRequest,
@@ -163,10 +165,10 @@ exports.authService = {
                 data: null
             };
         });
-    },
+    }
     loginUser(data, deviceName, ip) {
         return __awaiter(this, void 0, void 0, function* () {
-            const user = yield users_repository_1.usersRepository.findUserWithPass(data.loginOrEmail);
+            const user = yield this.usersRepository.findUserWithPass(data.loginOrEmail);
             if (!user) {
                 return {
                     data: null,
@@ -180,7 +182,7 @@ exports.authService = {
                     data: null
                 };
             }
-            const deviceId = yield devices_repository_1.devicesRepository.findDeviceId(user._id, ip, deviceName);
+            const deviceId = yield this.devicesRepository.findDeviceId(user._id, ip, deviceName);
             const device = {
                 userId: user._id,
                 deviceId: deviceId === null ? (0, uuid_1.v4)() : deviceId,
@@ -204,7 +206,7 @@ exports.authService = {
                 exp: refreshTokenPayload.exp,
                 iat: refreshTokenPayload.iat
             };
-            if (yield devices_repository_1.devicesRepository.createOrUpdateDevice(fullDevice)) {
+            if (yield this.devicesRepository.createOrUpdateDevice(fullDevice)) {
                 return {
                     status: resultStatus_type_1.ResultStatus.Success,
                     data: { accessToken, refreshToken }
@@ -217,10 +219,10 @@ exports.authService = {
                 };
             }
         });
-    },
+    }
     logout(deviceId, userId, iat) {
         return __awaiter(this, void 0, void 0, function* () {
-            const currentDevice = yield devicesService_1.devicesService.getDevice(deviceId, userId, iat);
+            const currentDevice = yield devicesCompositionRoot_1.devicesService.getDevice(deviceId, userId, iat);
             if (currentDevice.status === resultStatus_type_1.ResultStatus.NotFound) {
                 return {
                     status: resultStatus_type_1.ResultStatus.Unauthorized,
@@ -228,7 +230,7 @@ exports.authService = {
                     data: null
                 };
             }
-            const isDeleted = yield devices_repository_1.devicesRepository.deleteDeviceById(deviceId);
+            const isDeleted = yield this.devicesRepository.deleteDeviceById(deviceId);
             return isDeleted
                 ? {
                     status: resultStatus_type_1.ResultStatus.Success,
@@ -239,10 +241,10 @@ exports.authService = {
                     data: null
                 };
         });
-    },
+    }
     refreshToken(deviceId, userId, iat) {
         return __awaiter(this, void 0, void 0, function* () {
-            let device = yield devices_repository_1.devicesRepository.findDevice(deviceId, userId, iat);
+            let device = yield this.devicesRepository.findDevice(deviceId, userId, iat);
             if (!device || String(iat) !== device.iat) {
                 return {
                     status: resultStatus_type_1.ResultStatus.Unauthorized,
@@ -260,7 +262,7 @@ exports.authService = {
                 exp: newPayload.exp,
                 iat: newPayload.iat
             };
-            const isUpdatedDevice = yield devices_repository_1.devicesRepository.createOrUpdateDevice(fullDevice);
+            const isUpdatedDevice = yield this.devicesRepository.createOrUpdateDevice(fullDevice);
             if (isUpdatedDevice) {
                 return {
                     status: resultStatus_type_1.ResultStatus.Success,
@@ -275,4 +277,5 @@ exports.authService = {
             }
         });
     }
-};
+}
+exports.AuthService = AuthService;

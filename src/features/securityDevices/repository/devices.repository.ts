@@ -1,14 +1,12 @@
 import {DeviceModel} from "../domain/devices.entity";
 import {IDeviceDbModel} from "../models/deviceDb.model";
 
-export const devicesRepository = {
+export class DevicesRepository {
     async findDeviceId(userId: string, ip: string, deviceName: string) {
         const device = await DeviceModel.findOne({userId, ip, deviceName})
 
-
-
         return device ? device.deviceId : null
-    },
+    }
     async findDevice(deviceId: string, userId: string, iat: number): Promise<IDeviceDbModel | null> {
 
         const deviceDb: IDeviceDbModel[] = await DeviceModel.aggregate( [
@@ -23,11 +21,11 @@ export const devicesRepository = {
         ])
 
         return deviceDb[0]
-    },
+    }
     async findDeviceById(deviceId: string) {
         const device = await DeviceModel.findOne({deviceId})
         return device ? device : null
-    },
+    }
     async createOrUpdateDevice(device: IDeviceDbModel) {
         const foundDeviceId = await this.findDeviceId(device.userId, device.ip, device.deviceName)
 
@@ -43,7 +41,7 @@ export const devicesRepository = {
 
             return await DeviceModel.create(device)
         }
-    },
+    }
     async deleteDeviceById(deviceId: string) {
 
         const result = await DeviceModel.deleteOne(
@@ -51,7 +49,7 @@ export const devicesRepository = {
         )
         return result.deletedCount > 0
 
-    },
+    }
     async deleteAllAnotherDevices(deviceId: string, userId: string) {
         const isDeleted = await DeviceModel.deleteMany({
             userId: userId,

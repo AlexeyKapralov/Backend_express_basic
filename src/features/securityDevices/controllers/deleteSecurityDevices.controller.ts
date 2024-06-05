@@ -1,8 +1,8 @@
 import {Request, Response} from "express"
-import {devicesService} from "../service/devicesService";
 import {ResultStatus} from "../../../common/types/resultStatus.type";
 import {StatusCodes} from "http-status-codes";
 import {jwtService} from "../../../common/adapters/jwt.service";
+import {devicesService} from "../devicesCompositionRoot";
 
 export const deleteSecurityDevicesController = async (req: Request, res: Response) => {
     const refreshToken = req.cookies.refreshToken

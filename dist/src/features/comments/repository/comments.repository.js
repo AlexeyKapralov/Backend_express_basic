@@ -9,16 +9,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.commentsRepository = void 0;
+exports.CommentsRepository = void 0;
 const mongodb_1 = require("mongodb");
 const comments_entity_1 = require("../domain/comments.entity");
-exports.commentsRepository = {
+class CommentsRepository {
     getCommentById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield comments_entity_1.CommentsModel.findOne({ _id: id });
             return result ? result : undefined;
         });
-    },
+    }
     createComment(user, post, data) {
         return __awaiter(this, void 0, void 0, function* () {
             const newComment = {
@@ -34,7 +34,7 @@ exports.commentsRepository = {
             const result = yield comments_entity_1.CommentsModel.create(newComment);
             return !!result ? newComment : undefined;
         });
-    },
+    }
     updateComment(commentId, data) {
         return __awaiter(this, void 0, void 0, function* () {
             const isUpdatedComment = yield comments_entity_1.CommentsModel
@@ -45,11 +45,12 @@ exports.commentsRepository = {
             });
             return isUpdatedComment.modifiedCount > 0;
         });
-    },
+    }
     deleteComment(commentId) {
         return __awaiter(this, void 0, void 0, function* () {
             const isDeleted = yield comments_entity_1.CommentsModel.deleteOne({ _id: commentId });
             return isDeleted.deletedCount > 0;
         });
     }
-};
+}
+exports.CommentsRepository = CommentsRepository;

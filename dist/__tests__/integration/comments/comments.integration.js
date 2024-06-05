@@ -11,14 +11,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongodb_memory_server_1 = require("mongodb-memory-server");
 const db_1 = require("../../../src/db/db");
-const posts_service_1 = require("../../../src/features/posts/service/posts.service");
 const authManager_test_1 = require("../../e2e/auth/authManager.test");
 const blogsManager_test_1 = require("../../e2e/blogs/blogsManager.test");
 const postsManager_test_1 = require("../../e2e/posts/postsManager.test");
 const jwt_service_1 = require("../../../src/common/adapters/jwt.service");
 const resultStatus_type_1 = require("../../../src/common/types/resultStatus.type");
-const comments_service_1 = require("../../../src/features/comments/service/comments.service");
 const comments_entity_1 = require("../../../src/features/comments/domain/comments.entity");
+const postsCompositionRoot_1 = require("../../../src/features/posts/postsCompositionRoot");
+const commentsCompositionRoot_1 = require("../../../src/features/comments/commentsCompositionRoot");
 describe('comments integration tests', () => {
     let tokens;
     let blog;
@@ -45,7 +45,7 @@ describe('comments integration tests', () => {
             content: 'aaaa'
         };
         const userId = jwt_service_1.jwtService.getUserIdByToken(tokens.accessToken);
-        const result = yield posts_service_1.postsService.createComment(userId, post.id, body);
+        const result = yield postsCompositionRoot_1.postsService.createComment(userId, post.id, body);
         expect(result).toEqual({
             status: resultStatus_type_1.ResultStatus.Success,
             data: expect.objectContaining({
@@ -64,13 +64,13 @@ describe('comments integration tests', () => {
             content: 'aaabbb'
         };
         const userId = jwt_service_1.jwtService.getUserIdByToken(tokens.accessToken);
-        const result = yield posts_service_1.postsService.createComment(userId, post.id, body);
+        const result = yield postsCompositionRoot_1.postsService.createComment(userId, post.id, body);
         const newBody = {
             content: 'ccc'
         };
         let isUpdated;
         if (result.data !== null) {
-            isUpdated = yield comments_service_1.commentsService.updateComment('userId!', result.data.id, newBody);
+            isUpdated = yield commentsCompositionRoot_1.commentsService.updateComment('userId!', result.data.id, newBody);
         }
         expect(isUpdated.status).toBe(resultStatus_type_1.ResultStatus.NotFound);
     }));
@@ -79,12 +79,12 @@ describe('comments integration tests', () => {
             content: 'aaabbb'
         };
         const userId = jwt_service_1.jwtService.getUserIdByToken(tokens.accessToken);
-        const result = yield posts_service_1.postsService.createComment(userId, post.id, body);
+        const result = yield postsCompositionRoot_1.postsService.createComment(userId, post.id, body);
         const newBody = {
             content: 'ccc'
         };
         if (result.data !== null) {
-            yield comments_service_1.commentsService.updateComment(userId, result.data.id, newBody);
+            yield commentsCompositionRoot_1.commentsService.updateComment(userId, result.data.id, newBody);
         }
         const updatedComment = yield comments_entity_1.CommentsModel.findOne({ _id: result.data.id });
         expect(updatedComment.content).toBe(newBody.content);
@@ -94,10 +94,10 @@ describe('comments integration tests', () => {
             content: 'aaabbb'
         };
         const userId = jwt_service_1.jwtService.getUserIdByToken(tokens.accessToken);
-        const result = yield posts_service_1.postsService.createComment(userId, post.id, body);
+        const result = yield postsCompositionRoot_1.postsService.createComment(userId, post.id, body);
         let isDeleted;
         if (result.data !== null) {
-            isDeleted = yield comments_service_1.commentsService.deleteComment('userId!', result.data.id);
+            isDeleted = yield commentsCompositionRoot_1.commentsService.deleteComment('userId!', result.data.id);
         }
         expect(isDeleted.status).toBe(resultStatus_type_1.ResultStatus.NotFound);
     }));
@@ -106,9 +106,9 @@ describe('comments integration tests', () => {
             content: 'aaabbb'
         };
         const userId = jwt_service_1.jwtService.getUserIdByToken(tokens.accessToken);
-        const result = yield posts_service_1.postsService.createComment(userId, post.id, body);
+        const result = yield postsCompositionRoot_1.postsService.createComment(userId, post.id, body);
         if (result.data !== null) {
-            yield comments_service_1.commentsService.deleteComment(userId, result.data.id);
+            yield commentsCompositionRoot_1.commentsService.deleteComment(userId, result.data.id);
         }
         const isDeleted = yield comments_entity_1.CommentsModel.findOne({ _id: result.data.id });
         expect(isDeleted).toBe(null);

@@ -9,14 +9,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.devicesService = void 0;
-const devices_queryRepository_1 = require("../repository/devices.queryRepository");
+exports.DevicesService = void 0;
 const resultStatus_type_1 = require("../../../common/types/resultStatus.type");
-const devices_repository_1 = require("../repository/devices.repository");
-exports.devicesService = {
+class DevicesService {
+    constructor(devicesRepository, devicesQueryRepository) {
+        this.devicesRepository = devicesRepository;
+        this.devicesQueryRepository = devicesQueryRepository;
+    }
     getDevice(deviceId, userId, iat) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield devices_repository_1.devicesRepository.findDevice(deviceId, userId, iat);
+            const result = yield this.devicesRepository.findDevice(deviceId, userId, iat);
             return result
                 ? {
                     status: resultStatus_type_1.ResultStatus.Success,
@@ -27,10 +29,10 @@ exports.devicesService = {
                     data: null
                 };
         });
-    },
+    }
     getSecurityDevices(userId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const devices = yield devices_queryRepository_1.devicesQueryRepository.getSecurityDevices(userId);
+            const devices = yield this.devicesQueryRepository.getSecurityDevices(userId);
             if (!devices) {
                 return {
                     status: resultStatus_type_1.ResultStatus.Unauthorized,
@@ -42,10 +44,10 @@ exports.devicesService = {
                 data: devices
             };
         });
-    },
+    }
     deleteAllSecurityDevices(deviceId, userId) {
         return __awaiter(this, void 0, void 0, function* () {
-            if (yield devices_repository_1.devicesRepository.deleteAllAnotherDevices(deviceId, userId)) {
+            if (yield this.devicesRepository.deleteAllAnotherDevices(deviceId, userId)) {
                 return {
                     status: resultStatus_type_1.ResultStatus.Success,
                     data: null
@@ -56,10 +58,10 @@ exports.devicesService = {
                 data: null
             };
         });
-    },
+    }
     deleteDevice(deviceId, userId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const device = yield devices_repository_1.devicesRepository.findDeviceById(deviceId);
+            const device = yield this.devicesRepository.findDeviceById(deviceId);
             if (!device) {
                 return {
                     status: resultStatus_type_1.ResultStatus.NotFound,
@@ -72,7 +74,7 @@ exports.devicesService = {
                     data: null
                 };
             }
-            const isDeleted = yield devices_repository_1.devicesRepository.deleteDeviceById(device.deviceId);
+            const isDeleted = yield this.devicesRepository.deleteDeviceById(device.deviceId);
             return isDeleted
                 ? {
                     status: resultStatus_type_1.ResultStatus.Success,
@@ -84,4 +86,5 @@ exports.devicesService = {
                 };
         });
     }
-};
+}
+exports.DevicesService = DevicesService;

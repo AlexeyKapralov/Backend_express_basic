@@ -1,8 +1,8 @@
 import {Request, Response} from "express"
-import {authService} from "../service/auth.service";
 import {usersQueryRepository} from "../../users/repository/usersQuery.repository";
 import {StatusCodes} from "http-status-codes";
 import {ResultStatus} from "../../../common/types/resultStatus.type";
+import {authService} from "../authCompositionRoot";
 
 export const passwordRecoveryController = async (req: Request<{}, {}, {email: string}>, res: Response) => {
     const email = req.body.email

@@ -9,15 +9,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.devicesRepository = void 0;
+exports.DevicesRepository = void 0;
 const devices_entity_1 = require("../domain/devices.entity");
-exports.devicesRepository = {
+class DevicesRepository {
     findDeviceId(userId, ip, deviceName) {
         return __awaiter(this, void 0, void 0, function* () {
             const device = yield devices_entity_1.DeviceModel.findOne({ userId, ip, deviceName });
             return device ? device.deviceId : null;
         });
-    },
+    }
     findDevice(deviceId, userId, iat) {
         return __awaiter(this, void 0, void 0, function* () {
             const deviceDb = yield devices_entity_1.DeviceModel.aggregate([
@@ -31,13 +31,13 @@ exports.devicesRepository = {
             ]);
             return deviceDb[0];
         });
-    },
+    }
     findDeviceById(deviceId) {
         return __awaiter(this, void 0, void 0, function* () {
             const device = yield devices_entity_1.DeviceModel.findOne({ deviceId });
             return device ? device : null;
         });
-    },
+    }
     createOrUpdateDevice(device) {
         return __awaiter(this, void 0, void 0, function* () {
             const foundDeviceId = yield this.findDeviceId(device.userId, device.ip, device.deviceName);
@@ -49,13 +49,13 @@ exports.devicesRepository = {
                 return yield devices_entity_1.DeviceModel.create(device);
             }
         });
-    },
+    }
     deleteDeviceById(deviceId) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield devices_entity_1.DeviceModel.deleteOne({ deviceId: deviceId });
             return result.deletedCount > 0;
         });
-    },
+    }
     deleteAllAnotherDevices(deviceId, userId) {
         return __awaiter(this, void 0, void 0, function* () {
             const isDeleted = yield devices_entity_1.DeviceModel.deleteMany({
@@ -65,4 +65,5 @@ exports.devicesRepository = {
             return isDeleted.acknowledged;
         });
     }
-};
+}
+exports.DevicesRepository = DevicesRepository;

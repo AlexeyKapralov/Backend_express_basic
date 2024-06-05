@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import { IBlogInputModel } from '../models/blogInput.model'
-import { blogsService } from '../sevice/blogs.service'
 import { ResultStatus } from '../../../common/types/resultStatus.type'
+import {blogsService} from "../blogsComposition.root";
 
 export const updateBlogByIdController = async (req: Request<{
 	id: string

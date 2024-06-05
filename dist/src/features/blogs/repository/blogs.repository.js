@@ -9,15 +9,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.blogsRepository = void 0;
+exports.BlogsRepository = void 0;
 const blogs_entity_1 = require("../domain/blogs.entity");
-exports.blogsRepository = {
+class BlogsRepository {
     createBlog(body) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield blogs_entity_1.BlogModel.create(body);
             return !!result;
         });
-    },
+    }
     updateBlogByID(id, body) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield blogs_entity_1.BlogModel.updateOne({
@@ -31,13 +31,13 @@ exports.blogsRepository = {
             });
             return result.modifiedCount > 0;
         });
-    },
+    }
     deleteBlogByID(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield blogs_entity_1.BlogModel.deleteOne({ _id: id });
             return result.deletedCount > 0;
         });
-    },
+    }
     getBlogByID(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield blogs_entity_1.BlogModel.findOne({
@@ -45,5 +45,6 @@ exports.blogsRepository = {
             });
             return result ? result : undefined;
         });
-    },
-};
+    }
+}
+exports.BlogsRepository = BlogsRepository;

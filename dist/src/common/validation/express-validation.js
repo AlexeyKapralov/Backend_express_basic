@@ -13,7 +13,6 @@ exports.codeValidation = exports.contentCommentValidation = exports.postIdValida
 const express_validator_1 = require("express-validator");
 const user_entity_1 = require("../../features/users/domain/user.entity");
 const blogs_entity_1 = require("../../features/blogs/domain/blogs.entity");
-const users_repository_1 = require("../../features/users/repository/users.repository");
 exports.loginValidation = (0, express_validator_1.body)(['login'])
     .trim()
     .isLength({ min: 3, max: 10 })
@@ -67,7 +66,9 @@ exports.recoveryCodeValidation = (0, express_validator_1.body)('recoveryCode')
     .trim()
     .isLength({ min: 1 })
     .custom((recoveryCode) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = yield users_repository_1.usersRepository.findUserByRecoveryCode(recoveryCode);
+    const user = yield user_entity_1.UsersModel.findOne({
+        confirmationCode: recoveryCode
+    });
     if (!user || user.confirmationCodeExpired < new Date()) {
         throw new Error('confirmation code invalid');
     }

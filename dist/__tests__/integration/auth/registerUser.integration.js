@@ -11,10 +11,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongodb_memory_server_1 = require("mongodb-memory-server");
 const db_1 = require("../../../src/db/db");
-const auth_service_1 = require("../../../src/features/auth/service/auth.service");
 const email_service_1 = require("../../../src/common/adapters/email.service");
 const resultStatus_type_1 = require("../../../src/common/types/resultStatus.type");
 const user_entity_1 = require("../../../src/features/users/domain/user.entity");
+const authCompositionRoot_1 = require("../../../src/features/auth/authCompositionRoot");
 describe('Integration Auth', () => {
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
         const mongod = yield mongodb_memory_server_1.MongoMemoryServer.create();
@@ -39,7 +39,7 @@ describe('Integration Auth', () => {
             email: 'alewka24@gmail.com',
             password: 'qwerty1234@'
         };
-        const result = yield auth_service_1.authService.registrationUser(data);
+        const result = yield authCompositionRoot_1.authService.registrationUser(data);
         expect(result).toEqual({
             status: resultStatus_type_1.ResultStatus.Success,
             data: null

@@ -11,9 +11,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updatePostByIdController = void 0;
 const http_status_codes_1 = require("http-status-codes");
-const posts_service_1 = require("../service/posts.service");
+const postsCompositionRoot_1 = require("../postsCompositionRoot");
 const updatePostByIdController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield posts_service_1.postsService.updatePost(req.params.id, req.body);
+    const result = yield postsCompositionRoot_1.postsService.updatePost(req.params.id, req.body);
     result ? res.status(http_status_codes_1.StatusCodes.NO_CONTENT).json() : res.status(http_status_codes_1.StatusCodes.NOT_FOUND).json();
 });
 exports.updatePostByIdController = updatePostByIdController;

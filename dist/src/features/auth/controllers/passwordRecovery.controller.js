@@ -10,10 +10,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.passwordRecoveryController = void 0;
-const auth_service_1 = require("../service/auth.service");
 const usersQuery_repository_1 = require("../../users/repository/usersQuery.repository");
 const http_status_codes_1 = require("http-status-codes");
 const resultStatus_type_1 = require("../../../common/types/resultStatus.type");
+const authCompositionRoot_1 = require("../authCompositionRoot");
 const passwordRecoveryController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const email = req.body.email;
     const user = yield usersQuery_repository_1.usersQueryRepository.findUserByLoginOrEmail(email);
@@ -21,7 +21,7 @@ const passwordRecoveryController = (req, res) => __awaiter(void 0, void 0, void 
         res.status(http_status_codes_1.StatusCodes.NO_CONTENT).json();
         return;
     }
-    const recoveryStatus = yield auth_service_1.authService.recoveryPassword(email);
+    const recoveryStatus = yield authCompositionRoot_1.authService.recoveryPassword(email);
     switch (recoveryStatus.status) {
         case resultStatus_type_1.ResultStatus.NotFound: // if (x === 'value1')
             res.status(http_status_codes_1.StatusCodes.NO_CONTENT).send();

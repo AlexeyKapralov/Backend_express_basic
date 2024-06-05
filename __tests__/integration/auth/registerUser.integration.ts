@@ -1,11 +1,11 @@
 import {MongoMemoryServer} from 'mongodb-memory-server'
 import {db} from '../../../src/db/db'
-import {authService} from '../../../src/features/auth/service/auth.service'
 import {IUserInputModel} from '../../../src/features/users/models/userInput.model'
 import {emailService} from '../../../src/common/adapters/email.service'
 import {ResultType} from '../../../src/common/types/result.type'
 import {ResultStatus} from '../../../src/common/types/resultStatus.type'
 import {UsersModel} from "../../../src/features/users/domain/user.entity";
+import {authService} from "../../../src/features/auth/authCompositionRoot";
 
 describe('Integration Auth', () => {
 	beforeAll(async () => {

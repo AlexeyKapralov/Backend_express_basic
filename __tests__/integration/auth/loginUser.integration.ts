@@ -1,13 +1,15 @@
 import {MongoMemoryServer} from 'mongodb-memory-server'
 import {db} from '../../../src/db/db'
-import {authService} from '../../../src/features/auth/service/auth.service'
 import {jest} from "@jest/globals";
 import {bcryptService} from "../../../src/common/adapters/bcrypt.service";
 import {userManagerTest} from "../../e2e/users/userManager.test";
 import {authManagerTest} from "../../e2e/auth/authManager.test";
 import {SETTINGS} from "../../../src/common/config/settings";
-import {usersRepository} from "../../../src/features/users/repository/users.repository";
 import {jwtService} from "../../../src/common/adapters/jwt.service";
+import {UsersRepository} from "../../../src/features/users/repository/users.repository";
+import {authService} from "../../../src/features/auth/authCompositionRoot";
+import {AuthService} from "../../../src/features/auth/service/auth.service";
+import {DevicesRepository} from "../../../src/features/securityDevices/repository/devices.repository";
 
 describe('Login User', () => {
     beforeAll(async () => {
@@ -34,6 +36,10 @@ describe('Login User', () => {
     })
 
     it('should login user', async () => {
+        //todo корректно ли я здесь создаю новый класс с его зависимостями и переопределяю новый метод, просто когда я сделал только мок findUserWithPass, у меня не работало
+        const usersRepository = new UsersRepository()
+        const devicesRepository = new DevicesRepository()
+        const authService = new AuthService(usersRepository, devicesRepository)
         usersRepository.findUserWithPass = jest.fn<typeof usersRepository.findUserWithPass>().mockImplementation(async () => {
             return {
                 _id: 'id',
@@ -57,7 +63,6 @@ describe('Login User', () => {
         expect(usersRepository.findUserWithPass).toHaveBeenCalled()
 
         expect(usersRepository.findUserWithPass).toHaveBeenCalledTimes(1)
-
 
         expect(result.data).toEqual({
             accessToken: expect.stringMatching(/^([A-Za-z0-9-_]+)\.([A-Za-z0-9-_]+)\.([A-Za-z0-9-_]+)$/),
@@ -113,7 +118,6 @@ describe('Login User', () => {
         await new Promise(resolve => setTimeout(resolve, 2000))
 
         const tokenPayload = jwtService.verifyAndDecodeToken(tokens!.refreshToken)
-
 
         expect(tokenPayload).toBeNull()
 

@@ -1,8 +1,9 @@
 // Mock-объект для blogsRepository, чтобы заменить его на управляемый тестами
 import {expect, jest} from '@jest/globals';
-import {blogsRepository} from "../../../src/features/blogs/repository/blogs.repository";
-import {blogsService} from "../../../src/features/blogs/sevice/blogs.service";
 import { ResultStatus } from '../../../src/common/types/resultStatus.type'
+import {BlogsRepository} from "../../../src/features/blogs/repository/blogs.repository";
+import {BlogsService} from "../../../src/features/blogs/sevice/blogs.service";
+import {blogsService} from "../../../src/features/blogs/blogsComposition.root";
 
 describe('Test for createBlog method in blogsService', () => {
     afterEach(() => {
@@ -28,6 +29,7 @@ describe('Test for createBlog method in blogsService', () => {
         }
 
         //искусственный возврат из репозитория
+        const blogsRepository = new BlogsRepository()
         blogsRepository.createBlog = jest.fn<typeof blogsRepository.createBlog>().mockImplementation(async () => {
             return true
         })

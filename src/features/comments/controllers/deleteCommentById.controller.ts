@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
-import { commentsService } from '../service/comments.service'
 import { ResultStatus } from '../../../common/types/resultStatus.type'
 import { StatusCodes } from 'http-status-codes'
+import {commentsService} from "../commentsCompositionRoot";
 
 export const deleteCommentByIdController = async (req: Request<{commentId: string}>, res:Response) => {
 	const result = await commentsService.deleteComment(req.userId!, req.params.commentId)

@@ -2,11 +2,11 @@ import {jwtService} from "../../../src/common/adapters/jwt.service";
 import {userManagerTest} from "../../e2e/users/userManager.test";
 import {SETTINGS} from "../../../src/common/config/settings";
 import {authManagerTest} from "../../e2e/auth/authManager.test";
-import {devicesService} from "../../../src/features/securityDevices/service/devicesService";
 import {ResultStatus} from "../../../src/common/types/resultStatus.type";
 import {MongoMemoryServer} from "mongodb-memory-server";
 import {db} from "../../../src/db/db";
 import {jest} from "@jest/globals";
+import {devicesService} from "../../../src/features/securityDevices/devicesCompositionRoot";
 
 describe('integration test delete device', () => {
 

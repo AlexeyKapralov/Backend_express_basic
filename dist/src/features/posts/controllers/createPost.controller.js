@@ -10,11 +10,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createPostController = void 0;
-const posts_service_1 = require("../service/posts.service");
 const http_status_codes_1 = require("http-status-codes");
 const resultStatus_type_1 = require("../../../common/types/resultStatus.type");
+const postsCompositionRoot_1 = require("../postsCompositionRoot");
 const createPostController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield posts_service_1.postsService.createPost(req.body);
+    const result = yield postsCompositionRoot_1.postsService.createPost(req.body);
     result.status === resultStatus_type_1.ResultStatus.Success ? res.status(http_status_codes_1.StatusCodes.CREATED).json(result.data) : res.sendStatus(http_status_codes_1.StatusCodes.BAD_REQUEST);
 });
 exports.createPostController = createPostController;

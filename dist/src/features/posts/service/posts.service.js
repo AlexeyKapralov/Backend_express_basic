@@ -9,24 +9,26 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.postsService = void 0;
-const posts_repository_1 = require("../repository/posts.repository");
-const comments_repository_1 = require("../../comments/repository/comments.repository");
+exports.PostsService = void 0;
 const resultStatus_type_1 = require("../../../common/types/resultStatus.type");
-const users_repository_1 = require("../../users/repository/users.repository");
 const commentsMappers_1 = require("../../comments/mappers/commentsMappers");
-const blogs_repository_1 = require("../../blogs/repository/blogs.repository");
-exports.postsService = {
+class PostsService {
+    constructor(blogsRepository, postsRepository, usersRepository, commentsRepository) {
+        this.blogsRepository = blogsRepository;
+        this.postsRepository = postsRepository;
+        this.usersRepository = usersRepository;
+        this.commentsRepository = commentsRepository;
+    }
     createPost(body) {
         return __awaiter(this, void 0, void 0, function* () {
-            const foundBlog = yield blogs_repository_1.blogsRepository.getBlogByID(body.blogId);
+            const foundBlog = yield this.blogsRepository.getBlogByID(body.blogId);
             if (!foundBlog) {
                 return {
                     status: resultStatus_type_1.ResultStatus.NotFound,
                     data: null
                 };
             }
-            const result = yield posts_repository_1.postsRepository.createPost(body, foundBlog.name);
+            const result = yield this.postsRepository.createPost(body, foundBlog.name);
             return result
                 ? {
                     status: resultStatus_type_1.ResultStatus.Success,
@@ -37,10 +39,10 @@ exports.postsService = {
                     data: null
                 };
         });
-    },
+    }
     updatePost(id, body) {
         return __awaiter(this, void 0, void 0, function* () {
-            return (yield posts_repository_1.postsRepository.updatePost(id, body))
+            return (yield this.postsRepository.updatePost(id, body))
                 ? {
                     status: resultStatus_type_1.ResultStatus.Success,
                     data: null
@@ -50,10 +52,10 @@ exports.postsService = {
                     data: null
                 };
         });
-    },
+    }
     deletePost(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return (yield posts_repository_1.postsRepository.deletePost(id))
+            return (yield this.postsRepository.deletePost(id))
                 ? {
                     status: resultStatus_type_1.ResultStatus.Success,
                     data: null
@@ -63,13 +65,13 @@ exports.postsService = {
                     data: null
                 };
         });
-    },
+    }
     createComment(userId, postId, body) {
         return __awaiter(this, void 0, void 0, function* () {
-            const post = yield posts_repository_1.postsRepository.getPostById(postId);
-            const user = yield users_repository_1.usersRepository.findUserById(userId);
+            const post = yield this.postsRepository.getPostById(postId);
+            const user = yield this.usersRepository.findUserById(userId);
             if (post && user) {
-                const res = yield comments_repository_1.commentsRepository.createComment(user, post, body);
+                const res = yield this.commentsRepository.createComment(user, post, body);
                 return res
                     ? {
                         status: resultStatus_type_1.ResultStatus.Success,
@@ -88,4 +90,5 @@ exports.postsService = {
             }
         });
     }
-};
+}
+exports.PostsService = PostsService;

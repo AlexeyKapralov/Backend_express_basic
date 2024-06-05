@@ -1,9 +1,9 @@
 import { Request, Response } from 'express'
 import { ICommentInputModel } from '../../comments/models/commentInput.model'
 import { ICommentViewModel } from '../../comments/models/commentView.model'
-import { postsService } from '../service/posts.service'
 import { ResultStatus } from '../../../common/types/resultStatus.type'
 import { StatusCodes } from 'http-status-codes'
+import {postsService} from "../postsCompositionRoot";
 
 export const createCommentForPost = async (req: Request<{
 	postId: string

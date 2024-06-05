@@ -1,10 +1,10 @@
 import {Request, Response} from 'express'
 import {StatusCodes} from "http-status-codes";
-import {usersQueryRepository} from "../repository/usersQuery.repository";
 import {getQueryParams} from "../../../common/utils/mappers";
 import { IPaginator } from '../../../common/types/paginator'
 import { IUserViewModel } from '../models/userView.model'
 import { IQueryModel } from '../../../common/types/query.model'
+import {usersQueryRepository} from "../repository/usersQuery.repository";
 
 export const getUsersController = async (
     req: Request<{}, {}, {}, IQueryModel>,

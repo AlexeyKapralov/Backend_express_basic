@@ -1,5 +1,5 @@
 import {bcryptService} from '../../../common/adapters/bcrypt.service'
-import {usersRepository} from '../../users/repository/users.repository'
+import {UsersRepository} from '../../users/repository/users.repository'
 import {ILoginInputModel} from '../models/loginInput.model'
 import {ResultType} from '../../../common/types/result.type'
 import {ResultStatus} from '../../../common/types/resultStatus.type'
@@ -9,16 +9,24 @@ import {v4 as uuidv4} from 'uuid'
 import {add} from 'date-fns'
 import {SETTINGS} from '../../../common/config/settings'
 import {jwtService} from "../../../common/adapters/jwt.service";
-import {devicesRepository} from "../../securityDevices/repository/devices.repository";
-import {devicesService} from "../../securityDevices/service/devicesService";
 import {UsersModel} from "../../users/domain/user.entity";
 import {IDeviceDbModel} from "../../securityDevices/models/deviceDb.model";
 import {IUserDbModel} from "../../users/models/userDb.model";
+import {devicesService} from "../../securityDevices/devicesCompositionRoot";
+import {DevicesRepository} from "../../securityDevices/repository/devices.repository";
 
-export const authService = {
+export class AuthService {
+    protected usersRepository
+    protected devicesRepository
+
+    constructor(usersRepository: UsersRepository, devicesRepository: DevicesRepository) {
+        this.usersRepository = usersRepository
+        this.devicesRepository = devicesRepository
+    }
+
     async registrationUser(data: IUserInputModel): Promise<ResultType> {
         const passwordHash = await bcryptService.createPasswordHash(data.password)
-        const user = await usersRepository.createUser(data, passwordHash)
+        const user = await this.usersRepository.createUser(data, passwordHash)
 
         if (user) {
             const html = `
@@ -43,17 +51,17 @@ export const authService = {
                 data: null
             }
         }
-    },
+    }
     async updateUserConfirm(confirmationCode: string): Promise<ResultType> {
-        await usersRepository.updateUserConfirm(confirmationCode)
+        await this.usersRepository.updateUserConfirm(confirmationCode)
         return {
             status: ResultStatus.Success,
             data: null
         }
-    },
+    }
     async resendConfirmationCode(email: string): Promise<ResultType> {
 
-        const user = await usersRepository.findUserByLoginOrEmail(email)
+        const user = await this.usersRepository.findUserByLoginOrEmail(email)
 
         if (user) {
             const code = uuidv4()
@@ -88,9 +96,9 @@ export const authService = {
             status: ResultStatus.NotFound,
             data: null
         }
-    },
+    }
     async recoveryPassword(email: string): Promise<ResultType> {
-        const user: IUserDbModel | undefined = await usersRepository.findUserByLoginOrEmail(email)
+        const user: IUserDbModel | undefined = await this.usersRepository.findUserByLoginOrEmail(email)
         if (!user) {
             return {
                 status: ResultStatus.NotFound,
@@ -101,7 +109,7 @@ export const authService = {
         const confirmationCode = uuidv4()
         const confirmationCodeExpired = add(new Date(), SETTINGS.EXPIRED_LIFE)
 
-        const isUnconfirmed = await usersRepository.setUnconfirmed(user._id, confirmationCode, confirmationCodeExpired)
+        const isUnconfirmed = await this.usersRepository.setUnconfirmed(user._id, confirmationCode, confirmationCodeExpired)
         if (!isUnconfirmed) {
             return {
                 status: ResultStatus.BadRequest,
@@ -126,9 +134,9 @@ export const authService = {
             status: ResultStatus.Success,
             data: null
         }
-    },
+    }
     async setNewPassword(recoveryCode: string, password: string): Promise<ResultType> {
-        const user = await usersRepository.findUserByRecoveryCode(recoveryCode)
+        const user = await this.usersRepository.findUserByRecoveryCode(recoveryCode)
 
         if (!user || user.confirmationCodeExpired < new Date()) {
             return {
@@ -147,7 +155,7 @@ export const authService = {
         }
 
         const passwordHash = await bcryptService.createPasswordHash(password)
-        const isUpdatePassword = await usersRepository.updatePassword(user._id, passwordHash)
+        const isUpdatePassword = await this.usersRepository.updatePassword(user._id, passwordHash)
 
         if (!isUpdatePassword) {
             return {
@@ -159,12 +167,12 @@ export const authService = {
             status: ResultStatus.Success,
             data: null
         }
-    },
+    }
     async loginUser(data: ILoginInputModel, deviceName: string, ip: string): Promise<ResultType<{
         accessToken: string,
         refreshToken: string
     } | null>> {
-        const user = await usersRepository.findUserWithPass(data.loginOrEmail)
+        const user = await this.usersRepository.findUserWithPass(data.loginOrEmail)
         if (!user) {
             return {
                 data: null,
@@ -179,7 +187,7 @@ export const authService = {
             }
         }
 
-        const deviceId = await devicesRepository.findDeviceId(user._id, ip, deviceName)
+        const deviceId = await this.devicesRepository.findDeviceId(user._id, ip, deviceName)
 
         const device: Omit<IDeviceDbModel, 'iat' | 'exp'> = {
             userId: user._id,
@@ -208,7 +216,7 @@ export const authService = {
             iat: refreshTokenPayload.iat
         }
 
-        if (await devicesRepository.createOrUpdateDevice(fullDevice)) {
+        if (await this.devicesRepository.createOrUpdateDevice(fullDevice)) {
             return {
                 status: ResultStatus.Success,
                 data: {accessToken, refreshToken}
@@ -220,7 +228,7 @@ export const authService = {
             }
         }
 
-    },
+    }
     async logout(deviceId: string, userId: string, iat: number): Promise<ResultType> {
 
         const currentDevice =  await devicesService.getDevice(deviceId, userId, iat)
@@ -233,7 +241,7 @@ export const authService = {
             }
         }
 
-        const isDeleted = await devicesRepository.deleteDeviceById(deviceId)
+        const isDeleted = await this.devicesRepository.deleteDeviceById(deviceId)
 
         return isDeleted
             ? {
@@ -244,13 +252,13 @@ export const authService = {
                 status: ResultStatus.BadRequest,
                 data: null
             }
-    },
+    }
     async refreshToken(deviceId: string, userId: string, iat: number): Promise<ResultType<{
         accessToken: string,
         refreshToken: string
     } | null>> {
 
-        let device = await devicesRepository.findDevice(deviceId, userId, iat)
+        let device = await this.devicesRepository.findDevice(deviceId, userId, iat)
         if (!device || String(iat) !== device.iat) {
             return {
                 status: ResultStatus.Unauthorized,
@@ -272,7 +280,7 @@ export const authService = {
             iat: newPayload!.iat
         }
 
-        const isUpdatedDevice = await devicesRepository.createOrUpdateDevice(fullDevice)
+        const isUpdatedDevice = await this.devicesRepository.createOrUpdateDevice(fullDevice)
 
         if (isUpdatedDevice) {
             return {

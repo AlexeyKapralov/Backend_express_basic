@@ -1,9 +1,9 @@
 import { Request, Response } from 'express'
 import { IBlogPostInputModel } from '../models/blogInput.model'
 import { IPostViewModel } from '../../posts/models/postView.model'
-import { blogsService } from '../sevice/blogs.service'
 import { StatusCodes } from 'http-status-codes'
 import { ResultStatus } from '../../../common/types/resultStatus.type'
+import {blogsService} from "../blogsComposition.root";
 
 export const createPostByBlogIdController = async (req: Request<{ id: string }, {}, IBlogPostInputModel>, res: Response<IPostViewModel>) => {
     const result = await blogsService.createPostByBlogId(req.params.id, req.body)
