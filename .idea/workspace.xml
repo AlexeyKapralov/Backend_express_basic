@@ -4,61 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="26bf12fa-1c19-43fd-bd80-8f598efb16f4" name="Changes" comment="transfer to mongoose and correct tests, also small fixes">
-      <change afterPath="$PROJECT_DIR$/src/features/auth/controllers/newPassword.controller.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/features/auth/controllers/passwordRecovery.controller.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/features/auth/models/newPasswordRecoveryInput.model.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/__tests__/e2e/comments/comments.api.e2e.ts" beforeDir="false" afterPath="$PROJECT_DIR$/__tests__/e2e/comments/comments.api.e2e.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/__tests__/e2e/posts/postsManager.test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/__tests__/e2e/posts/postsManager.test.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/__tests__/integration/auth/loginUser.integration.ts" beforeDir="false" afterPath="$PROJECT_DIR$/__tests__/integration/auth/loginUser.integration.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/__tests__/integration/auth/logoutUser.integration.ts" beforeDir="false" afterPath="$PROJECT_DIR$/__tests__/integration/auth/logoutUser.integration.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/__tests__/integration/auth/refreshToken.integration.ts" beforeDir="false" afterPath="$PROJECT_DIR$/__tests__/integration/auth/refreshToken.integration.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/__tests__/integration/auth/registerUser.integration.ts" beforeDir="false" afterPath="$PROJECT_DIR$/__tests__/integration/auth/registerUser.integration.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/__tests__/e2e/comments/comments.api.e2e.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/__tests__/e2e/comments/comments.api.e2e.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/__tests__/e2e/posts/postsManager.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/__tests__/e2e/posts/postsManager.test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/__tests__/integration/auth/loginUser.integration.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/__tests__/integration/auth/loginUser.integration.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/__tests__/integration/auth/logoutUser.integration.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/__tests__/integration/auth/logoutUser.integration.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/__tests__/integration/auth/refreshToken.integration.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/__tests__/integration/auth/refreshToken.integration.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/__tests__/integration/auth/registerUser.integration.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/__tests__/integration/auth/registerUser.integration.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/common/validation/express-validation.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/common/validation/express-validation.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/auth/authRouter.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/auth/authRouter.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/auth/controllers/emailResending.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/auth/controllers/emailResending.controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/auth/controllers/loginController.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/auth/controllers/loginController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/auth/controllers/logout.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/auth/controllers/logout.controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/auth/controllers/refreshToken.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/auth/controllers/refreshToken.controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/auth/controllers/registration.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/auth/controllers/registration.controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/auth/controllers/registrationConfirmation.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/auth/controllers/registrationConfirmation.controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/comments/comments.router.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/comments/comments.router.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/comments/repository/comments.repository.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/comments/repository/comments.repository.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/posts/mappers/postMappers.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/posts/mappers/postMappers.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/posts/posts.router.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/posts/posts.router.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/posts/repository/posts.repository.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/posts/repository/posts.repository.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/securityDevices/repository/devices.repository.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/securityDevices/repository/devices.repository.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/users/repository/users.repository.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/users/repository/users.repository.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/users/repository/usersQuery.repository.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/users/repository/usersQuery.repository.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/users/users.router.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/users/users.router.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/validation/express-validation.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/validation/express-validation.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/auth/authRouter.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/auth/authRouter.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/auth/controllers/emailResending.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/auth/controllers/emailResending.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/auth/controllers/loginController.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/auth/controllers/loginController.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/auth/controllers/logout.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/auth/controllers/logout.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/auth/controllers/refreshToken.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/auth/controllers/refreshToken.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/auth/controllers/registration.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/auth/controllers/registration.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/auth/controllers/registrationConfirmation.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/auth/controllers/registrationConfirmation.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/auth/service/login.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/auth/service/auth.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/comments/comments.router.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/comments/comments.router.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/comments/repository/comments.repository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/comments/repository/comments.repository.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/posts/domain/post.entity.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/posts/domain/post.entity.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/posts/mappers/postMappers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/posts/mappers/postMappers.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/posts/models/postDb.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/posts/models/postDb.model.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/posts/posts.router.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/posts/posts.router.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/posts/repository/posts.repository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/posts/repository/posts.repository.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/posts/repository/postsQuery.repository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/posts/repository/postsQuery.repository.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/users/repository/users.repository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/users/repository/users.repository.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/users/repository/usersQuery.repository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/users/repository/usersQuery.repository.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/users/users.router.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/users/users.router.ts" afterDir="false" />
-    </list>
+    <list default="true" id="26bf12fa-1c19-43fd-bd80-8f598efb16f4" name="Changes" comment="restore password, and add new password endpoints added. Validators for these endpoints added. Also, _id removed and added WithId from mongodb for all models and ObjectId instead string id in models.&#10;&#10;LoginService rename in AuthService." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -288,7 +234,7 @@
       <workItem from="1716900880629" duration="3076000" />
       <workItem from="1716995386748" duration="7353000" />
       <workItem from="1717046831530" duration="21715000" />
-      <workItem from="1717171895777" duration="53077000" />
+      <workItem from="1717171895777" duration="53324000" />
     </task>
     <task id="LOCAL-00001" summary="small fixes">
       <option name="closed" value="true" />
@@ -346,7 +292,15 @@
       <option name="project" value="LOCAL" />
       <updated>1717242645076</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="restore password, and add new password endpoints added. Validators for these endpoints added. Also, _id removed and added WithId from mongodb for all models and ObjectId instead string id in models.&#10;&#10;LoginService rename in AuthService.">
+      <option name="closed" value="true" />
+      <created>1717339083043</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1717339083043</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -374,6 +328,7 @@
     <MESSAGE value="Refactor project structure, add new mappers, update services path&#10;&#10;The commit includes restructuring of the project for better maintenance. Import paths of services in various controllers have been updated. In addition, several new mappers were added to different features like users, blogs, posts, and comments. Cookie checks were introduced in securityDevices routes, and some unnecessary authorization checks were removed from its controllers. Note, further refactoring may be required." />
     <MESSAGE value="create integration and e2e tests for comments" />
     <MESSAGE value="transfer to mongoose and correct tests, also small fixes" />
-    <option name="LAST_COMMIT_MESSAGE" value="transfer to mongoose and correct tests, also small fixes" />
+    <MESSAGE value="restore password, and add new password endpoints added. Validators for these endpoints added. Also, _id removed and added WithId from mongodb for all models and ObjectId instead string id in models.&#10;&#10;LoginService rename in AuthService." />
+    <option name="LAST_COMMIT_MESSAGE" value="restore password, and add new password endpoints added. Validators for these endpoints added. Also, _id removed and added WithId from mongodb for all models and ObjectId instead string id in models.&#10;&#10;LoginService rename in AuthService." />
   </component>
 </project>
