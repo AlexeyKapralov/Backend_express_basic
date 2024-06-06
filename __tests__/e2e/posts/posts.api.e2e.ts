@@ -178,23 +178,7 @@ describe('posts tests', () => {
 	})
 
 	it(`shouldn't get post by id with incorrect id`, async () => {
-		const tokens = await authManagerTest.createAndAuthUser()
-		let accessToken
-		tokens ?  accessToken = tokens.accessToken : accessToken = ''
-		const createdBlog: IBlogViewModel | undefined = await blogsManagerTest.createBlog('default', accessToken!)
-		if (createdBlog) {
-			const requestBody = {
-				'title': 'string8',
-				'shortDescription': 'string2',
-				'content': 'string',
-				'blogId': createdBlog!.id
-			}
-
-			const post = await postsManagerTest.createPost(requestBody, accessToken!, StatusCodes.CREATED, createdBlog)
-			if (post) {
-				await postsManagerTest.getPostById('random text', StatusCodes.NOT_FOUND)
-			}
-		}
+		await postsManagerTest.getPostById('random text', StatusCodes.BAD_REQUEST)
 	})
 
 	it(`should get post by id`, async () => {

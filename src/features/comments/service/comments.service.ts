@@ -2,15 +2,21 @@ import { ICommentViewModel } from '../models/commentView.model'
 import { ResultType } from '../../../common/types/result.type'
 import { ResultStatus } from '../../../common/types/resultStatus.type'
 import { ICommentInputModel } from '../models/commentInput.model'
-import { commentsRepository } from '../repository/comments.repository'
-import {usersRepository} from "../../users/repository/users.repository";
+import {UsersRepository} from "../../users/repository/users.repository";
+import {CommentsRepository} from "../repository/comments.repository";
 
-export const commentsService = {
+export class CommentsService {
+	protected usersRepository
+	protected commentsRepository
+	constructor(usersRepository: UsersRepository, commentsRepository: CommentsRepository) {
+		this.usersRepository = usersRepository
+		this.commentsRepository = commentsRepository
+	}
 
 	async updateComment(userId: string, commentId: string, data: ICommentInputModel): Promise<ResultType<ICommentViewModel | null>> {
 
-		const user = await usersRepository.findUserById(userId)
-		const comment = await commentsRepository.getCommentById(commentId)
+		const user = await this.usersRepository.findUserById(userId)
+		const comment = await this.commentsRepository.getCommentById(commentId)
 
 		if (!comment || !user) {
 			return {
@@ -26,7 +32,7 @@ export const commentsService = {
 			}
 		}
 
-		const result = await commentsRepository.updateComment(commentId, data)
+		const result = await this.commentsRepository.updateComment(commentId, data)
 
 		if (result) {
 			return {
@@ -39,11 +45,11 @@ export const commentsService = {
 				data: null
 			}
 		}
-	},
+	}
 	async deleteComment(userId: string, commentId: string): Promise<ResultType> {
 
-		const user = await usersRepository.findUserById(userId)
-		const comment = await commentsRepository.getCommentById(commentId)
+		const user = await this.usersRepository.findUserById(userId)
+		const comment = await this.commentsRepository.getCommentById(commentId)
 
 		if (!comment || !user) {
 			return {
@@ -58,7 +64,7 @@ export const commentsService = {
 				data: null
 			}
 		}
-		const result = await commentsRepository.deleteComment(commentId)
+		const result = await this.commentsRepository.deleteComment(commentId)
 
 		return result
 			? {

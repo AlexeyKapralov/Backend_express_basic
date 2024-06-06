@@ -9,16 +9,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.usersService = void 0;
+exports.UsersService = void 0;
 const bcrypt_service_1 = require("../../../common/adapters/bcrypt.service");
-const users_repository_1 = require("../repository/users.repository");
 const resultStatus_type_1 = require("../../../common/types/resultStatus.type");
 const userMappers_1 = require("../mappers/userMappers");
-exports.usersService = {
+class UsersService {
+    constructor(usersRepository) {
+        this.usersRepository = usersRepository;
+    }
     createUser(data) {
         return __awaiter(this, void 0, void 0, function* () {
             const passwordHash = yield bcrypt_service_1.bcryptService.createPasswordHash(data.password);
-            const user = yield users_repository_1.usersRepository.createUser(data, passwordHash, 'admin');
+            const user = yield this.usersRepository.createUser(data, passwordHash, 'admin');
             return user
                 ? {
                     status: resultStatus_type_1.ResultStatus.Success,
@@ -29,12 +31,12 @@ exports.usersService = {
                     data: null
                 };
         });
-    },
+    }
     deleteUser(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const user = yield users_repository_1.usersRepository.findUserById(id);
+            const user = yield this.usersRepository.findUserById(id);
             if (user) {
-                return (yield users_repository_1.usersRepository.deleteUser(id))
+                return (yield this.usersRepository.deleteUser(id))
                     ? {
                         status: resultStatus_type_1.ResultStatus.Success,
                         data: null
@@ -52,4 +54,5 @@ exports.usersService = {
             }
         });
     }
-};
+}
+exports.UsersService = UsersService;

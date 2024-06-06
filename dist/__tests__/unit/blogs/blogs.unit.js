@@ -11,9 +11,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 // Mock-объект для blogsRepository, чтобы заменить его на управляемый тестами
 const globals_1 = require("@jest/globals");
-const blogs_repository_1 = require("../../../src/features/blogs/repository/blogs.repository");
-const blogs_service_1 = require("../../../src/features/blogs/sevice/blogs.service");
 const resultStatus_type_1 = require("../../../src/common/types/resultStatus.type");
+const blogs_repository_1 = require("../../../src/features/blogs/repository/blogs.repository");
+const blogsComposition_root_1 = require("../../../src/features/blogs/blogsComposition.root");
 describe('Test for createBlog method in blogsService', () => {
     afterEach(() => {
         globals_1.jest.clearAllMocks();
@@ -34,13 +34,14 @@ describe('Test for createBlog method in blogsService', () => {
             isMembership: false,
         };
         //искусственный возврат из репозитория
-        blogs_repository_1.blogsRepository.createBlog = globals_1.jest.fn().mockImplementation(() => __awaiter(void 0, void 0, void 0, function* () {
+        const blogsRepository = new blogs_repository_1.BlogsRepository();
+        blogsRepository.createBlog = globals_1.jest.fn().mockImplementation(() => __awaiter(void 0, void 0, void 0, function* () {
             return true;
         }));
         // Вызываем метод createBlog из blogsService с фиктивными данными
-        const result = yield blogs_service_1.blogsService.createBlog(mockInputData);
+        const result = yield blogsComposition_root_1.blogsService.createBlog(mockInputData);
         // Проверяем, что метод createBlog был вызван с ожидаемыми данными
-        (0, globals_1.expect)(blogs_repository_1.blogsRepository.createBlog).toHaveBeenCalledWith(mockBlogDbModel);
+        (0, globals_1.expect)(blogsRepository.createBlog).toHaveBeenCalledWith(mockBlogDbModel);
         // Проверяем, что метод вернул ожидаемый результат
         (0, globals_1.expect)(result).toEqual({
             status: resultStatus_type_1.ResultStatus.Success,

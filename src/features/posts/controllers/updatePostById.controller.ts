@@ -1,7 +1,7 @@
 import {Request, Response} from "express"
 import {StatusCodes} from "http-status-codes";
 import {IPostInputModel} from "../models/postInput.model";
-import {postsService} from "../service/posts.service";
+import {postsService} from "../postsCompositionRoot";
 
 export const updatePostByIdController = async (req: Request<{ id: string }, {}, IPostInputModel>, res: Response) => {
     const result = await postsService.updatePost(req.params.id, req.body)

@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
 import { IRegistrationConfirmationCodeModel } from '../models/registrationConfirmationCode.model'
-import { authService } from '../service/auth.service'
 import { ResultStatus } from '../../../common/types/resultStatus.type'
 import { StatusCodes } from 'http-status-codes'
+import {authService} from "../authCompositionRoot";
 
 export const registrationConfirmationController = async (req: Request<{},{},IRegistrationConfirmationCodeModel>, res:Response) => {
 	const result = await authService.updateUserConfirm(req.body.code)

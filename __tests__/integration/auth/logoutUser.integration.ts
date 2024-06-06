@@ -1,11 +1,11 @@
 import {authManagerTest} from "../../e2e/auth/authManager.test";
-import {authService} from "../../../src/features/auth/service/auth.service";
 import {ResultStatus} from "../../../src/common/types/resultStatus.type";
 import {db} from "../../../src/db/db";
 import {MongoMemoryServer} from "mongodb-memory-server";
 import {userManagerTest} from "../../e2e/users/userManager.test";
 import {SETTINGS} from "../../../src/common/config/settings";
 import {jwtService} from "../../../src/common/adapters/jwt.service";
+import {authService} from "../../../src/features/auth/authCompositionRoot";
 
 describe('logout user integration test', () => {
     beforeAll(async () => {

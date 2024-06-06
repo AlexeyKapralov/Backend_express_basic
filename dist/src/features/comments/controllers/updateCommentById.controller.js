@@ -10,11 +10,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateCommentByIdController = void 0;
-const comments_service_1 = require("../service/comments.service");
 const resultStatus_type_1 = require("../../../common/types/resultStatus.type");
 const http_status_codes_1 = require("http-status-codes");
+const commentsCompositionRoot_1 = require("../commentsCompositionRoot");
 const updateCommentByIdController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield comments_service_1.commentsService.updateComment(req.userId, req.params.commentId, req.body);
+    const result = yield commentsCompositionRoot_1.commentsService.updateComment(req.userId, req.params.commentId, req.body);
     switch (result.status) {
         case resultStatus_type_1.ResultStatus.Success:
             res.status(http_status_codes_1.StatusCodes.NO_CONTENT).json(result.data);

@@ -9,9 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.devicesQueryRepository = void 0;
+exports.DevicesQueryRepository = void 0;
 const devices_entity_1 = require("../domain/devices.entity");
-exports.devicesQueryRepository = {
+class DevicesQueryRepository {
     getSecurityDevices(userId) {
         return __awaiter(this, void 0, void 0, function* () {
             return devices_entity_1.DeviceModel.aggregate([
@@ -28,4 +28,5 @@ exports.devicesQueryRepository = {
             ]);
         });
     }
-};
+}
+exports.DevicesQueryRepository = DevicesQueryRepository;

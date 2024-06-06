@@ -10,14 +10,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.logoutController = void 0;
-const auth_service_1 = require("../service/auth.service");
 const resultStatus_type_1 = require("../../../common/types/resultStatus.type");
 const http_status_codes_1 = require("http-status-codes");
 const jwt_service_1 = require("../../../common/adapters/jwt.service");
+const authCompositionRoot_1 = require("../authCompositionRoot");
 const logoutController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const refreshToken = req.cookies.refreshToken;
     const tokenPayload = jwt_service_1.jwtService.verifyAndDecodeToken(refreshToken);
-    const result = yield auth_service_1.authService.logout(tokenPayload.deviceId, tokenPayload.userId, tokenPayload.iat);
+    const result = yield authCompositionRoot_1.authService.logout(tokenPayload.deviceId, tokenPayload.userId, tokenPayload.iat);
     if (result.status === resultStatus_type_1.ResultStatus.Success) {
         res.status(http_status_codes_1.StatusCodes.NO_CONTENT).json();
     }

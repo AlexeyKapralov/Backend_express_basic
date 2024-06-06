@@ -4,7 +4,7 @@ import {app} from "../../../src/app";
 import {agent} from "supertest";
 
 describe('refresh Token e2e test', ()=>{
-
+    //todo написать тест для проверки отправки настоящего письма
     beforeAll(async () => {
         const mongod = await MongoMemoryServer.create()
         const uri = mongod.getUri()

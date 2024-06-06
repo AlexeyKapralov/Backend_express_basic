@@ -9,15 +9,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.commentsService = void 0;
+exports.CommentsService = void 0;
 const resultStatus_type_1 = require("../../../common/types/resultStatus.type");
-const comments_repository_1 = require("../repository/comments.repository");
-const users_repository_1 = require("../../users/repository/users.repository");
-exports.commentsService = {
+class CommentsService {
+    constructor(usersRepository, commentsRepository) {
+        this.usersRepository = usersRepository;
+        this.commentsRepository = commentsRepository;
+    }
     updateComment(userId, commentId, data) {
         return __awaiter(this, void 0, void 0, function* () {
-            const user = yield users_repository_1.usersRepository.findUserById(userId);
-            const comment = yield comments_repository_1.commentsRepository.getCommentById(commentId);
+            const user = yield this.usersRepository.findUserById(userId);
+            const comment = yield this.commentsRepository.getCommentById(commentId);
             if (!comment || !user) {
                 return {
                     status: resultStatus_type_1.ResultStatus.NotFound,
@@ -30,7 +32,7 @@ exports.commentsService = {
                     data: null
                 };
             }
-            const result = yield comments_repository_1.commentsRepository.updateComment(commentId, data);
+            const result = yield this.commentsRepository.updateComment(commentId, data);
             if (result) {
                 return {
                     status: resultStatus_type_1.ResultStatus.Success,
@@ -44,11 +46,11 @@ exports.commentsService = {
                 };
             }
         });
-    },
+    }
     deleteComment(userId, commentId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const user = yield users_repository_1.usersRepository.findUserById(userId);
-            const comment = yield comments_repository_1.commentsRepository.getCommentById(commentId);
+            const user = yield this.usersRepository.findUserById(userId);
+            const comment = yield this.commentsRepository.getCommentById(commentId);
             if (!comment || !user) {
                 return {
                     status: resultStatus_type_1.ResultStatus.NotFound,
@@ -61,7 +63,7 @@ exports.commentsService = {
                     data: null
                 };
             }
-            const result = yield comments_repository_1.commentsRepository.deleteComment(commentId);
+            const result = yield this.commentsRepository.deleteComment(commentId);
             return result
                 ? {
                     status: resultStatus_type_1.ResultStatus.Success,
@@ -73,4 +75,5 @@ exports.commentsService = {
                 };
         });
     }
-};
+}
+exports.CommentsService = CommentsService;

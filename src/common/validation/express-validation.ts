@@ -2,7 +2,6 @@ import {body, param, query} from 'express-validator'
 import {UsersModel} from "../../features/users/domain/user.entity";
 import {BlogModel} from "../../features/blogs/domain/blogs.entity";
 import {IUserDbModel} from "../../features/users/models/userDb.model";
-import {usersRepository} from "../../features/users/repository/users.repository";
 
 export const loginValidation = body(['login'])
 	.trim()
@@ -20,7 +19,12 @@ export const loginOrEmailValidation = body(['loginOrEmail'])
 	.isLength({ min: 3, max: 20 })
 	.exists()
 
-export const passwordValidation = body('password')
+export const passwordValidation = body(['password'])
+	.trim()
+	.isLength({ min: 6, max: 20 })
+	.exists()
+
+export const newPasswordValidation = body(['newPassword'])
 	.trim()
 	.isLength({ min: 6, max: 20 })
 	.exists()
@@ -56,8 +60,10 @@ export const recoveryCodeValidation = body('recoveryCode')
 	.trim()
 	.isLength({min:1})
 	.custom(async (recoveryCode: string) => {
-		const user = await usersRepository.findUserByRecoveryCode(recoveryCode)
-
+		const user = await UsersModel.findOne({
+				confirmationCode: recoveryCode
+			}
+		)
 		if (!user || user.confirmationCodeExpired < new Date()) {
 			throw new Error('confirmation code invalid')
 		}
@@ -103,6 +109,11 @@ export const blogIdInBodyValidation = body('blogId').trim().custom(async value =
 		throw new Error('blog not found')
 	}
 })
+
+export const postIdValidation = param('id')
+	.trim()
+	.isLength({min: 1})
+	.isMongoId()
 
 export const contentCommentValidation = body('content')
 	.trim()

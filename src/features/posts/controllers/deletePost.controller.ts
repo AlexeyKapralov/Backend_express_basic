@@ -1,6 +1,6 @@
 import {Request, Response} from 'express'
-import {StatusCodes} from "http-status-codes";
-import {postsService} from "../service/posts.service";
+import {StatusCodes} from "http-status-codes"
+import {postsService} from "../postsCompositionRoot";
 
 export const deletePostController = async (req: Request<{ id: string }>, res: Response<StatusCodes>) => {
     const isDeleted = await postsService.deletePost(req.params.id)

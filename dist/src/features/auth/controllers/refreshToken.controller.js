@@ -10,11 +10,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.refreshTokenController = void 0;
-const auth_service_1 = require("../service/auth.service");
 const resultStatus_type_1 = require("../../../common/types/resultStatus.type");
 const http_status_codes_1 = require("http-status-codes");
 const generators_1 = require("../../../common/utils/generators");
 const jwt_service_1 = require("../../../common/adapters/jwt.service");
+const authCompositionRoot_1 = require("../authCompositionRoot");
 const refreshTokenController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const refreshToken = req.cookies.refreshToken;
     const tokenPayload = jwt_service_1.jwtService.verifyAndDecodeToken(refreshToken);
@@ -22,7 +22,7 @@ const refreshTokenController = (req, res) => __awaiter(void 0, void 0, void 0, f
         res.status(http_status_codes_1.StatusCodes.UNAUTHORIZED).json();
         return;
     }
-    const result = yield auth_service_1.authService.refreshToken(tokenPayload.deviceId, tokenPayload.userId, tokenPayload.iat);
+    const result = yield authCompositionRoot_1.authService.refreshToken(tokenPayload.deviceId, tokenPayload.userId, tokenPayload.iat);
     if (result.status === resultStatus_type_1.ResultStatus.Success) {
         (0, generators_1.setCookie)(res, result.data.refreshToken);
         res.status(http_status_codes_1.StatusCodes.OK)

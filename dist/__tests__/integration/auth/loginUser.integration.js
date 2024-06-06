@@ -11,14 +11,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongodb_memory_server_1 = require("mongodb-memory-server");
 const db_1 = require("../../../src/db/db");
-const auth_service_1 = require("../../../src/features/auth/service/auth.service");
 const globals_1 = require("@jest/globals");
 const bcrypt_service_1 = require("../../../src/common/adapters/bcrypt.service");
 const userManager_test_1 = require("../../e2e/users/userManager.test");
 const authManager_test_1 = require("../../e2e/auth/authManager.test");
 const settings_1 = require("../../../src/common/config/settings");
-const users_repository_1 = require("../../../src/features/users/repository/users.repository");
 const jwt_service_1 = require("../../../src/common/adapters/jwt.service");
+const users_repository_1 = require("../../../src/features/users/repository/users.repository");
+const authCompositionRoot_1 = require("../../../src/features/auth/authCompositionRoot");
+const auth_service_1 = require("../../../src/features/auth/service/auth.service");
+const devices_repository_1 = require("../../../src/features/securityDevices/repository/devices.repository");
 describe('Login User', () => {
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
         const mongod = yield mongodb_memory_server_1.MongoMemoryServer.create();
@@ -39,7 +41,11 @@ describe('Login User', () => {
         done();
     });
     it('should login user', () => __awaiter(void 0, void 0, void 0, function* () {
-        users_repository_1.usersRepository.findUserWithPass = globals_1.jest.fn().mockImplementation(() => __awaiter(void 0, void 0, void 0, function* () {
+        //todo корректно ли я здесь создаю новый класс с его зависимостями и переопределяю новый метод, просто когда я сделал только мок findUserWithPass, у меня не работало
+        const usersRepository = new users_repository_1.UsersRepository();
+        const devicesRepository = new devices_repository_1.DevicesRepository();
+        const authService = new auth_service_1.AuthService(usersRepository, devicesRepository);
+        usersRepository.findUserWithPass = globals_1.jest.fn().mockImplementation(() => __awaiter(void 0, void 0, void 0, function* () {
             return {
                 _id: 'id',
                 login: 'login',
@@ -55,9 +61,9 @@ describe('Login User', () => {
             .mockImplementation((reqPassPlainText, dbPassHash) => __awaiter(void 0, void 0, void 0, function* () {
             return true;
         }));
-        const result = yield auth_service_1.authService.loginUser({ loginOrEmail: 'login', password: '123' }, 'Chrome', '0.0.0.1');
-        expect(users_repository_1.usersRepository.findUserWithPass).toHaveBeenCalled();
-        expect(users_repository_1.usersRepository.findUserWithPass).toHaveBeenCalledTimes(1);
+        const result = yield authService.loginUser({ loginOrEmail: 'login', password: '123' }, 'Chrome', '0.0.0.1');
+        expect(usersRepository.findUserWithPass).toHaveBeenCalled();
+        expect(usersRepository.findUserWithPass).toHaveBeenCalledTimes(1);
         expect(result.data).toEqual({
             accessToken: expect.stringMatching(/^([A-Za-z0-9-_]+)\.([A-Za-z0-9-_]+)\.([A-Za-z0-9-_]+)$/),
             refreshToken: expect.stringMatching(/^([A-Za-z0-9-_]+)\.([A-Za-z0-9-_]+)\.([A-Za-z0-9-_]+)$/)
@@ -77,7 +83,7 @@ describe('Login User', () => {
         const tokens = yield authManager_test_1.authManagerTest.authUser(loginInputData);
         yield new Promise(resolve => setTimeout(resolve, 1000));
         const tokenPayload = jwt_service_1.jwtService.verifyAndDecodeToken(tokens.refreshToken);
-        const result = yield auth_service_1.authService.refreshToken(tokenPayload.deviceId, tokenPayload.userId, tokenPayload.iat);
+        const result = yield authCompositionRoot_1.authService.refreshToken(tokenPayload.deviceId, tokenPayload.userId, tokenPayload.iat);
         expect(tokens.refreshToken).not.toBe(result.data.refreshToken);
     }));
     it(`shouldn't update refresh token after expired time`, () => __awaiter(void 0, void 0, void 0, function* () {

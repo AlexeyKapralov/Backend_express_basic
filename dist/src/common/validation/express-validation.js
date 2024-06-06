@@ -9,11 +9,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.codeValidation = exports.contentCommentValidation = exports.blogIdInBodyValidation = exports.blogIdParamValidation = exports.contentValidation = exports.shortDescriptionValidation = exports.titleValidation = exports.websiteUrlValidation = exports.descriptionValidation = exports.nameValidation = exports.searchNameTermValidation = exports.searchEmailTermValidation = exports.searchLoginTermValidation = exports.pageSizeValidation = exports.pageNumberValidation = exports.sortDirectionValidation = exports.sortByValidation = exports.recoveryCodeValidation = exports.emailValidationForResend = exports.emailValidationForRegistration = exports.emailValidationForRecovery = exports.passwordValidation = exports.loginOrEmailValidation = exports.loginValidation = void 0;
+exports.codeValidation = exports.contentCommentValidation = exports.postIdValidation = exports.blogIdInBodyValidation = exports.blogIdParamValidation = exports.contentValidation = exports.shortDescriptionValidation = exports.titleValidation = exports.websiteUrlValidation = exports.descriptionValidation = exports.nameValidation = exports.searchNameTermValidation = exports.searchEmailTermValidation = exports.searchLoginTermValidation = exports.pageSizeValidation = exports.pageNumberValidation = exports.sortDirectionValidation = exports.sortByValidation = exports.recoveryCodeValidation = exports.emailValidationForResend = exports.emailValidationForRegistration = exports.emailValidationForRecovery = exports.newPasswordValidation = exports.passwordValidation = exports.loginOrEmailValidation = exports.loginValidation = void 0;
 const express_validator_1 = require("express-validator");
 const user_entity_1 = require("../../features/users/domain/user.entity");
 const blogs_entity_1 = require("../../features/blogs/domain/blogs.entity");
-const users_repository_1 = require("../../features/users/repository/users.repository");
 exports.loginValidation = (0, express_validator_1.body)(['login'])
     .trim()
     .isLength({ min: 3, max: 10 })
@@ -28,7 +27,11 @@ exports.loginOrEmailValidation = (0, express_validator_1.body)(['loginOrEmail'])
     .trim()
     .isLength({ min: 3, max: 20 })
     .exists();
-exports.passwordValidation = (0, express_validator_1.body)('password')
+exports.passwordValidation = (0, express_validator_1.body)(['password'])
+    .trim()
+    .isLength({ min: 6, max: 20 })
+    .exists();
+exports.newPasswordValidation = (0, express_validator_1.body)(['newPassword'])
     .trim()
     .isLength({ min: 6, max: 20 })
     .exists();
@@ -63,7 +66,9 @@ exports.recoveryCodeValidation = (0, express_validator_1.body)('recoveryCode')
     .trim()
     .isLength({ min: 1 })
     .custom((recoveryCode) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = yield users_repository_1.usersRepository.findUserByRecoveryCode(recoveryCode);
+    const user = yield user_entity_1.UsersModel.findOne({
+        confirmationCode: recoveryCode
+    });
     if (!user || user.confirmationCodeExpired < new Date()) {
         throw new Error('confirmation code invalid');
     }
@@ -106,6 +111,10 @@ exports.blogIdInBodyValidation = (0, express_validator_1.body)('blogId').trim().
         throw new Error('blog not found');
     }
 }));
+exports.postIdValidation = (0, express_validator_1.param)('id')
+    .trim()
+    .isLength({ min: 1 })
+    .isMongoId();
 exports.contentCommentValidation = (0, express_validator_1.body)('content')
     .trim()
     .isLength({ min: 20, max: 300 });

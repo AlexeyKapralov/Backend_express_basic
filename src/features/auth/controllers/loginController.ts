@@ -1,11 +1,11 @@
 import {Request, Response} from 'express'
-import {authService} from '../service/auth.service'
 import {StatusCodes} from 'http-status-codes'
 import {ILoginInputModel} from "../models/loginInput.model";
 import {ResultType} from "../../../common/types/result.type";
 import {ResultStatus} from "../../../common/types/resultStatus.type";
 import {ILoginSuccessViewModel} from "../../../common/types/loginSuccessView.model";
 import {addSeconds} from "date-fns";
+import {authService} from "../authCompositionRoot";
 
 export const loginController = async (
     req: Request<{}, {}, ILoginInputModel>,

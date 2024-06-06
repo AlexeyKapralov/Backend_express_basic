@@ -10,11 +10,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createUserController = void 0;
-const users_service_1 = require("../service/users.service");
 const http_status_codes_1 = require("http-status-codes");
 const resultStatus_type_1 = require("../../../common/types/resultStatus.type");
+const usersCompositionRoot_1 = require("../usersCompositionRoot");
 const createUserController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield users_service_1.usersService.createUser(req.body);
+    const result = yield usersCompositionRoot_1.usersService.createUser(req.body);
     result.status === resultStatus_type_1.ResultStatus.Success
         ? res.status(http_status_codes_1.StatusCodes.CREATED).send(result.data)
         : res.status(http_status_codes_1.StatusCodes.NOT_FOUND).json();

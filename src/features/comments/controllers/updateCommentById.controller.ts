@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
 import { ICommentInputModel } from '../models/commentInput.model'
-import { commentsService } from '../service/comments.service'
 import { ResultStatus } from '../../../common/types/resultStatus.type'
 import { StatusCodes } from 'http-status-codes'
+import {commentsService} from "../commentsCompositionRoot";
 
 export const updateCommentByIdController = async (req: Request<{commentId:string}, {},ICommentInputModel>, res: Response) => {
 	const result = await commentsService.updateComment(req.userId!, req.params.commentId, req.body)
