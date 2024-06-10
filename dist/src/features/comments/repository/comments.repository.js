@@ -13,9 +13,25 @@ exports.CommentsRepository = void 0;
 const mongodb_1 = require("mongodb");
 const comments_entity_1 = require("../domain/comments.entity");
 class CommentsRepository {
+    // async getCommentById(id: string): Promise<ICommentDbModel | undefined> {
+    //     const result = await CommentsModel.aggregate([
+    //         {
+    //             $match: {_id: id}
+    //         },
+    //         {
+    //             $unwind: '$likes'
+    //         },
+    //         {
+    //             $match: {
+    //                 "likes.userId": id
+    //             }
+    //         }
+    //     ]).exec()
     getCommentById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield comments_entity_1.CommentsModel.findOne({ _id: id });
+            const result = yield comments_entity_1.CommentsModel.findOne({
+                _id: id
+            });
             return result ? result : undefined;
         });
     }
@@ -29,7 +45,10 @@ class CommentsRepository {
                     userLogin: user.login
                 },
                 createdAt: new Date().toISOString(),
-                postId: post._id.toString()
+                postId: post._id.toString(),
+                likes: [],
+                dislikesCount: 0,
+                likesCount: 0
             };
             const result = yield comments_entity_1.CommentsModel.create(newComment);
             return !!result ? newComment : undefined;
@@ -50,6 +69,41 @@ class CommentsRepository {
         return __awaiter(this, void 0, void 0, function* () {
             const isDeleted = yield comments_entity_1.CommentsModel.deleteOne({ _id: commentId });
             return isDeleted.deletedCount > 0;
+        });
+    }
+    updateLikeStatus(commentId, likeData, likeIterator, dislikeIterator) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const isExist = yield comments_entity_1.CommentsModel.find({
+                _id: commentId,
+                // likes: {
+                //     $elemMatch: {
+                //         userId: likeData.userId
+                //     }
+                // }
+                'likes.userId': likeData.userId
+            }).exec();
+            let isUpdated;
+            if (isExist.length > 0) {
+                isUpdated = yield comments_entity_1.CommentsModel.updateOne({ _id: commentId, 'likes.userId': likeData.userId }, {
+                    $inc: {
+                        likesCount: likeIterator,
+                        dislikesCount: dislikeIterator
+                    },
+                    $set: {
+                        'likes.$.createdAt': likeData.createdAt,
+                        'likes.$.status': likeData.status
+                    }
+                });
+                return isUpdated.modifiedCount > 0;
+            }
+            isUpdated = yield comments_entity_1.CommentsModel.updateOne({ _id: commentId }, {
+                $inc: {
+                    likesCount: likeIterator,
+                    dislikesCount: dislikeIterator
+                },
+                $push: { likes: likeData }
+            });
+            return isUpdated.modifiedCount > 0;
         });
     }
 }

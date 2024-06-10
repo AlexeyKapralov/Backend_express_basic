@@ -5,7 +5,7 @@ import { ResultStatus } from '../../../common/types/resultStatus.type'
 import { StatusCodes } from 'http-status-codes'
 import {postsService} from "../postsCompositionRoot";
 
-export const createCommentForPost = async (req: Request<{
+export const createCommentForPostController = async (req: Request<{
 	postId: string
 }, {}, ICommentInputModel>, res: Response<ICommentViewModel>) => {
 	const result = await postsService.createComment(req.userId!, req.params.postId, req.body)

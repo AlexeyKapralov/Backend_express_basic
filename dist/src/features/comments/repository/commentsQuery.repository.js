@@ -14,8 +14,8 @@ const commentsMappers_1 = require("../mappers/commentsMappers");
 const post_entity_1 = require("../../posts/domain/post.entity");
 const comments_entity_1 = require("../domain/comments.entity");
 exports.commentsQueryRepository = {
-    getComments(postId, query) {
-        return __awaiter(this, void 0, void 0, function* () {
+    getComments(postId_1, query_1) {
+        return __awaiter(this, arguments, void 0, function* (postId, query, userId = 'default') {
             const post = yield post_entity_1.PostModel.findOne({ _id: postId });
             if (!post) {
                 return undefined;
@@ -33,13 +33,16 @@ exports.commentsQueryRepository = {
                 page: query.pageNumber,
                 pageSize: query.pageSize,
                 totalCount: commentsCount,
-                items: comments.map(commentsMappers_1.getCommentView)
+                items: comments.map(i => (0, commentsMappers_1.getCommentView)(i, userId))
             };
         });
     },
-    getCommentById(id) {
-        return __awaiter(this, void 0, void 0, function* () {
+    getCommentById(id_1) {
+        return __awaiter(this, arguments, void 0, function* (id, userId = 'default') {
             const result = yield comments_entity_1.CommentsModel.findOne({ _id: id });
+            if (userId !== 'default') {
+                return result ? (0, commentsMappers_1.getCommentView)(result, userId) : undefined;
+            }
             return result ? (0, commentsMappers_1.getCommentView)(result) : undefined;
         });
     }

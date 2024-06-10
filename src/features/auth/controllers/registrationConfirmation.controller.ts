@@ -7,6 +7,6 @@ import {authService} from "../authCompositionRoot";
 export const registrationConfirmationController = async (req: Request<{},{},IRegistrationConfirmationCodeModel>, res:Response) => {
 	const result = await authService.updateUserConfirm(req.body.code)
 	result.status === ResultStatus.Success
-		? res.status(StatusCodes.NO_CONTENT).json()
-		: res.status(StatusCodes.NOT_FOUND).json()
+		? res.status(StatusCodes.NO_CONTENT).send()
+		: res.status(StatusCodes.NOT_FOUND).send()
 }

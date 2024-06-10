@@ -16,7 +16,7 @@ import {inputValidationMiddleware} from "../../middlewares/inputValidation.middl
 import {getPostByIdController} from "./controllers/getPostById.controller";
 import {updatePostByIdController} from "./controllers/updatePostById.controller";
 import {deletePostController} from "./controllers/deletePost.controller";
-import { createCommentForPost } from './controllers/createCommentForPost.controller'
+import { createCommentForPostController } from './controllers/createCommentForPost.controller'
 import { getCommentsController } from './controllers/getComments.controller'
 
 export const postsRouter = Router({})
@@ -34,7 +34,7 @@ postsRouter.post('/:postId/comments',
     authMiddleware,
     contentCommentValidation,
     inputValidationMiddleware,
-    createCommentForPost,
+    createCommentForPostController,
 )
 
 postsRouter.get('/',

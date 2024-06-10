@@ -12,7 +12,7 @@ export const SETTINGS = {
 	LOGIN_MAIL: process.env.LOGIN_MAIL || '',
 	PASS_MAIL: process.env.PASS_MAIL || '',
 	EXPIRATION: {
-		ACCESS_TOKEN: process.env.ACCESS_TOKEN_LIVE || '10s',
-		REFRESH_TOKEN: process.env.REFRESH_TOKEN_LIVE || '20s'
+		ACCESS_TOKEN: process.env.ACCESS_TOKEN_LIVE || '10m',
+		REFRESH_TOKEN: process.env.REFRESH_TOKEN_LIVE || '20m'
 	}
 }

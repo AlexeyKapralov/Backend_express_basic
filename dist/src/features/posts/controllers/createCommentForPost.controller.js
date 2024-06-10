@@ -9,14 +9,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createCommentForPost = void 0;
+exports.createCommentForPostController = void 0;
 const resultStatus_type_1 = require("../../../common/types/resultStatus.type");
 const http_status_codes_1 = require("http-status-codes");
 const postsCompositionRoot_1 = require("../postsCompositionRoot");
-const createCommentForPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const createCommentForPostController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield postsCompositionRoot_1.postsService.createComment(req.userId, req.params.postId, req.body);
     result.status === resultStatus_type_1.ResultStatus.Success
         ? res.status(http_status_codes_1.StatusCodes.CREATED).json(result.data)
         : res.status(http_status_codes_1.StatusCodes.NOT_FOUND).json();
 });
-exports.createCommentForPost = createCommentForPost;
+exports.createCommentForPostController = createCommentForPostController;

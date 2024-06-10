@@ -7,7 +7,7 @@ import {PostModel} from "../../posts/domain/post.entity";
 import {CommentsModel} from "../domain/comments.entity";
 
 export const commentsQueryRepository = {
-	async getComments(postId: string, query: IQueryModel): Promise<IPaginator<ICommentViewModel> | undefined> {
+	async getComments(postId: string, query: IQueryModel, userId: string = 'default'): Promise<IPaginator<ICommentViewModel> | undefined> {
 		const post = await PostModel.findOne({_id: postId})
 
 		if (!post) {
@@ -29,11 +29,15 @@ export const commentsQueryRepository = {
 			page: query.pageNumber!,
 			pageSize: query.pageSize!,
 			totalCount: commentsCount,
-			items: comments.map(getCommentView)
+			items: comments.map( i => getCommentView(i, userId))
 		}
 	},
-	async getCommentById(id:string): Promise<ICommentViewModel | undefined> {
+	async getCommentById(id:string, userId: string = 'default'): Promise<ICommentViewModel | undefined> {
+
 		const result = await CommentsModel.findOne({_id: id})
+		if (userId !== 'default') {
+			return result ? getCommentView(result, userId) : undefined
+		}
 		return result ? getCommentView(result) : undefined
 	}
 }

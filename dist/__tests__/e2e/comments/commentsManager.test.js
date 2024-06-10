@@ -27,7 +27,10 @@ exports.commentsManagerTest = {
                     },
                     postId: postId === 'post'
                         ? `postID`
-                        : postId
+                        : postId,
+                    likesCount: 0,
+                    dislikesCount: 0,
+                    likes: []
                 };
                 yield comments_entity_1.CommentsModel.create(comment);
             }

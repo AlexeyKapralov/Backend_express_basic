@@ -55,6 +55,11 @@ describe('comments integration tests', () => {
                 commentatorInfo: expect.objectContaining({
                     userId: userId,
                     userLogin: expect.any(String),
+                }),
+                likesInfo: expect.objectContaining({
+                    likesCount: expect.any(Number),
+                    dislikesCount: expect.any(Number),
+                    myStatus: expect.any(String)
                 })
             })
         });

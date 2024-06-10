@@ -66,7 +66,6 @@ describe('e2e test for devices', () => {
         const result = yield (0, supertest_1.agent)(app_1.app)
             .get(`${path_1.PATH.SECURITY}/devices`)
             .set('Cookie', [`refreshToken=${refreshToken}`]);
-        debugger;
         expect(result.body.length).toBe(4);
     }));
     it('Should delete another devices', () => __awaiter(void 0, void 0, void 0, function* () {

@@ -25,6 +25,7 @@ exports.db = {
                 console.log('it is ok');
             }
             catch (e) {
+                console.log(e);
                 console.log('no connection');
                 yield mongoose_1.default.disconnect();
             }

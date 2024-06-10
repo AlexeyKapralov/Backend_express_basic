@@ -9,10 +9,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.codeValidation = exports.contentCommentValidation = exports.postIdValidation = exports.blogIdInBodyValidation = exports.blogIdParamValidation = exports.contentValidation = exports.shortDescriptionValidation = exports.titleValidation = exports.websiteUrlValidation = exports.descriptionValidation = exports.nameValidation = exports.searchNameTermValidation = exports.searchEmailTermValidation = exports.searchLoginTermValidation = exports.pageSizeValidation = exports.pageNumberValidation = exports.sortDirectionValidation = exports.sortByValidation = exports.recoveryCodeValidation = exports.emailValidationForResend = exports.emailValidationForRegistration = exports.emailValidationForRecovery = exports.newPasswordValidation = exports.passwordValidation = exports.loginOrEmailValidation = exports.loginValidation = void 0;
+exports.likesStatusValidation = exports.codeValidation = exports.contentCommentValidation = exports.postIdValidation = exports.blogIdInBodyValidation = exports.blogIdParamValidation = exports.contentValidation = exports.shortDescriptionValidation = exports.titleValidation = exports.websiteUrlValidation = exports.descriptionValidation = exports.nameValidation = exports.searchNameTermValidation = exports.searchEmailTermValidation = exports.searchLoginTermValidation = exports.pageSizeValidation = exports.pageNumberValidation = exports.sortDirectionValidation = exports.sortByValidation = exports.recoveryCodeValidation = exports.emailValidationForResend = exports.emailValidationForRegistration = exports.emailValidationForRecovery = exports.newPasswordValidation = exports.passwordValidation = exports.loginOrEmailValidation = exports.loginValidation = void 0;
 const express_validator_1 = require("express-validator");
 const user_entity_1 = require("../../features/users/domain/user.entity");
 const blogs_entity_1 = require("../../features/blogs/domain/blogs.entity");
+const commentDb_model_1 = require("../../features/comments/models/commentDb.model");
 exports.loginValidation = (0, express_validator_1.body)(['login'])
     .trim()
     .isLength({ min: 3, max: 10 })
@@ -133,3 +134,6 @@ exports.codeValidation = (0, express_validator_1.body)('code')
         throw new Error('confirmation code expired');
     }
 }));
+exports.likesStatusValidation = (0, express_validator_1.body)('likeStatus')
+    .trim()
+    .isIn(Object.values(commentDb_model_1.LikeStatus));

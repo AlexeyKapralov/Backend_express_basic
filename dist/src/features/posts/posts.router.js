@@ -14,7 +14,7 @@ const createCommentForPost_controller_1 = require("./controllers/createCommentFo
 const getComments_controller_1 = require("./controllers/getComments.controller");
 exports.postsRouter = (0, express_1.Router)({});
 exports.postsRouter.get('/:id/comments', express_validation_1.pageNumberValidation, express_validation_1.pageSizeValidation, express_validation_1.sortByValidation, express_validation_1.sortDirectionValidation, getComments_controller_1.getCommentsController);
-exports.postsRouter.post('/:postId/comments', auth_middleware_1.authMiddleware, express_validation_1.contentCommentValidation, inputValidation_middleware_1.inputValidationMiddleware, createCommentForPost_controller_1.createCommentForPost);
+exports.postsRouter.post('/:postId/comments', auth_middleware_1.authMiddleware, express_validation_1.contentCommentValidation, inputValidation_middleware_1.inputValidationMiddleware, createCommentForPost_controller_1.createCommentForPostController);
 exports.postsRouter.get('/', express_validation_1.pageNumberValidation, express_validation_1.pageSizeValidation, express_validation_1.sortByValidation, express_validation_1.sortDirectionValidation, getPosts_controller_1.getPostsController);
 exports.postsRouter.post('/', auth_middleware_1.authMiddleware, express_validation_1.titleValidation, express_validation_1.shortDescriptionValidation, express_validation_1.contentValidation, express_validation_1.blogIdInBodyValidation, inputValidation_middleware_1.inputValidationMiddleware, createPost_controller_1.createPostController);
 exports.postsRouter.get('/:id', express_validation_1.postIdValidation, inputValidation_middleware_1.inputValidationMiddleware, getPostById_controller_1.getPostByIdController);

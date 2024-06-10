@@ -2,6 +2,7 @@ import {body, param, query} from 'express-validator'
 import {UsersModel} from "../../features/users/domain/user.entity";
 import {BlogModel} from "../../features/blogs/domain/blogs.entity";
 import {IUserDbModel} from "../../features/users/models/userDb.model";
+import {LikeStatus} from "../../features/comments/models/commentDb.model";
 
 export const loginValidation = body(['login'])
 	.trim()
@@ -134,4 +135,6 @@ export const codeValidation = body('code')
 			throw new Error('confirmation code expired')
 		}
 	})
-
+export const likesStatusValidation = body('likeStatus')
+	.trim()
+	.isIn( Object.values(LikeStatus))

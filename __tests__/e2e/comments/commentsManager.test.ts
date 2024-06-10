@@ -5,7 +5,7 @@ import {CommentsModel} from "../../../src/features/comments/domain/comments.enti
 export const commentsManagerTest = {
     async createComments(count: number, postId: string = 'post') {
         for (let i = 0; i < count; i++) {
-            const letter =  String.fromCharCode('A'.charCodeAt(0) + i)
+            const letter = String.fromCharCode('A'.charCodeAt(0) + i)
             const comment: ICommentDbModel = {
                 _id: new ObjectId().toString(),
                 createdAt: new Date().toISOString(),
@@ -16,7 +16,10 @@ export const commentsManagerTest = {
                 },
                 postId: postId === 'post'
                     ? `postID`
-                    : postId
+                    : postId,
+                likesCount: 0,
+                dislikesCount: 0,
+                likes: []
             }
             await CommentsModel.create(comment)
         }

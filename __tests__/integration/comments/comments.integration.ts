@@ -11,6 +11,7 @@ import {ICommentatorInfo} from "../../../src/features/comments/models/commentato
 import {CommentsModel} from "../../../src/features/comments/domain/comments.entity";
 import {postsService} from "../../../src/features/posts/postsCompositionRoot";
 import {commentsService} from "../../../src/features/comments/commentsCompositionRoot";
+import {ILikeInfoViewModel} from "../../../src/features/comments/models/commentDb.model";
 
 describe('comments integration tests', () => {
     let tokens
@@ -55,6 +56,11 @@ describe('comments integration tests', () => {
                 commentatorInfo: expect.objectContaining<ICommentatorInfo>({
                     userId: userId!,
                     userLogin: expect.any(String),
+                }),
+                likesInfo: expect.objectContaining<ILikeInfoViewModel>({
+                    likesCount: expect.any(Number),
+                    dislikesCount: expect.any(Number),
+                    myStatus: expect.any(String)
                 })
             })
         })

@@ -85,7 +85,6 @@ describe('e2e test for devices', () => {
             .get(`${PATH.SECURITY}/devices`)
             .set('Cookie', [`refreshToken=${refreshToken}`])
 
-        debugger
         expect(result.body.length).toBe(4)
     })
 

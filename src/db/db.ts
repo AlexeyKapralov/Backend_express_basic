@@ -12,6 +12,7 @@ export const db = {
             await mongoose.connect(mongoURI)
             console.log('it is ok')
         } catch (e) {
+            console.log(e)
             console.log('no connection')
             await mongoose.disconnect()
         }

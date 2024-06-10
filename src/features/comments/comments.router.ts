@@ -3,8 +3,9 @@ import { getCommentByIdController } from './controllers/getCommentById.controlle
 import { updateCommentByIdController } from './controllers/updateCommentById.controller'
 import { deleteCommentByIdController } from './controllers/deleteCommentById.controller'
 import { authMiddleware } from '../../middlewares/auth.middleware'
-import { contentCommentValidation } from '../../common/validation/express-validation'
+import {contentCommentValidation, likesStatusValidation} from '../../common/validation/express-validation'
 import { inputValidationMiddleware } from '../../middlewares/inputValidation.middleware'
+import {likeStatusController} from "./controllers/likeStatus.controller";
 
 export const commentsRouter = Router({})
 
@@ -18,4 +19,14 @@ commentsRouter.delete(`/:commentId`,
 	authMiddleware,
 	deleteCommentByIdController
 )
-commentsRouter.get(`/:commentId`, getCommentByIdController)
+commentsRouter.get(`/:commentId`,
+	getCommentByIdController
+)
+
+
+commentsRouter.put(`/:commentId/like-status`,
+	authMiddleware,
+	likesStatusValidation,
+	inputValidationMiddleware,
+	likeStatusController
+)

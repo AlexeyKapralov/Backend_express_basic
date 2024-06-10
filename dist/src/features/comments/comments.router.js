@@ -8,7 +8,9 @@ const deleteCommentById_controller_1 = require("./controllers/deleteCommentById.
 const auth_middleware_1 = require("../../middlewares/auth.middleware");
 const express_validation_1 = require("../../common/validation/express-validation");
 const inputValidation_middleware_1 = require("../../middlewares/inputValidation.middleware");
+const likeStatus_controller_1 = require("./controllers/likeStatus.controller");
 exports.commentsRouter = (0, express_1.Router)({});
 exports.commentsRouter.put(`/:commentId`, auth_middleware_1.authMiddleware, express_validation_1.contentCommentValidation, inputValidation_middleware_1.inputValidationMiddleware, updateCommentById_controller_1.updateCommentByIdController);
 exports.commentsRouter.delete(`/:commentId`, auth_middleware_1.authMiddleware, deleteCommentById_controller_1.deleteCommentByIdController);
 exports.commentsRouter.get(`/:commentId`, getCommentById_controller_1.getCommentByIdController);
+exports.commentsRouter.put(`/:commentId/like-status`, auth_middleware_1.authMiddleware, express_validation_1.likesStatusValidation, inputValidation_middleware_1.inputValidationMiddleware, likeStatus_controller_1.likeStatusController);
