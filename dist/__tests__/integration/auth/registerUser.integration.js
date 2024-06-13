@@ -11,11 +11,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongodb_memory_server_1 = require("mongodb-memory-server");
 const db_1 = require("../../../src/db/db");
-const email_service_1 = require("../../../src/common/adapters/email.service");
 const resultStatus_type_1 = require("../../../src/common/types/resultStatus.type");
 const user_entity_1 = require("../../../src/features/users/domain/user.entity");
-const authCompositionRoot_1 = require("../../../src/features/auth/authCompositionRoot");
+const ioc_1 = require("../../../src/ioc");
+const email_service_1 = require("../../../src/common/adapters/email.service");
+const auth_service_1 = require("../../../src/features/auth/service/auth.service");
 describe('Integration Auth', () => {
+    const emailService = ioc_1.container.resolve(email_service_1.EmailService);
+    const authService = ioc_1.container.resolve(auth_service_1.AuthService);
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
         const mongod = yield mongodb_memory_server_1.MongoMemoryServer.create();
         const uri = mongod.getUri();
@@ -23,7 +26,7 @@ describe('Integration Auth', () => {
     }));
     beforeEach(() => __awaiter(void 0, void 0, void 0, function* () {
         yield db_1.db.drop();
-        email_service_1.emailService.sendConfirmationCode = jest.fn().mockImplementation((email, subject, confirmationCode) => {
+        emailService.sendConfirmationCode = jest.fn().mockImplementation((email, subject, confirmationCode) => {
             return true;
         });
     }));
@@ -39,14 +42,14 @@ describe('Integration Auth', () => {
             email: 'alewka24@gmail.com',
             password: 'qwerty1234@'
         };
-        const result = yield authCompositionRoot_1.authService.registrationUser(data);
+        const result = yield authService.registrationUser(data);
         expect(result).toEqual({
             status: resultStatus_type_1.ResultStatus.Success,
             data: null
         });
         const dbUser = user_entity_1.UsersModel.find({ login: data.login, email: data.email });
         expect(dbUser).toBeDefined();
-        expect(email_service_1.emailService.sendConfirmationCode).toHaveBeenCalled();
-        expect(email_service_1.emailService.sendConfirmationCode).toHaveBeenCalledTimes(1);
+        expect(emailService.sendConfirmationCode).toHaveBeenCalled();
+        expect(emailService.sendConfirmationCode).toHaveBeenCalledTimes(1);
     }));
 });

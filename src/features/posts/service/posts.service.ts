@@ -9,13 +9,15 @@ import {BlogsRepository} from "../../blogs/repository/blogs.repository";
 import {PostsRepository} from "../repository/posts.repository";
 import {UsersRepository} from "../../users/repository/users.repository";
 import {CommentsRepository} from "../../comments/repository/comments.repository";
+import {inject, injectable} from "inversify";
 
+@injectable()
 export class PostsService {
     constructor(
-        protected blogsRepository: BlogsRepository,
-        protected postsRepository: PostsRepository,
-        protected usersRepository: UsersRepository,
-        protected commentsRepository: CommentsRepository,
+        @inject(BlogsRepository) protected blogsRepository: BlogsRepository,
+        @inject(PostsRepository) protected postsRepository: PostsRepository,
+        @inject(UsersRepository) protected usersRepository: UsersRepository,
+        @inject(CommentsRepository) protected commentsRepository: CommentsRepository,
     ) {
     }
 

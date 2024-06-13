@@ -1,13 +1,15 @@
 import jwt from "jsonwebtoken";
 import {SETTINGS} from "../config/settings";
+import {injectable} from "inversify";
 
-export const jwtService = {
+@injectable()
+export class JwtService {
     createAccessToken(userId: string): string {
         return jwt.sign({userId}, SETTINGS.SECRET_JWT, {expiresIn: SETTINGS.EXPIRATION.ACCESS_TOKEN});
-    },
+    }
     createRefreshToken(deviceId: string, userId: string): string {
         return jwt.sign({deviceId, userId}, SETTINGS.SECRET_JWT, {expiresIn: SETTINGS.EXPIRATION.REFRESH_TOKEN});
-    },
+    }
     getUserIdByToken(token: string): string | null {
         try {
             const result: any = jwt.verify(token, SETTINGS.SECRET_JWT)
@@ -15,7 +17,7 @@ export const jwtService = {
         } catch (e) {
             return null
         }
-    },
+    }
     verifyAndDecodeToken(token: string) {
         try {
             const result:any = jwt.verify(token, SETTINGS.SECRET_JWT)
@@ -29,7 +31,7 @@ export const jwtService = {
         } catch (e) {
             return null
         }
-    },
+    }
     checkRefreshToken(token: string): boolean {
         try {
             jwt.verify(token, SETTINGS.SECRET_JWT)

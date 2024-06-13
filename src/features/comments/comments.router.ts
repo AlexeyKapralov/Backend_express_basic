@@ -1,32 +1,29 @@
 import { Router } from 'express'
-import { getCommentByIdController } from './controllers/getCommentById.controller'
-import { updateCommentByIdController } from './controllers/updateCommentById.controller'
-import { deleteCommentByIdController } from './controllers/deleteCommentById.controller'
 import { authMiddleware } from '../../middlewares/auth.middleware'
 import {contentCommentValidation, likesStatusValidation} from '../../common/validation/express-validation'
 import { inputValidationMiddleware } from '../../middlewares/inputValidation.middleware'
-import {likeStatusController} from "./controllers/likeStatus.controller";
+import {container} from "../../ioc";
+import {CommentsController} from "./comments.controller";
 
 export const commentsRouter = Router({})
+const commentsController = container.resolve(CommentsController)
 
 commentsRouter.put(`/:commentId`,
 	authMiddleware,
 	contentCommentValidation,
 	inputValidationMiddleware,
-	updateCommentByIdController
+	commentsController.getCommentById.bind(commentsController)
 )
 commentsRouter.delete(`/:commentId`,
 	authMiddleware,
-	deleteCommentByIdController
+	commentsController.deleteCommentById.bind(commentsController)
 )
 commentsRouter.get(`/:commentId`,
-	getCommentByIdController
+	commentsController.getCommentById.bind(commentsController)
 )
-
-
 commentsRouter.put(`/:commentId/like-status`,
 	authMiddleware,
 	likesStatusValidation,
 	inputValidationMiddleware,
-	likeStatusController
+	commentsController.likeStatusController.bind(commentsController)
 )

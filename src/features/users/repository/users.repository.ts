@@ -5,7 +5,9 @@ import {add} from 'date-fns'
 import {SETTINGS} from '../../../common/config/settings'
 import {UsersModel} from "../domain/user.entity";
 import {IUserDbModel} from "../models/userDb.model";
+import {injectable} from "inversify";
 
+@injectable()
 export class UsersRepository {
 
     async findUserWithPass(loginOrEmail: string): Promise<IUserDbModel | undefined> {

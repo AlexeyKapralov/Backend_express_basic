@@ -1,4 +1,10 @@
 "use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -9,10 +15,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.usersQueryRepository = void 0;
+exports.UsersQueryRepository = void 0;
 const userMappers_1 = require("../mappers/userMappers");
 const user_entity_1 = require("../domain/user.entity");
-exports.usersQueryRepository = {
+const inversify_1 = require("inversify");
+let UsersQueryRepository = class UsersQueryRepository {
     findUsers(query) {
         return __awaiter(this, void 0, void 0, function* () {
             const conditions = [];
@@ -44,14 +51,14 @@ exports.usersQueryRepository = {
                 items: res ? res.map(userMappers_1.getUserViewModel) : []
             };
         });
-    },
+    }
     findUserById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const res = yield user_entity_1.UsersModel
                 .findOne({ _id: id });
             return res ? (0, userMappers_1.getUserViewModel)(res) : undefined;
         });
-    },
+    }
     findUserByLoginOrEmail(loginOrEmail) {
         return __awaiter(this, void 0, void 0, function* () {
             const user = yield user_entity_1.UsersModel.findOne({
@@ -59,5 +66,9 @@ exports.usersQueryRepository = {
             });
             return user !== null ? (0, userMappers_1.getUserViewModel)(user) : undefined;
         });
-    },
+    }
 };
+exports.UsersQueryRepository = UsersQueryRepository;
+exports.UsersQueryRepository = UsersQueryRepository = __decorate([
+    (0, inversify_1.injectable)()
+], UsersQueryRepository);

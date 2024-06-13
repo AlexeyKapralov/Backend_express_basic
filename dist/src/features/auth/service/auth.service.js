@@ -1,4 +1,16 @@
 "use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -10,23 +22,30 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = void 0;
-const bcrypt_service_1 = require("../../../common/adapters/bcrypt.service");
+const users_repository_1 = require("../../users/repository/users.repository");
 const resultStatus_type_1 = require("../../../common/types/resultStatus.type");
-const email_service_1 = require("../../../common/adapters/email.service");
 const uuid_1 = require("uuid");
 const date_fns_1 = require("date-fns");
 const settings_1 = require("../../../common/config/settings");
-const jwt_service_1 = require("../../../common/adapters/jwt.service");
 const user_entity_1 = require("../../users/domain/user.entity");
-const devicesCompositionRoot_1 = require("../../securityDevices/devicesCompositionRoot");
-class AuthService {
-    constructor(usersRepository, devicesRepository) {
+const devices_repository_1 = require("../../securityDevices/repository/devices.repository");
+const inversify_1 = require("inversify");
+const email_service_1 = require("../../../common/adapters/email.service");
+const bcrypt_service_1 = require("../../../common/adapters/bcrypt.service");
+const jwtService_1 = require("../../../common/adapters/jwtService");
+const devicesService_1 = require("../../securityDevices/service/devicesService");
+let AuthService = class AuthService {
+    constructor(usersRepository, devicesRepository, emailService, bcryptService, jwtService, devicesService) {
         this.usersRepository = usersRepository;
         this.devicesRepository = devicesRepository;
+        this.emailService = emailService;
+        this.bcryptService = bcryptService;
+        this.jwtService = jwtService;
+        this.devicesService = devicesService;
     }
     registrationUser(data) {
         return __awaiter(this, void 0, void 0, function* () {
-            const passwordHash = yield bcrypt_service_1.bcryptService.createPasswordHash(data.password);
+            const passwordHash = yield this.bcryptService.createPasswordHash(data.password);
             const user = yield this.usersRepository.createUser(data, passwordHash);
             if (user) {
                 const html = `
@@ -36,7 +55,7 @@ class AuthService {
 				 </p>
 			`;
                 try {
-                    email_service_1.emailService.sendConfirmationCode(data.email, 'Confirmation code', html);
+                    this.emailService.sendConfirmationCode(data.email, 'Confirmation code', html);
                 }
                 catch (e) {
                     console.error(`some problems with send confirm code ${e}`);
@@ -82,7 +101,7 @@ class AuthService {
 				 </p>
 			`;
                 try {
-                    email_service_1.emailService.sendConfirmationCode(user.email, 'Confirmation code', html);
+                    this.emailService.sendConfirmationCode(user.email, 'Confirmation code', html);
                 }
                 catch (e) {
                     console.error(`some problems with send confirm code ${e}`);
@@ -124,7 +143,7 @@ class AuthService {
           </p>
         `;
             try {
-                email_service_1.emailService.sendConfirmationCode(email, 'Password recovery', html);
+                this.emailService.sendConfirmationCode(email, 'Password recovery', html);
             }
             catch (e) {
                 console.error(`some problems with send confirm code ${e}`);
@@ -144,7 +163,7 @@ class AuthService {
                     data: null
                 };
             }
-            const isNewPassword = bcrypt_service_1.bcryptService.comparePasswordsHash(password, user.password);
+            const isNewPassword = this.bcryptService.comparePasswordsHash(password, user.password);
             if (!isNewPassword) {
                 return {
                     status: resultStatus_type_1.ResultStatus.Forbidden,
@@ -152,7 +171,7 @@ class AuthService {
                     data: null
                 };
             }
-            const passwordHash = yield bcrypt_service_1.bcryptService.createPasswordHash(password);
+            const passwordHash = yield this.bcryptService.createPasswordHash(password);
             const isUpdatePassword = yield this.usersRepository.updatePassword(user._id, passwordHash);
             if (!isUpdatePassword) {
                 return {
@@ -175,7 +194,7 @@ class AuthService {
                     status: resultStatus_type_1.ResultStatus.NotFound
                 };
             }
-            const isTrueHash = yield bcrypt_service_1.bcryptService.comparePasswordsHash(data.password, user.password);
+            const isTrueHash = yield this.bcryptService.comparePasswordsHash(data.password, user.password);
             if (!isTrueHash) {
                 return {
                     status: resultStatus_type_1.ResultStatus.BadRequest,
@@ -189,9 +208,9 @@ class AuthService {
                 deviceName: deviceName,
                 ip: ip
             };
-            const accessToken = jwt_service_1.jwtService.createAccessToken(user._id);
-            const refreshToken = jwt_service_1.jwtService.createRefreshToken(device.deviceId, device.userId);
-            const refreshTokenPayload = jwt_service_1.jwtService.verifyAndDecodeToken(refreshToken);
+            const accessToken = this.jwtService.createAccessToken(user._id);
+            const refreshToken = this.jwtService.createRefreshToken(device.deviceId, device.userId);
+            const refreshTokenPayload = this.jwtService.verifyAndDecodeToken(refreshToken);
             if (!refreshTokenPayload) {
                 return {
                     status: resultStatus_type_1.ResultStatus.Unauthorized,
@@ -222,7 +241,7 @@ class AuthService {
     }
     logout(deviceId, userId, iat) {
         return __awaiter(this, void 0, void 0, function* () {
-            const currentDevice = yield devicesCompositionRoot_1.devicesService.getDevice(deviceId, userId, iat);
+            const currentDevice = yield this.devicesService.getDevice(deviceId, userId, iat);
             if (currentDevice.status === resultStatus_type_1.ResultStatus.NotFound) {
                 return {
                     status: resultStatus_type_1.ResultStatus.Unauthorized,
@@ -251,9 +270,9 @@ class AuthService {
                     data: null
                 };
             }
-            const newAccessToken = jwt_service_1.jwtService.createAccessToken(device.userId);
-            const newRefreshToken = jwt_service_1.jwtService.createRefreshToken(device.deviceId, device.userId);
-            const newPayload = jwt_service_1.jwtService.verifyAndDecodeToken(newRefreshToken);
+            const newAccessToken = this.jwtService.createAccessToken(device.userId);
+            const newRefreshToken = this.jwtService.createRefreshToken(device.deviceId, device.userId);
+            const newPayload = this.jwtService.verifyAndDecodeToken(newRefreshToken);
             const fullDevice = {
                 userId: device.userId,
                 deviceId: device.deviceId,
@@ -277,5 +296,20 @@ class AuthService {
             }
         });
     }
-}
+};
 exports.AuthService = AuthService;
+exports.AuthService = AuthService = __decorate([
+    (0, inversify_1.injectable)(),
+    __param(0, (0, inversify_1.inject)(users_repository_1.UsersRepository)),
+    __param(1, (0, inversify_1.inject)(devices_repository_1.DevicesRepository)),
+    __param(2, (0, inversify_1.inject)(email_service_1.EmailService)),
+    __param(3, (0, inversify_1.inject)(bcrypt_service_1.BcryptService)),
+    __param(4, (0, inversify_1.inject)(jwtService_1.JwtService)),
+    __param(5, (0, inversify_1.inject)(devicesService_1.DevicesService)),
+    __metadata("design:paramtypes", [users_repository_1.UsersRepository,
+        devices_repository_1.DevicesRepository,
+        email_service_1.EmailService,
+        bcrypt_service_1.BcryptService,
+        jwtService_1.JwtService,
+        devicesService_1.DevicesService])
+], AuthService);

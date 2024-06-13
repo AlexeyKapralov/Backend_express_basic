@@ -5,11 +5,11 @@ import {ICommentInputModel} from '../models/commentInput.model'
 import {UsersRepository} from "../../users/repository/users.repository";
 import {CommentsRepository} from "../repository/comments.repository";
 import {ILikeDbModel, LikeStatus} from "../models/commentDb.model";
+import {inject, injectable} from "inversify";
 
+@injectable()
 export class CommentsService {
-	protected usersRepository
-	protected commentsRepository
-	constructor(usersRepository: UsersRepository, commentsRepository: CommentsRepository) {
+	constructor(@inject(UsersRepository) protected usersRepository: UsersRepository, @inject(CommentsRepository) protected commentsRepository: CommentsRepository) {
 		this.usersRepository = usersRepository
 		this.commentsRepository = commentsRepository
 	}

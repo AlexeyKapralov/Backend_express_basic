@@ -1,22 +1,24 @@
-import { bcryptService } from '../../../common/adapters/bcrypt.service'
 import { IUserInputModel } from '../models/userInput.model'
 import { IUserViewModel } from '../models/userView.model'
 import {UsersRepository} from '../repository/users.repository'
 import { ResultType } from '../../../common/types/result.type'
 import { ResultStatus } from '../../../common/types/resultStatus.type'
 import {getUserViewModel} from "../mappers/userMappers";
+import {inject, injectable} from "inversify";
+import {BcryptService} from "../../../common/adapters/bcrypt.service";
 
+@injectable()
 export class UsersService {
-		protected usersRepository
 
-		constructor(usersRepository: UsersRepository) {
-			this.usersRepository = usersRepository
-		}
+		constructor(
+			@inject(UsersRepository) protected usersRepository: UsersRepository,
+			@inject(BcryptService) protected bcryptService: BcryptService
+		) {}
 
 		async createUser(
 			data: IUserInputModel
 		): Promise<ResultType<IUserViewModel | null>> {
-			const passwordHash = await bcryptService.createPasswordHash(data.password)
+			const passwordHash = await this.bcryptService.createPasswordHash(data.password)
 			const user = await this.usersRepository.createUser(data, passwordHash, 'admin')
 			return user
 				? {

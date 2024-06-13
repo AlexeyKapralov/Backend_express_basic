@@ -1,6 +1,8 @@
 import {IDeviceViewModel} from "../models/deviceView.model";
 import {DeviceModel} from "../domain/devices.entity";
+import {injectable} from "inversify";
 
+@injectable()
 export class DevicesQueryRepository {
     async getSecurityDevices(userId: string): Promise<Array<IDeviceViewModel>> {
         return DeviceModel.aggregate([

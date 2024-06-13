@@ -5,9 +5,12 @@ import {IPostViewModel} from "../models/postView.model";
 import {getPostViewModel} from "../mappers/postMappers";
 import {PostModel} from "../domain/post.entity";
 import {BlogsRepository} from "../../blogs/repository/blogs.repository";
+import {inject, injectable} from "inversify";
 
+@injectable()
 export class PostsRepository {
-    constructor(protected blogsRepository: BlogsRepository) {
+    constructor(
+        @inject(BlogsRepository) protected blogsRepository: BlogsRepository) {
     }
     async getPostById(id: string): Promise<WithId<IPostDbModel> | undefined> {
         const result = await PostModel.findOne({

@@ -1,9 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const jwt_service_1 = require("../../../src/common/adapters/jwt.service");
+const jwtService_1 = require("../../../src/common/adapters/jwtService");
+const ioc_1 = require("../../../src/ioc");
 describe('refresh token test', () => {
+    const jwtService = ioc_1.container.resolve(jwtService_1.JwtService);
     it.skip('should refresh token', () => {
-        jwt_service_1.jwtService.verifyAndDecodeToken = jest.fn().mockImplementation(() => {
+        jwtService.verifyAndDecodeToken = jest.fn().mockImplementation(() => {
             return {
                 deviceId: '123',
                 userId: '1',

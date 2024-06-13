@@ -4,7 +4,9 @@ import {ObjectId, WithId} from 'mongodb'
 import {IPostDbModel} from "../../posts/models/postDb.model";
 import {CommentsModel} from "../domain/comments.entity";
 import {IUserDbModel} from "../../users/models/userDb.model";
+import {injectable} from "inversify";
 
+@injectable()
 export class CommentsRepository {
 
     // async getCommentById(id: string): Promise<ICommentDbModel | undefined> {

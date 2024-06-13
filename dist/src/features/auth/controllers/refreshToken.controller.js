@@ -13,11 +13,11 @@ exports.refreshTokenController = void 0;
 const resultStatus_type_1 = require("../../../common/types/resultStatus.type");
 const http_status_codes_1 = require("http-status-codes");
 const generators_1 = require("../../../common/utils/generators");
-const jwt_service_1 = require("../../../common/adapters/jwt.service");
+const jwtService_1 = require("../../../common/adapters/jwtService");
 const authCompositionRoot_1 = require("../authCompositionRoot");
 const refreshTokenController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const refreshToken = req.cookies.refreshToken;
-    const tokenPayload = jwt_service_1.jwtService.verifyAndDecodeToken(refreshToken);
+    const tokenPayload = jwtService_1.JwtService.verifyAndDecodeToken(refreshToken);
     if (!tokenPayload) {
         res.status(http_status_codes_1.StatusCodes.UNAUTHORIZED).json();
         return;

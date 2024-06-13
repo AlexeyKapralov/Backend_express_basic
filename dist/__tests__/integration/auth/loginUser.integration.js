@@ -12,16 +12,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongodb_memory_server_1 = require("mongodb-memory-server");
 const db_1 = require("../../../src/db/db");
 const globals_1 = require("@jest/globals");
-const bcrypt_service_1 = require("../../../src/common/adapters/bcrypt.service");
 const userManager_test_1 = require("../../e2e/users/userManager.test");
 const authManager_test_1 = require("../../e2e/auth/authManager.test");
 const settings_1 = require("../../../src/common/config/settings");
-const jwt_service_1 = require("../../../src/common/adapters/jwt.service");
+const ioc_1 = require("../../../src/ioc");
+const jwtService_1 = require("../../../src/common/adapters/jwtService");
 const users_repository_1 = require("../../../src/features/users/repository/users.repository");
-const authCompositionRoot_1 = require("../../../src/features/auth/authCompositionRoot");
-const auth_service_1 = require("../../../src/features/auth/service/auth.service");
 const devices_repository_1 = require("../../../src/features/securityDevices/repository/devices.repository");
+const auth_service_1 = require("../../../src/features/auth/service/auth.service");
+const bcrypt_service_1 = require("../../../src/common/adapters/bcrypt.service");
 describe('Login User', () => {
+    const jwtService = ioc_1.container.resolve(jwtService_1.JwtService);
+    const usersRepository = ioc_1.container.resolve(users_repository_1.UsersRepository);
+    const devicesRepository = ioc_1.container.resolve(devices_repository_1.DevicesRepository);
+    const authService = ioc_1.container.resolve(auth_service_1.AuthService);
+    const bcryptService = ioc_1.container.resolve(bcrypt_service_1.BcryptService);
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
         const mongod = yield mongodb_memory_server_1.MongoMemoryServer.create();
         const uri = mongod.getUri();
@@ -41,10 +46,6 @@ describe('Login User', () => {
         done();
     });
     it('should login user', () => __awaiter(void 0, void 0, void 0, function* () {
-        //todo корректно ли я здесь создаю новый класс с его зависимостями и переопределяю новый метод, просто когда я сделал только мок findUserWithPass, у меня не работало
-        const usersRepository = new users_repository_1.UsersRepository();
-        const devicesRepository = new devices_repository_1.DevicesRepository();
-        const authService = new auth_service_1.AuthService(usersRepository, devicesRepository);
         usersRepository.findUserWithPass = globals_1.jest.fn().mockImplementation(() => __awaiter(void 0, void 0, void 0, function* () {
             return {
                 _id: 'id',
@@ -57,7 +58,7 @@ describe('Login User', () => {
                 isConfirmed: true
             };
         }));
-        bcrypt_service_1.bcryptService.comparePasswordsHash = globals_1.jest.fn()
+        bcryptService.comparePasswordsHash = globals_1.jest.fn()
             .mockImplementation((reqPassPlainText, dbPassHash) => __awaiter(void 0, void 0, void 0, function* () {
             return true;
         }));
@@ -82,8 +83,8 @@ describe('Login User', () => {
         };
         const tokens = yield authManager_test_1.authManagerTest.authUser(loginInputData);
         yield new Promise(resolve => setTimeout(resolve, 1000));
-        const tokenPayload = jwt_service_1.jwtService.verifyAndDecodeToken(tokens.refreshToken);
-        const result = yield authCompositionRoot_1.authService.refreshToken(tokenPayload.deviceId, tokenPayload.userId, tokenPayload.iat);
+        const tokenPayload = jwtService.verifyAndDecodeToken(tokens.refreshToken);
+        const result = yield authService.refreshToken(tokenPayload.deviceId, tokenPayload.userId, tokenPayload.iat);
         expect(tokens.refreshToken).not.toBe(result.data.refreshToken);
     }));
     it(`shouldn't update refresh token after expired time`, () => __awaiter(void 0, void 0, void 0, function* () {
@@ -100,7 +101,7 @@ describe('Login User', () => {
         };
         const tokens = yield authManager_test_1.authManagerTest.authUser(loginInputData);
         yield new Promise(resolve => setTimeout(resolve, 2000));
-        const tokenPayload = jwt_service_1.jwtService.verifyAndDecodeToken(tokens.refreshToken);
+        const tokenPayload = jwtService.verifyAndDecodeToken(tokens.refreshToken);
         expect(tokenPayload).toBeNull();
     }));
 });

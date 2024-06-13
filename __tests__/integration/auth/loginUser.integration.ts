@@ -1,17 +1,24 @@
 import {MongoMemoryServer} from 'mongodb-memory-server'
 import {db} from '../../../src/db/db'
 import {jest} from "@jest/globals";
-import {bcryptService} from "../../../src/common/adapters/bcrypt.service";
 import {userManagerTest} from "../../e2e/users/userManager.test";
 import {authManagerTest} from "../../e2e/auth/authManager.test";
 import {SETTINGS} from "../../../src/common/config/settings";
-import {jwtService} from "../../../src/common/adapters/jwt.service";
+import {container} from "../../../src/ioc";
+import {JwtService} from "../../../src/common/adapters/jwtService";
 import {UsersRepository} from "../../../src/features/users/repository/users.repository";
-import {authService} from "../../../src/features/auth/authCompositionRoot";
-import {AuthService} from "../../../src/features/auth/service/auth.service";
 import {DevicesRepository} from "../../../src/features/securityDevices/repository/devices.repository";
+import {AuthService} from "../../../src/features/auth/service/auth.service";
+import {BcryptService} from "../../../src/common/adapters/bcrypt.service";
 
 describe('Login User', () => {
+
+    const jwtService = container.resolve(JwtService);
+    const usersRepository = container.resolve(UsersRepository)
+    const devicesRepository = container.resolve(DevicesRepository)
+    const authService = container.resolve(AuthService)
+    const bcryptService = container.resolve(BcryptService)
+
     beforeAll(async () => {
         const mongod = await MongoMemoryServer.create()
         const uri = mongod.getUri()
@@ -36,10 +43,6 @@ describe('Login User', () => {
     })
 
     it('should login user', async () => {
-        //todo корректно ли я здесь создаю новый класс с его зависимостями и переопределяю новый метод, просто когда я сделал только мок findUserWithPass, у меня не работало
-        const usersRepository = new UsersRepository()
-        const devicesRepository = new DevicesRepository()
-        const authService = new AuthService(usersRepository, devicesRepository)
         usersRepository.findUserWithPass = jest.fn<typeof usersRepository.findUserWithPass>().mockImplementation(async () => {
             return {
                 _id: 'id',

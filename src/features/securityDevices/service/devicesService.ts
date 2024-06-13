@@ -4,11 +4,13 @@ import {ResultType} from "../../../common/types/result.type";
 import {ResultStatus} from "../../../common/types/resultStatus.type";
 import {DevicesRepository} from "../repository/devices.repository";
 import {IDeviceDbModel} from "../models/deviceDb.model";
+import {inject, injectable} from "inversify";
 
+@injectable()
 export class DevicesService {
     constructor(
-        protected devicesRepository: DevicesRepository,
-        protected devicesQueryRepository: DevicesQueryRepository
+        @inject(DevicesRepository) protected devicesRepository: DevicesRepository,
+        @inject(DevicesQueryRepository) protected devicesQueryRepository: DevicesQueryRepository
     ) {}
 
     async getDevice(deviceId: string, userId: string, iat: number): Promise<ResultType<IDeviceDbModel | null>> {

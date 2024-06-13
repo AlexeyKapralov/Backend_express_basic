@@ -15,9 +15,12 @@ const userManager_test_1 = require("../../e2e/users/userManager.test");
 const settings_1 = require("../../../src/common/config/settings");
 const authManager_test_1 = require("../../e2e/auth/authManager.test");
 const resultStatus_type_1 = require("../../../src/common/types/resultStatus.type");
-const jwt_service_1 = require("../../../src/common/adapters/jwt.service");
-const authCompositionRoot_1 = require("../../../src/features/auth/authCompositionRoot");
+const jwtService_1 = require("../../../src/common/adapters/jwtService");
+const ioc_1 = require("../../../src/ioc");
+const auth_service_1 = require("../../../src/features/auth/service/auth.service");
 describe('refresh Token integration test', () => {
+    const jwtService = ioc_1.container.resolve(jwtService_1.JwtService);
+    const authService = ioc_1.container.resolve(auth_service_1.AuthService);
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
         const mongod = yield mongodb_memory_server_1.MongoMemoryServer.create();
         const uri = mongod.getUri();
@@ -42,9 +45,9 @@ describe('refresh Token integration test', () => {
         const tokens = yield authManager_test_1.authManagerTest.authUser({ password: inputData.password, loginOrEmail: inputData.login });
         //todo почему ниже не работает деструктуризация
         // const {deviceId, userId} = jwtService.verifyAndDecodeToken(tokens!.refreshToken)
-        const tokenPayload = jwt_service_1.jwtService.verifyAndDecodeToken(tokens.refreshToken);
+        const tokenPayload = jwtService.verifyAndDecodeToken(tokens.refreshToken);
         yield new Promise(resolve => setTimeout(resolve, 1000));
-        let newTokens = yield authCompositionRoot_1.authService.refreshToken(tokenPayload.deviceId, tokenPayload.userId, tokenPayload.iat);
+        let newTokens = yield authService.refreshToken(tokenPayload.deviceId, tokenPayload.userId, tokenPayload.iat);
         expect(newTokens.data).not.toBe(tokens);
         expect(newTokens.status).toBe(resultStatus_type_1.ResultStatus.Success);
     }));

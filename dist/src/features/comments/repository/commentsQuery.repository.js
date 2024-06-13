@@ -1,4 +1,10 @@
 "use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -9,11 +15,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.commentsQueryRepository = void 0;
+exports.CommentsQueryRepository = void 0;
 const commentsMappers_1 = require("../mappers/commentsMappers");
 const post_entity_1 = require("../../posts/domain/post.entity");
 const comments_entity_1 = require("../domain/comments.entity");
-exports.commentsQueryRepository = {
+const inversify_1 = require("inversify");
+let CommentsQueryRepository = class CommentsQueryRepository {
     getComments(postId_1, query_1) {
         return __awaiter(this, arguments, void 0, function* (postId, query, userId = 'default') {
             const post = yield post_entity_1.PostModel.findOne({ _id: postId });
@@ -36,7 +43,7 @@ exports.commentsQueryRepository = {
                 items: comments.map(i => (0, commentsMappers_1.getCommentView)(i, userId))
             };
         });
-    },
+    }
     getCommentById(id_1) {
         return __awaiter(this, arguments, void 0, function* (id, userId = 'default') {
             const result = yield comments_entity_1.CommentsModel.findOne({ _id: id });
@@ -47,3 +54,7 @@ exports.commentsQueryRepository = {
         });
     }
 };
+exports.CommentsQueryRepository = CommentsQueryRepository;
+exports.CommentsQueryRepository = CommentsQueryRepository = __decorate([
+    (0, inversify_1.injectable)()
+], CommentsQueryRepository);

@@ -1,13 +1,17 @@
 import {MongoMemoryServer} from 'mongodb-memory-server'
 import {db} from '../../../src/db/db'
 import {IUserInputModel} from '../../../src/features/users/models/userInput.model'
-import {emailService} from '../../../src/common/adapters/email.service'
 import {ResultType} from '../../../src/common/types/result.type'
 import {ResultStatus} from '../../../src/common/types/resultStatus.type'
 import {UsersModel} from "../../../src/features/users/domain/user.entity";
-import {authService} from "../../../src/features/auth/authCompositionRoot";
+import {container} from "../../../src/ioc";
+import {EmailService} from "../../../src/common/adapters/email.service";
+import {AuthService} from "../../../src/features/auth/service/auth.service";
 
 describe('Integration Auth', () => {
+	const emailService = container.resolve(EmailService)
+	const authService = container.resolve(AuthService)
+
 	beforeAll(async () => {
 		const mongod = await MongoMemoryServer.create()
 		const uri = mongod.getUri()

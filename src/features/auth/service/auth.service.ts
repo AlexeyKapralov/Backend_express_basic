@@ -1,31 +1,36 @@
-import {bcryptService} from '../../../common/adapters/bcrypt.service'
 import {UsersRepository} from '../../users/repository/users.repository'
 import {ILoginInputModel} from '../models/loginInput.model'
 import {ResultType} from '../../../common/types/result.type'
 import {ResultStatus} from '../../../common/types/resultStatus.type'
 import {IUserInputModel} from '../../users/models/userInput.model'
-import {emailService} from '../../../common/adapters/email.service'
 import {v4 as uuidv4} from 'uuid'
 import {add} from 'date-fns'
 import {SETTINGS} from '../../../common/config/settings'
-import {jwtService} from "../../../common/adapters/jwt.service";
 import {UsersModel} from "../../users/domain/user.entity";
 import {IDeviceDbModel} from "../../securityDevices/models/deviceDb.model";
 import {IUserDbModel} from "../../users/models/userDb.model";
-import {devicesService} from "../../securityDevices/devicesCompositionRoot";
 import {DevicesRepository} from "../../securityDevices/repository/devices.repository";
+import {inject, injectable} from "inversify";
+import {EmailService} from "../../../common/adapters/email.service";
+import {BcryptService} from "../../../common/adapters/bcrypt.service";
+import {JwtService} from "../../../common/adapters/jwtService";
+import {DevicesService} from "../../securityDevices/service/devicesService";
 
+@injectable()
 export class AuthService {
-    protected usersRepository
-    protected devicesRepository
 
-    constructor(usersRepository: UsersRepository, devicesRepository: DevicesRepository) {
-        this.usersRepository = usersRepository
-        this.devicesRepository = devicesRepository
+    constructor(
+        @inject(UsersRepository) protected usersRepository: UsersRepository,
+        @inject(DevicesRepository) protected devicesRepository: DevicesRepository,
+        @inject(EmailService) protected emailService: EmailService,
+        @inject(BcryptService) protected bcryptService: BcryptService,
+        @inject(JwtService) protected jwtService: JwtService,
+        @inject(DevicesService) protected devicesService: DevicesService,
+    ) {
     }
 
     async registrationUser(data: IUserInputModel): Promise<ResultType> {
-        const passwordHash = await bcryptService.createPasswordHash(data.password)
+        const passwordHash = await this.bcryptService.createPasswordHash(data.password)
         const user = await this.usersRepository.createUser(data, passwordHash)
 
         if (user) {
@@ -36,7 +41,7 @@ export class AuthService {
 				 </p>
 			`
             try {
-                emailService.sendConfirmationCode(data.email, 'Confirmation code', html)
+                this.emailService.sendConfirmationCode(data.email, 'Confirmation code', html)
             } catch (e) {
                 console.error(`some problems with send confirm code ${e}`)
             }
@@ -83,7 +88,7 @@ export class AuthService {
 				 </p>
 			`
             try {
-                emailService.sendConfirmationCode(user.email, 'Confirmation code', html)
+                this.emailService.sendConfirmationCode(user.email, 'Confirmation code', html)
             } catch (e) {
                 console.error(`some problems with send confirm code ${e}`)
             }
@@ -125,7 +130,7 @@ export class AuthService {
         `
 
         try {
-            emailService.sendConfirmationCode(email, 'Password recovery', html)
+            this.emailService.sendConfirmationCode(email, 'Password recovery', html)
         } catch (e) {
             console.error(`some problems with send confirm code ${e}`)
         }
@@ -145,7 +150,7 @@ export class AuthService {
             }
         }
 
-        const isNewPassword = bcryptService.comparePasswordsHash(password, user.password)
+        const isNewPassword = this.bcryptService.comparePasswordsHash(password, user.password)
         if (!isNewPassword) {
             return {
                 status: ResultStatus.Forbidden,
@@ -154,7 +159,7 @@ export class AuthService {
             }
         }
 
-        const passwordHash = await bcryptService.createPasswordHash(password)
+        const passwordHash = await this.bcryptService.createPasswordHash(password)
         const isUpdatePassword = await this.usersRepository.updatePassword(user._id, passwordHash)
 
         if (!isUpdatePassword) {
@@ -179,7 +184,7 @@ export class AuthService {
                 status: ResultStatus.NotFound
             }
         }
-        const isTrueHash = await bcryptService.comparePasswordsHash(data.password, user.password)
+        const isTrueHash = await this.bcryptService.comparePasswordsHash(data.password, user.password)
         if (!isTrueHash) {
             return {
                 status: ResultStatus.BadRequest,
@@ -196,10 +201,10 @@ export class AuthService {
             ip: ip
         }
 
-        const accessToken = jwtService.createAccessToken(user._id)
-        const refreshToken = jwtService.createRefreshToken(device.deviceId, device.userId)
+        const accessToken = this.jwtService.createAccessToken(user._id)
+        const refreshToken = this.jwtService.createRefreshToken(device.deviceId, device.userId)
 
-        const refreshTokenPayload = jwtService.verifyAndDecodeToken(refreshToken)
+        const refreshTokenPayload = this.jwtService.verifyAndDecodeToken(refreshToken)
         if (!refreshTokenPayload) {
             return {
                 status: ResultStatus.Unauthorized,
@@ -231,7 +236,7 @@ export class AuthService {
     }
     async logout(deviceId: string, userId: string, iat: number): Promise<ResultType> {
 
-        const currentDevice =  await devicesService.getDevice(deviceId, userId, iat)
+        const currentDevice =  await this.devicesService.getDevice(deviceId, userId, iat)
 
         if (currentDevice.status === ResultStatus.NotFound) {
             return {
@@ -266,10 +271,10 @@ export class AuthService {
             }
         }
 
-        const newAccessToken = jwtService.createAccessToken(device.userId)
-        const newRefreshToken = jwtService.createRefreshToken(device.deviceId, device.userId)
+        const newAccessToken = this.jwtService.createAccessToken(device.userId)
+        const newRefreshToken = this.jwtService.createRefreshToken(device.deviceId, device.userId)
 
-        const newPayload = jwtService.verifyAndDecodeToken(newRefreshToken)
+        const newPayload = this.jwtService.verifyAndDecodeToken(newRefreshToken)
 
         const fullDevice: IDeviceDbModel = {
             userId: device.userId,

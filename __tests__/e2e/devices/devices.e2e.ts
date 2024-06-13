@@ -5,10 +5,11 @@ import {StatusCodes} from "http-status-codes";
 import {agent} from "supertest";
 import {app} from "../../../src/app";
 import {SETTINGS} from "../../../src/common/config/settings";
-import {jwtService} from "../../../src/common/adapters/jwt.service";
+import {JwtService} from "../../../src/common/adapters/jwtService";
 import {userManagerTest} from "../users/userManager.test";
 import {PATH} from "../../../src/common/config/path";
 import {DeviceModel} from "../../../src/features/securityDevices/domain/devices.entity";
+import {container} from "../../../src/ioc";
 
 describe('e2e test for devices', () => {
     let tokensUser1: { refreshToken: string, accessToken: string } | undefined
@@ -18,6 +19,8 @@ describe('e2e test for devices', () => {
     let user1
     let user2
     let tokensAnotherUser1: { refreshToken: string, accessToken: string } | undefined
+    const jwtService = container.resolve(JwtService)
+
 
 
     beforeAll(async () => {

@@ -4,8 +4,10 @@ import {IPaginator} from '../../../common/types/paginator'
 import {IQueryModel} from '../../../common/types/query.model'
 import {getUserViewModel} from "../mappers/userMappers";
 import {UsersModel} from "../domain/user.entity";
+import {injectable} from "inversify";
 
-export const usersQueryRepository = {
+@injectable()
+export class UsersQueryRepository {
 	async findUsers(query: IQueryModel): Promise<IPaginator<IUserViewModel>> {
 
 		const conditions = []
@@ -43,17 +45,17 @@ export const usersQueryRepository = {
 			totalCount: countDocs,
 			items: res ? res.map(getUserViewModel) : []
 		}
-	},
+	}
 	async findUserById(id: string): Promise<IUserViewModel | undefined> {
 		const res = await UsersModel
 			.findOne({ _id: id })
 		return res ? getUserViewModel(res) : undefined
-	},
+	}
 	async findUserByLoginOrEmail(loginOrEmail: string): Promise<IUserViewModel | undefined> {
 		const user = await UsersModel.findOne({
 				$or: [{ login: loginOrEmail }, { email: loginOrEmail }]
 			}
 		)
 		return user !== null ? getUserViewModel(user) : undefined
-	},
+	}
 }

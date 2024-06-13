@@ -17,7 +17,11 @@ const LikesSchema = new mongoose_1.default.Schema({
 const CommentsSchema = new mongoose_1.default.Schema({
     _id: { type: String, required: true },
     content: { type: String, required: true },
-    createdAt: { type: String, required: true, match: /\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)/ },
+    createdAt: {
+        type: String,
+        required: true,
+        match: /\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)/
+    },
     postId: { type: String, required: true },
     commentatorInfo: CommentatorInfo,
     likes: [LikesSchema],

@@ -1,7 +1,10 @@
-import {jwtService} from "../../../src/common/adapters/jwt.service";
+import {JwtService} from "../../../src/common/adapters/jwtService";
 import {IDeviceDbModel} from "../../../src/features/securityDevices/models/deviceDb.model";
+import {container} from "../../../src/ioc";
 
 describe( 'refresh token test', () => {
+    const jwtService = container.resolve(JwtService)
+
     it.skip('should refresh token', () => {
 
         jwtService.verifyAndDecodeToken = jest.fn().mockImplementation(():IDeviceDbModel => {

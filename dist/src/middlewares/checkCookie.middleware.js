@@ -11,14 +11,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.checkCookieMiddleware = void 0;
 const http_status_codes_1 = require("http-status-codes");
-const jwt_service_1 = require("../common/adapters/jwt.service");
+const ioc_1 = require("../ioc");
+const jwtService_1 = require("../common/adapters/jwtService");
+const jwtService = ioc_1.container.resolve(jwtService_1.JwtService);
 const checkCookieMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const refreshToken = req.cookies.refreshToken;
     if (!refreshToken) {
         res.status(http_status_codes_1.StatusCodes.UNAUTHORIZED).send();
         return;
     }
-    const isValidToken = jwt_service_1.jwtService.checkRefreshToken(refreshToken);
+    const isValidToken = jwtService.checkRefreshToken(refreshToken);
     if (!isValidToken) {
         res.status(http_status_codes_1.StatusCodes.UNAUTHORIZED).send();
         return;

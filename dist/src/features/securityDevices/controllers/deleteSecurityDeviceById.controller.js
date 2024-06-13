@@ -12,11 +12,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteSecurityDeviceByIdController = void 0;
 const resultStatus_type_1 = require("../../../common/types/resultStatus.type");
 const http_status_codes_1 = require("http-status-codes");
-const jwt_service_1 = require("../../../common/adapters/jwt.service");
+const jwtService_1 = require("../../../common/adapters/jwtService");
 const devicesCompositionRoot_1 = require("../devicesCompositionRoot");
 const deleteSecurityDeviceByIdController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const refreshToken = req.cookies.refreshToken;
-    const userId = jwt_service_1.jwtService.getUserIdByToken(refreshToken);
+    const userId = jwtService_1.JwtService.getUserIdByToken(refreshToken);
     if (!userId) {
         res.status(http_status_codes_1.StatusCodes.FORBIDDEN).send();
         return;

@@ -1,7 +1,9 @@
 import nodemailer from 'nodemailer'
 import { SETTINGS } from '../config/settings'
+import {injectable} from "inversify";
 
-export const emailService = {
+@injectable()
+export class EmailService {
 	sendConfirmationCode (email: string, subject: string, html: string) {
 		let transport = nodemailer.createTransport({
 				service: 'gmail',

@@ -1,6 +1,4 @@
 import {Router} from "express";
-import {getPostsController} from "./controllers/getPosts.controller";
-import {createPostController} from "./controllers/createPost.controller";
 import {
     blogIdInBodyValidation, contentCommentValidation,
     contentValidation,
@@ -13,28 +11,25 @@ import {
 } from '../../common/validation/express-validation'
 import {authMiddleware} from "../../middlewares/auth.middleware";
 import {inputValidationMiddleware} from "../../middlewares/inputValidation.middleware";
-import {getPostByIdController} from "./controllers/getPostById.controller";
-import {updatePostByIdController} from "./controllers/updatePostById.controller";
-import {deletePostController} from "./controllers/deletePost.controller";
-import { createCommentForPostController } from './controllers/createCommentForPost.controller'
-import { getCommentsController } from './controllers/getComments.controller'
+import {container} from "../../ioc";
+import {PostsController} from "./posts.controller";
 
 export const postsRouter = Router({})
-
+const postsController = container.resolve(PostsController)
 
 postsRouter.get('/:id/comments',
     pageNumberValidation,
     pageSizeValidation,
     sortByValidation,
     sortDirectionValidation,
-    getCommentsController
+    postsController.getComments.bind(postsController)
 )
 
 postsRouter.post('/:postId/comments',
     authMiddleware,
     contentCommentValidation,
     inputValidationMiddleware,
-    createCommentForPostController,
+    postsController.createCommentForPost.bind(postsController),
 )
 
 postsRouter.get('/',
@@ -42,7 +37,7 @@ postsRouter.get('/',
     pageSizeValidation,
     sortByValidation,
     sortDirectionValidation,
-    getPostsController
+    postsController.getPosts.bind(postsController)
 )
 
 postsRouter.post('/',
@@ -52,13 +47,13 @@ postsRouter.post('/',
     contentValidation,
     blogIdInBodyValidation,
     inputValidationMiddleware,
-    createPostController,
+    postsController.createPost.bind(postsController),
 )
 
 postsRouter.get('/:id',
     postIdValidation,
     inputValidationMiddleware,
-    getPostByIdController
+    postsController.getPostById.bind(postsController)
 )
 
 postsRouter.put('/:id',
@@ -68,13 +63,13 @@ postsRouter.put('/:id',
     titleValidation,
     shortDescriptionValidation,
     inputValidationMiddleware,
-    updatePostByIdController
+    postsController.updatePostById.bind(postsController)
 )
 
 postsRouter.delete('/:id',
     authMiddleware,
     titleValidation,
-    deletePostController
+    postsController.deletePost.bind(postsController)
 )
 
 

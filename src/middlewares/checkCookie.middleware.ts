@@ -1,6 +1,9 @@
 import { NextFunction, Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
-import { jwtService } from '../common/adapters/jwt.service'
+import {container} from "../ioc";
+import {JwtService} from "../common/adapters/jwtService";
+
+const jwtService = container.resolve(JwtService)
 
 export const checkCookieMiddleware = async (
 	req: Request,

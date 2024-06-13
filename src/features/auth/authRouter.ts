@@ -1,6 +1,4 @@
 import {Router} from 'express'
-import {loginController} from './controllers/loginController'
-import {getUserInfoController} from './controllers/getUserInfo'
 import {authMiddleware} from '../../middlewares/auth.middleware'
 import {
     codeValidation, emailValidationForRecovery,
@@ -10,24 +8,20 @@ import {
     passwordValidation, recoveryCodeValidation
 } from '../../common/validation/express-validation'
 import {inputValidationMiddleware} from '../../middlewares/inputValidation.middleware'
-import {registrationController} from './controllers/registration.controller'
-import {registrationConfirmationController} from './controllers/registrationConfirmation.controller'
-import {emailResendingController} from './controllers/emailResending.controller'
-import {refreshTokenController} from "./controllers/refreshToken.controller";
-import {logoutController} from "./controllers/logout.controller";
 import {rateLimitMiddleware} from "../../middlewares/rateLimit.middleware";
 import {checkCookieMiddleware} from "../../middlewares/checkCookie.middleware";
-import {passwordRecoveryController} from "./controllers/passwordRecovery.controller";
-import {newPasswordController} from "./controllers/newPassword.controller";
+import {container} from "../../ioc";
+import {AuthController} from "./auth.controller";
 
 export const authRouter = Router({})
+const authController = container.resolve(AuthController)
 
 authRouter.post('/login',
     rateLimitMiddleware,
     loginOrEmailValidation,
     passwordValidation,
     inputValidationMiddleware,
-    loginController
+    authController.login.bind(authController)
 )
 
 authRouter.post(
@@ -35,7 +29,7 @@ authRouter.post(
     rateLimitMiddleware,
     emailValidationForRecovery,
     inputValidationMiddleware,
-    passwordRecoveryController
+    authController.passwordRecovery.bind(authController)
 )
 
 authRouter.post('/new-password',
@@ -43,13 +37,13 @@ authRouter.post('/new-password',
     newPasswordValidation,
     recoveryCodeValidation,
     inputValidationMiddleware,
-    newPasswordController
+    authController.newPassword.bind(authController)
 )
 
 authRouter.post('/refresh-token',
     rateLimitMiddleware,
     checkCookieMiddleware,
-    refreshTokenController
+    authController.refreshToken.bind(authController)
 )
 
 authRouter.post('/registration',
@@ -58,28 +52,29 @@ authRouter.post('/registration',
     passwordValidation,
     emailValidationForRegistration,
     inputValidationMiddleware,
-    registrationController
+    authController.registration.bind(authController)
 )
 
 authRouter.post('/registration-confirmation',
     rateLimitMiddleware,
     codeValidation,
     inputValidationMiddleware,
-    registrationConfirmationController
+    authController.registrationConfirmation.bind(authController)
 )
 authRouter.post('/registration-email-resending',
     rateLimitMiddleware,
     emailValidationForResend,
     inputValidationMiddleware,
-    emailResendingController
+    authController.emailResending.bind(authController)
 )
 authRouter.post('/logout',
     rateLimitMiddleware,
     checkCookieMiddleware,
-    logoutController
+    authController.logout.bind(authController)
 )
 
 authRouter.get('/me',
     rateLimitMiddleware,
     authMiddleware,
-    getUserInfoController)
+    authController.getUserInfo.bind(authController)
+)

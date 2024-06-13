@@ -1,13 +1,13 @@
 import {Router} from "express";
-import { getSecurityDevicesController} from "./controllers/getSecurityDevices.controller";
-import {deleteSecurityDevicesController} from "./controllers/deleteSecurityDevices.controller";
-import {deleteSecurityDeviceByIdController} from "./controllers/deleteSecurityDeviceById.controller";
 import {checkCookieMiddleware} from "../../middlewares/checkCookie.middleware";
+import {container} from "../../ioc";
+import {SecurityDevicesController} from "./securityDevices.controller";
 
 export const securityDevicesRouter = Router({})
+const securityDevicesController = container.resolve(SecurityDevicesController)
 
-securityDevicesRouter.get(`/devices`, checkCookieMiddleware, getSecurityDevicesController)
+securityDevicesRouter.get(`/devices`, checkCookieMiddleware, securityDevicesController.getSecurityDevices.bind(securityDevicesController))
 
-securityDevicesRouter.delete(`/devices`, checkCookieMiddleware, deleteSecurityDevicesController)
+securityDevicesRouter.delete(`/devices`, checkCookieMiddleware, securityDevicesController.deleteSecurityDevices.bind(securityDevicesController) )
 
-securityDevicesRouter.delete(`/devices/:deviceId`, checkCookieMiddleware, deleteSecurityDeviceByIdController)
+securityDevicesRouter.delete(`/devices/:deviceId`, checkCookieMiddleware, securityDevicesController.deleteSecurityDeviceById.bind(securityDevicesController) )

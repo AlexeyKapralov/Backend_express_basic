@@ -1,4 +1,3 @@
-//todo переписать с использование WithID, т.к. так будет корректнее
 import mongoose from "mongoose";
 import {WithId} from "mongodb";
 import {IUserDbModel} from "../models/userDb.model";

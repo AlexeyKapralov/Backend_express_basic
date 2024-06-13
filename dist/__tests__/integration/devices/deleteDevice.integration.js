@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const jwt_service_1 = require("../../../src/common/adapters/jwt.service");
+const jwtService_1 = require("../../../src/common/adapters/jwtService");
 const userManager_test_1 = require("../../e2e/users/userManager.test");
 const settings_1 = require("../../../src/common/config/settings");
 const authManager_test_1 = require("../../e2e/auth/authManager.test");
@@ -17,8 +17,11 @@ const resultStatus_type_1 = require("../../../src/common/types/resultStatus.type
 const mongodb_memory_server_1 = require("mongodb-memory-server");
 const db_1 = require("../../../src/db/db");
 const globals_1 = require("@jest/globals");
-const devicesCompositionRoot_1 = require("../../../src/features/securityDevices/devicesCompositionRoot");
+const ioc_1 = require("../../../src/ioc");
+const devicesService_1 = require("../../../src/features/securityDevices/service/devicesService");
 describe('integration test delete device', () => {
+    const jwtService = ioc_1.container.resolve(jwtService_1.JwtService);
+    const devicesService = ioc_1.container.resolve(devicesService_1.DevicesService);
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
         const mongod = yield mongodb_memory_server_1.MongoMemoryServer.create();
         const uri = mongod.getUri();
@@ -39,7 +42,7 @@ describe('integration test delete device', () => {
             loginOrEmail: userData.email,
             password: userData.password
         });
-        device = jwt_service_1.jwtService.verifyAndDecodeToken(tokens.refreshToken);
+        device = jwtService.verifyAndDecodeToken(tokens.refreshToken);
         const userData2 = {
             login: 'login2',
             password: 'qwert1234',
@@ -61,22 +64,22 @@ describe('integration test delete device', () => {
         done();
     });
     it('should return success with correct token + deviceID', () => __awaiter(void 0, void 0, void 0, function* () {
-        const userId = jwt_service_1.jwtService.getUserIdByToken(tokens.refreshToken);
-        const res = yield devicesCompositionRoot_1.devicesService.deleteDevice(device.deviceId, userId);
+        const userId = jwtService.getUserIdByToken(tokens.refreshToken);
+        const res = yield devicesService.deleteDevice(device.deviceId, userId);
         expect(res.status === resultStatus_type_1.ResultStatus.Success);
     }));
     it('should return unauthorized with incorrect token', () => __awaiter(void 0, void 0, void 0, function* () {
-        const res = yield devicesCompositionRoot_1.devicesService.deleteDevice(device.deviceId, '123');
+        const res = yield devicesService.deleteDevice(device.deviceId, '123');
         expect(res.status === resultStatus_type_1.ResultStatus.Unauthorized);
     }));
     it('should return unauthorized with incorrect deviceId', () => __awaiter(void 0, void 0, void 0, function* () {
-        const userId = jwt_service_1.jwtService.getUserIdByToken(tokens.refreshToken);
-        const res = yield devicesCompositionRoot_1.devicesService.deleteDevice('123', userId);
+        const userId = jwtService.getUserIdByToken(tokens.refreshToken);
+        const res = yield devicesService.deleteDevice('123', userId);
         expect(res.status === resultStatus_type_1.ResultStatus.Unauthorized);
     }));
     it('should return forbidden with another deviceID', () => __awaiter(void 0, void 0, void 0, function* () {
-        const userId = jwt_service_1.jwtService.getUserIdByToken(tokens.refreshToken);
-        const res = yield devicesCompositionRoot_1.devicesService.deleteDevice(device.deviceId, userId);
+        const userId = jwtService.getUserIdByToken(tokens.refreshToken);
+        const res = yield devicesService.deleteDevice(device.deviceId, userId);
         expect(res.status === resultStatus_type_1.ResultStatus.Forbidden);
     }));
 });

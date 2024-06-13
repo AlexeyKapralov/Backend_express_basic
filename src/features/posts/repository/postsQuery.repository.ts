@@ -5,8 +5,10 @@ import { IQueryModel } from '../../../common/types/query.model'
 import {getPostViewModel} from "../mappers/postMappers";
 import {PostModel} from "../domain/post.entity";
 import {IPostDbModel} from "../models/postDb.model";
+import {injectable} from "inversify";
 
-export const postsQueryRepository = {
+@injectable()
+export class PostsQueryRepository {
 	async getPosts(query: IQueryModel): Promise<IPaginator<IPostViewModel>> {
 		const posts: WithId<IPostDbModel>[] = await PostModel
 			.find()
@@ -25,7 +27,8 @@ export const postsQueryRepository = {
 			items: posts.map(getPostViewModel)
 		}
 
-	},
+	}
+
 	async getPostById(id: string): Promise<IPostViewModel | undefined> {
 		const result: WithId<IPostDbModel> | null = await PostModel.findOne({
 			_id: id

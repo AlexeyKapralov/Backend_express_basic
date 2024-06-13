@@ -4,7 +4,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersModel = exports.UserSchema = void 0;
-//todo переписать с использование WithID, т.к. так будет корректнее
 const mongoose_1 = __importDefault(require("mongoose"));
 exports.UserSchema = new mongoose_1.default.Schema({
     _id: { type: String, required: true },

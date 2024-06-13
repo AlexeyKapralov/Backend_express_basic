@@ -11,9 +11,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.authMiddleware = void 0;
 const http_status_codes_1 = require("http-status-codes");
-const jwt_service_1 = require("../common/adapters/jwt.service");
-const usersQuery_repository_1 = require("../features/users/repository/usersQuery.repository");
 const settings_1 = require("../common/config/settings");
+const ioc_1 = require("../ioc");
+const jwtService_1 = require("../common/adapters/jwtService");
+const usersQuery_repository_1 = require("../features/users/repository/usersQuery.repository");
+//todo 13.06.2024 нет понимания аритектурно правильно ли так делать
+const jwtService = ioc_1.container.resolve(jwtService_1.JwtService);
+const usersQueryRepository = ioc_1.container.resolve(usersQuery_repository_1.UsersQueryRepository);
 const authMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const auth = req.headers.authorization;
     if (!auth) {
@@ -23,10 +27,10 @@ const authMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
     const typeAuth = req.headers.authorization.split(' ')[0];
     if (typeAuth === 'Bearer') {
         const token = req.headers.authorization.split(' ')[1];
-        const userId = jwt_service_1.jwtService.getUserIdByToken(token);
+        const userId = jwtService.getUserIdByToken(token);
         let result;
         if (userId) {
-            result = yield usersQuery_repository_1.usersQueryRepository.findUserById(userId.toString());
+            result = yield usersQueryRepository.findUserById(userId.toString());
         }
         if (result) {
             req.userId = result.id;

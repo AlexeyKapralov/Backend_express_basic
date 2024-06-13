@@ -1,5 +1,4 @@
 import {Router} from 'express'
-import {createUserController} from './controllers/createUserController'
 import {authMiddleware} from '../../middlewares/auth.middleware'
 import {
     emailValidationForRegistration,
@@ -13,10 +12,11 @@ import {
     sortDirectionValidation
 } from '../../common/validation/express-validation'
 import {inputValidationMiddleware} from '../../middlewares/inputValidation.middleware'
-import {getUsersController} from './controllers/getUsers.controller'
-import {deleteUserController} from "./controllers/deleteUserController";
+import {container} from "../../ioc";
+import {UsersController} from "./users.controller";
 
 export const usersRouter = Router({})
+const usersController = container.resolve(UsersController)
 
 usersRouter.get(
     '/',
@@ -27,7 +27,7 @@ usersRouter.get(
     searchLoginTermValidation,
     searchEmailTermValidation,
     inputValidationMiddleware,
-    getUsersController
+    usersController.getUsers.bind(usersController)
 )
 
 usersRouter.post(
@@ -37,11 +37,11 @@ usersRouter.post(
     passwordValidation,
     emailValidationForRegistration,
     inputValidationMiddleware,
-    createUserController
+    usersController.createUser.bind(usersController)
 )
 
 usersRouter.delete(
     '/:id',
     authMiddleware,
-    deleteUserController
+    usersController.deleteUser.bind(usersController)
 )

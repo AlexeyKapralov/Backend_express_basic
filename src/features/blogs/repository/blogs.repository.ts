@@ -1,7 +1,9 @@
 import {IBlogDbModel} from "../models/blogDb.model";
 import {IBlogInputModel} from "../models/blogInput.model";
 import {BlogModel} from "../domain/blogs.entity";
+import {injectable} from "inversify";
 
+@injectable()
 export class BlogsRepository {
 
     async createBlog(body: IBlogDbModel) {

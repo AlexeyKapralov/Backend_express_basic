@@ -4,10 +4,15 @@ import {db} from "../../../src/db/db";
 import {MongoMemoryServer} from "mongodb-memory-server";
 import {userManagerTest} from "../../e2e/users/userManager.test";
 import {SETTINGS} from "../../../src/common/config/settings";
-import {jwtService} from "../../../src/common/adapters/jwt.service";
-import {authService} from "../../../src/features/auth/authCompositionRoot";
+import {container} from "../../../src/ioc";
+import {JwtService} from "../../../src/common/adapters/jwtService";
+import {AuthService} from "../../../src/features/auth/service/auth.service";
 
 describe('logout user integration test', () => {
+
+    const jwtService = container.resolve(JwtService)
+    const authService = container.resolve(AuthService)
+
     beforeAll(async () => {
         const mongod = await MongoMemoryServer.create()
         const uri = mongod.getUri()

@@ -1,6 +1,8 @@
 import {DeviceModel} from "../domain/devices.entity";
 import {IDeviceDbModel} from "../models/deviceDb.model";
+import {injectable} from "inversify";
 
+@injectable()
 export class DevicesRepository {
     async findDeviceId(userId: string, ip: string, deviceName: string) {
         const device = await DeviceModel.findOne({userId, ip, deviceName})

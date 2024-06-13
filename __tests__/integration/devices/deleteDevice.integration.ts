@@ -1,4 +1,4 @@
-import {jwtService} from "../../../src/common/adapters/jwt.service";
+import {JwtService} from "../../../src/common/adapters/jwtService";
 import {userManagerTest} from "../../e2e/users/userManager.test";
 import {SETTINGS} from "../../../src/common/config/settings";
 import {authManagerTest} from "../../e2e/auth/authManager.test";
@@ -6,9 +6,12 @@ import {ResultStatus} from "../../../src/common/types/resultStatus.type";
 import {MongoMemoryServer} from "mongodb-memory-server";
 import {db} from "../../../src/db/db";
 import {jest} from "@jest/globals";
-import {devicesService} from "../../../src/features/securityDevices/devicesCompositionRoot";
+import {container} from "../../../src/ioc";
+import {DevicesService} from "../../../src/features/securityDevices/service/devicesService";
 
 describe('integration test delete device', () => {
+    const jwtService = container.resolve(JwtService)
+    const devicesService = container.resolve(DevicesService)
 
     beforeAll(async () => {
         const mongod = await MongoMemoryServer.create()

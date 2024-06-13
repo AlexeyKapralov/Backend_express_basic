@@ -10,26 +10,24 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getCommentsController = void 0;
-const commentsQuery_repository_1 = require("../../comments/repository/commentsQuery.repository");
 const mappers_1 = require("../../../common/utils/mappers");
 const http_status_codes_1 = require("http-status-codes");
-const jwt_service_1 = require("../../../common/adapters/jwt.service");
-const usersQuery_repository_1 = require("../../users/repository/usersQuery.repository");
+const jwtService_1 = require("../../../common/adapters/jwtService");
 const getCommentsController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const query = (0, mappers_1.getQueryParams)(req.query);
     const token = ((_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1]) || null;
-    const userId = jwt_service_1.jwtService.getUserIdByToken(token || '');
+    const userId = jwtService_1.JwtService.getUserIdByToken(token || '');
     let result;
     if (userId) {
-        result = yield usersQuery_repository_1.usersQueryRepository.findUserById(userId.toString());
+        result = yield usersQueryRepository.findUserById(userId.toString());
     }
     let comments;
     if (result) {
-        comments = yield commentsQuery_repository_1.commentsQueryRepository.getComments(req.params.id, query, userId);
+        comments = yield commentsQueryRepository.getComments(req.params.id, query, userId);
     }
     else {
-        comments = yield commentsQuery_repository_1.commentsQueryRepository.getComments(req.params.id, query);
+        comments = yield commentsQueryRepository.getComments(req.params.id, query);
     }
     comments
         ? res.status(http_status_codes_1.StatusCodes.OK).send(comments)

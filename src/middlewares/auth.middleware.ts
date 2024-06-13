@@ -1,8 +1,13 @@
 import { NextFunction, Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
-import { jwtService } from '../common/adapters/jwt.service'
-import { usersQueryRepository } from '../features/users/repository/usersQuery.repository'
 import { SETTINGS } from '../common/config/settings'
+import {container} from "../ioc";
+import {JwtService} from "../common/adapters/jwtService";
+import {UsersQueryRepository} from "../features/users/repository/usersQuery.repository";
+
+//todo 13.06.2024 нет понимания аритектурно правильно ли так делать
+const jwtService = container.resolve(JwtService)
+const usersQueryRepository = container.resolve(UsersQueryRepository)
 
 export const authMiddleware = async (
 	req: Request,
