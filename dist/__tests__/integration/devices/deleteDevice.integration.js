@@ -9,7 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const jwtService_1 = require("../../../src/common/adapters/jwtService");
 const userManager_test_1 = require("../../e2e/users/userManager.test");
 const settings_1 = require("../../../src/common/config/settings");
 const authManager_test_1 = require("../../e2e/auth/authManager.test");
@@ -18,6 +17,7 @@ const mongodb_memory_server_1 = require("mongodb-memory-server");
 const db_1 = require("../../../src/db/db");
 const globals_1 = require("@jest/globals");
 const ioc_1 = require("../../../src/ioc");
+const jwtService_1 = require("../../../src/common/adapters/jwtService");
 const devicesService_1 = require("../../../src/features/securityDevices/service/devicesService");
 describe('integration test delete device', () => {
     const jwtService = ioc_1.container.resolve(jwtService_1.JwtService);

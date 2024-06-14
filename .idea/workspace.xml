@@ -4,134 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="26bf12fa-1c19-43fd-bd80-8f598efb16f4" name="Changes" comment="Ioc Container adds">
-      <change afterPath="$PROJECT_DIR$/src/features/auth/auth.controller.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/features/comments/comments.controller.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/features/posts/posts.controller.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/features/securityDevices/securityDevices.controller.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/features/users/users.controller.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ioc.ts" afterDir="false" />
+    <list default="true" id="26bf12fa-1c19-43fd-bd80-8f598efb16f4" name="Changes" comment="Tests refactored">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/__tests__/e2e/devices/devices.e2e.ts" beforeDir="false" afterPath="$PROJECT_DIR$/__tests__/e2e/devices/devices.e2e.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/__tests__/integration/auth/loginUser.integration.ts" beforeDir="false" afterPath="$PROJECT_DIR$/__tests__/integration/auth/loginUser.integration.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/__tests__/integration/auth/logoutUser.integration.ts" beforeDir="false" afterPath="$PROJECT_DIR$/__tests__/integration/auth/logoutUser.integration.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/__tests__/integration/auth/refreshToken.integration.ts" beforeDir="false" afterPath="$PROJECT_DIR$/__tests__/integration/auth/refreshToken.integration.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/__tests__/integration/auth/registerUser.integration.ts" beforeDir="false" afterPath="$PROJECT_DIR$/__tests__/integration/auth/registerUser.integration.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/__tests__/integration/comments/comments.integration.ts" beforeDir="false" afterPath="$PROJECT_DIR$/__tests__/integration/comments/comments.integration.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/__tests__/integration/devices/deleteDevice.integration.ts" beforeDir="false" afterPath="$PROJECT_DIR$/__tests__/integration/devices/deleteDevice.integration.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/__tests__/unit/auth/refreshToken.unit.ts" beforeDir="false" afterPath="$PROJECT_DIR$/__tests__/unit/auth/refreshToken.unit.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/__tests__/e2e/comments/commentsManager.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/__tests__/e2e/comments/commentsManager.test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/__tests__/e2e/devices/devices.e2e.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/__tests__/e2e/devices/devices.e2e.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/__tests__/integration/auth/loginUser.integration.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/__tests__/integration/auth/loginUser.integration.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/__tests__/integration/auth/logoutUser.integration.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/__tests__/integration/auth/logoutUser.integration.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/__tests__/integration/auth/refreshToken.integration.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/__tests__/integration/auth/refreshToken.integration.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/__tests__/integration/auth/registerUser.integration.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/__tests__/integration/auth/registerUser.integration.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/__tests__/integration/comments/comments.integration.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/__tests__/integration/comments/comments.integration.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/__tests__/integration/devices/deleteDevice.integration.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/__tests__/integration/devices/deleteDevice.integration.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/__tests__/unit/auth/refreshToken.unit.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/__tests__/unit/auth/refreshToken.unit.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/common/adapters/bcrypt.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/common/adapters/bcrypt.service.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/common/adapters/email.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/common/adapters/email.service.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/common/adapters/jwt.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/common/adapters/jwt.service.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/common/config/settings.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/common/config/settings.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/common/validation/express-validation.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/common/validation/express-validation.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/db/db.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/db/db.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/auth/authRouter.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/auth/authRouter.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/auth/controllers/logout.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/auth/controllers/logout.controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/auth/controllers/refreshToken.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/auth/controllers/refreshToken.controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/auth/controllers/registration.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/auth/controllers/registration.controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/auth/controllers/registrationConfirmation.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/auth/controllers/registrationConfirmation.controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/auth/service/auth.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/auth/service/auth.service.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/blogs/repository/blogs.repository.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/blogs/repository/blogs.repository.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/comments/comments.router.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/comments/comments.router.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/comments/commentsCompositionRoot.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/comments/commentsCompositionRoot.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/comments/controllers/getCommentById.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/comments/controllers/getCommentById.controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/comments/controllers/likeStatus.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/comments/controllers/likeStatus.controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/comments/controllers/updateCommentById.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/comments/controllers/updateCommentById.controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/comments/domain/comments.entity.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/comments/domain/comments.entity.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/comments/mappers/commentsMappers.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/comments/mappers/commentsMappers.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/comments/models/commentDb.model.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/comments/models/commentDb.model.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/comments/repository/comments.repository.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/comments/repository/comments.repository.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/comments/repository/commentsQuery.repository.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/comments/repository/commentsQuery.repository.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/comments/service/comments.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/comments/service/comments.service.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/posts/controllers/createCommentForPost.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/posts/controllers/createCommentForPost.controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/posts/controllers/getComments.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/posts/controllers/getComments.controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/posts/posts.router.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/posts/posts.router.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/posts/repository/posts.repository.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/posts/repository/posts.repository.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/posts/repository/postsQuery.repository.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/posts/repository/postsQuery.repository.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/posts/service/posts.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/posts/service/posts.service.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/securityDevices/controllers/deleteSecurityDeviceById.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/securityDevices/controllers/deleteSecurityDeviceById.controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/securityDevices/controllers/deleteSecurityDevices.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/securityDevices/controllers/deleteSecurityDevices.controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/securityDevices/controllers/getSecurityDevices.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/securityDevices/controllers/getSecurityDevices.controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/securityDevices/repository/devices.queryRepository.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/securityDevices/repository/devices.queryRepository.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/securityDevices/repository/devices.repository.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/securityDevices/repository/devices.repository.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/securityDevices/securityDevices.router.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/securityDevices/securityDevices.router.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/securityDevices/service/devicesService.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/securityDevices/service/devicesService.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/users/controllers/getUsers.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/users/controllers/getUsers.controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/users/domain/user.entity.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/users/domain/user.entity.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/users/repository/users.repository.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/users/repository/users.repository.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/users/repository/usersQuery.repository.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/users/repository/usersQuery.repository.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/users/service/users.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/users/service/users.service.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/users/users.router.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/users/users.router.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/middlewares/auth.middleware.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/middlewares/auth.middleware.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/middlewares/checkCookie.middleware.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/middlewares/checkCookie.middleware.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/adapters/bcrypt.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/adapters/bcrypt.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/adapters/email.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/adapters/email.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/adapters/jwt.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/adapters/jwtService.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/auth/authCompositionRoot.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/auth/authRouter.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/auth/authRouter.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/auth/controllers/emailResending.controller.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/auth/controllers/getUserInfo.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/auth/controllers/loginController.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/auth/controllers/logout.controller.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/auth/controllers/newPassword.controller.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/auth/controllers/passwordRecovery.controller.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/auth/controllers/refreshToken.controller.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/auth/controllers/registration.controller.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/auth/controllers/registrationConfirmation.controller.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/auth/service/auth.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/auth/service/auth.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/blogs/repository/blogs.repository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/blogs/repository/blogs.repository.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/comments/comments.router.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/comments/comments.router.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/comments/commentsCompositionRoot.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/comments/controllers/deleteCommentById.controller.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/comments/controllers/getCommentById.controller.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/comments/controllers/likeStatus.controller.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/comments/controllers/updateCommentById.controller.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/comments/repository/comments.repository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/comments/repository/comments.repository.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/comments/repository/commentsQuery.repository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/comments/repository/commentsQuery.repository.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/comments/service/comments.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/comments/service/comments.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/posts/controllers/createCommentForPost.controller.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/posts/controllers/createPost.controller.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/posts/controllers/deletePost.controller.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/posts/controllers/getComments.controller.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/posts/controllers/getPostById.controller.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/posts/controllers/getPosts.controller.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/posts/controllers/updatePostById.controller.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/posts/posts.router.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/posts/posts.router.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/posts/postsCompositionRoot.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/posts/repository/posts.repository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/posts/repository/posts.repository.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/posts/repository/postsQuery.repository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/posts/repository/postsQuery.repository.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/posts/service/posts.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/posts/service/posts.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/securityDevices/controllers/deleteSecurityDeviceById.controller.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/securityDevices/controllers/deleteSecurityDevices.controller.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/securityDevices/controllers/getSecurityDevices.controller.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/securityDevices/devicesCompositionRoot.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/securityDevices/repository/devices.queryRepository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/securityDevices/repository/devices.queryRepository.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/securityDevices/repository/devices.repository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/securityDevices/repository/devices.repository.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/securityDevices/securityDevices.router.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/securityDevices/securityDevices.router.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/securityDevices/service/devicesService.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/securityDevices/service/devicesService.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/users/controllers/createUserController.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/users/controllers/deleteUserController.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/users/controllers/getUsers.controller.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/users/domain/user.entity.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/users/domain/user.entity.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/users/repository/users.repository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/users/repository/users.repository.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/users/repository/usersQuery.repository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/users/repository/usersQuery.repository.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/users/service/users.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/users/service/users.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/users/users.router.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/users/users.router.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/users/usersCompositionRoot.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/middlewares/auth.middleware.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/middlewares/auth.middleware.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/middlewares/checkCookie.middleware.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/middlewares/checkCookie.middleware.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -181,7 +61,9 @@
     "Jest.Authentication User.should update refresh token.executor": "Run",
     "Jest.Authentication User.shouldn't update refresh token after expired time.executor": "Run",
     "Jest.Authentication User.shouldn't update refresh token.executor": "Run",
-    "Jest.Login User.should login user.executor": "Debug",
+    "Jest.Integration Auth.executor": "Run",
+    "Jest.Integration Auth.should create tokens.executor": "Run",
+    "Jest.Login User.should login user.executor": "Run",
     "Jest.Login User.should update refresh token.executor": "Run",
     "Jest.Login User.shouldn't update refresh token after expired time.executor": "Run",
     "Jest.auth test (1).executor": "Run",
@@ -235,7 +117,7 @@
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs.jest.jest_package": "D:/Projects/IT_Incubator/Social_network_backend/node_modules/jest",
+    "nodejs.jest.jest_package": "D:/Projects/IT_Incubator_Projects/Social_network_backend_express/node_modules/jest",
     "nodejs_package_manager_path": "npm",
     "npm.dev.executor": "Run",
     "npm.test coverage.executor": "Run",
@@ -263,8 +145,21 @@
       <recent name="D:\Projects\IT_Incubator_Projects\Social_network_backend\src\features\securityDevices\service" />
     </key>
   </component>
-  <component name="RunManager" selected="Jest.Login User.shouldn't update refresh token after expired time">
-    <configuration name="Login User.shouldn't update refresh token after expired time" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Jest.integration test delete device">
+    <configuration name="Integration Auth.should create tokens" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="TEST" />
+      <test-file value="$PROJECT_DIR$/__tests__/integration/auth/registerUser.integration.ts" />
+      <test-names>
+        <test-name value="Integration Auth" />
+        <test-name value="should create tokens" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="Login User.should login user" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
       <node-interpreter value="project" />
       <jest-package value="$PROJECT_DIR$/node_modules/jest" />
       <working-dir value="$PROJECT_DIR$" />
@@ -273,18 +168,20 @@
       <test-file value="$PROJECT_DIR$/__tests__/integration/auth/loginUser.integration.ts" />
       <test-names>
         <test-name value="Login User" />
-        <test-name value="shouldn't update refresh token after expired time" />
+        <test-name value="should login user" />
       </test-names>
       <method v="2" />
     </configuration>
-    <configuration name="dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/package.json" />
-      <command value="run" />
-      <scripts>
-        <script value="dev" />
-      </scripts>
+    <configuration name="integration test delete device" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
       <node-interpreter value="project" />
+      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
+      <working-dir value="$PROJECT_DIR$" />
       <envs />
+      <scope-kind value="SUITE" />
+      <test-file value="$PROJECT_DIR$/__tests__/integration/devices/deleteDevice.integration.ts" />
+      <test-names>
+        <test-name value="integration test delete device" />
+      </test-names>
       <method v="2" />
     </configuration>
     <configuration name="test:e2e" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
@@ -307,23 +204,13 @@
       <envs />
       <method v="2" />
     </configuration>
-    <configuration name="watch" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/package.json" />
-      <command value="run" />
-      <scripts>
-        <script value="watch" />
-      </scripts>
-      <node-interpreter value="project" />
-      <envs />
-      <method v="2" />
-    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="npm.test:integration" />
         <item itemvalue="npm.test:e2e" />
-        <item itemvalue="npm.dev" />
-        <item itemvalue="npm.watch" />
-        <item itemvalue="Jest.Login User.shouldn't update refresh token after expired time" />
+        <item itemvalue="Jest.integration test delete device" />
+        <item itemvalue="Jest.Login User.should login user" />
+        <item itemvalue="Jest.Integration Auth.should create tokens" />
       </list>
     </recent_temporary>
   </component>
@@ -364,7 +251,8 @@
       <workItem from="1718206022382" duration="3493000" />
       <workItem from="1718262511830" duration="6322000" />
       <workItem from="1718298332806" duration="30000" />
-      <workItem from="1718298384946" duration="10568000" />
+      <workItem from="1718298384946" duration="10863000" />
+      <workItem from="1718342092388" duration="9114000" />
     </task>
     <task id="LOCAL-00001" summary="small fixes">
       <option name="closed" value="true" />
@@ -422,7 +310,23 @@
       <option name="project" value="LOCAL" />
       <updated>1717242645076</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Ioc Container added">
+      <option name="closed" value="true" />
+      <created>1718310028582</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1718310028582</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Ioc Container added">
+      <option name="closed" value="true" />
+      <created>1718310043096</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1718310043096</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -452,6 +356,8 @@
     <MESSAGE value="transfer to mongoose and correct tests, also small fixes" />
     <MESSAGE value="comment endpoint refactor&#10;&#10;now it contains likesInfo (likes count, dislike count and myStatus), types, schemas for likes were add, correct tests for new schema, likeStatus validator was added" />
     <MESSAGE value="Ioc Container adds" />
-    <option name="LAST_COMMIT_MESSAGE" value="Ioc Container adds" />
+    <MESSAGE value="Ioc Container added" />
+    <MESSAGE value="Tests refactored" />
+    <option name="LAST_COMMIT_MESSAGE" value="Tests refactored" />
   </component>
 </project>

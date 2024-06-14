@@ -18,15 +18,11 @@ const settings_1 = require("../../../src/common/config/settings");
 const ioc_1 = require("../../../src/ioc");
 const jwtService_1 = require("../../../src/common/adapters/jwtService");
 const users_repository_1 = require("../../../src/features/users/repository/users.repository");
-const devices_repository_1 = require("../../../src/features/securityDevices/repository/devices.repository");
 const auth_service_1 = require("../../../src/features/auth/service/auth.service");
 const bcrypt_service_1 = require("../../../src/common/adapters/bcrypt.service");
 describe('Login User', () => {
     const jwtService = ioc_1.container.resolve(jwtService_1.JwtService);
-    const usersRepository = ioc_1.container.resolve(users_repository_1.UsersRepository);
-    const devicesRepository = ioc_1.container.resolve(devices_repository_1.DevicesRepository);
     const authService = ioc_1.container.resolve(auth_service_1.AuthService);
-    const bcryptService = ioc_1.container.resolve(bcrypt_service_1.BcryptService);
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
         const mongod = yield mongodb_memory_server_1.MongoMemoryServer.create();
         const uri = mongod.getUri();
@@ -46,7 +42,8 @@ describe('Login User', () => {
         done();
     });
     it('should login user', () => __awaiter(void 0, void 0, void 0, function* () {
-        usersRepository.findUserWithPass = globals_1.jest.fn().mockImplementation(() => __awaiter(void 0, void 0, void 0, function* () {
+        const findUserWithPassMock = globals_1.jest.spyOn(users_repository_1.UsersRepository.prototype, 'findUserWithPass')
+            .mockImplementation(() => __awaiter(void 0, void 0, void 0, function* () {
             return {
                 _id: 'id',
                 login: 'login',
@@ -58,13 +55,12 @@ describe('Login User', () => {
                 isConfirmed: true
             };
         }));
-        bcryptService.comparePasswordsHash = globals_1.jest.fn()
-            .mockImplementation((reqPassPlainText, dbPassHash) => __awaiter(void 0, void 0, void 0, function* () {
+        globals_1.jest.spyOn(bcrypt_service_1.BcryptService.prototype, 'comparePasswordsHash').mockImplementation((reqPassPlainText, dbPassHash) => __awaiter(void 0, void 0, void 0, function* () {
             return true;
         }));
         const result = yield authService.loginUser({ loginOrEmail: 'login', password: '123' }, 'Chrome', '0.0.0.1');
-        expect(usersRepository.findUserWithPass).toHaveBeenCalled();
-        expect(usersRepository.findUserWithPass).toHaveBeenCalledTimes(1);
+        expect(findUserWithPassMock).toHaveBeenCalled();
+        expect(findUserWithPassMock).toHaveBeenCalledTimes(1);
         expect(result.data).toEqual({
             accessToken: expect.stringMatching(/^([A-Za-z0-9-_]+)\.([A-Za-z0-9-_]+)\.([A-Za-z0-9-_]+)$/),
             refreshToken: expect.stringMatching(/^([A-Za-z0-9-_]+)\.([A-Za-z0-9-_]+)\.([A-Za-z0-9-_]+)$/)

@@ -17,8 +17,6 @@ const ioc_1 = require("../../../src/ioc");
 const email_service_1 = require("../../../src/common/adapters/email.service");
 const auth_service_1 = require("../../../src/features/auth/service/auth.service");
 describe('Integration Auth', () => {
-    const emailService = ioc_1.container.resolve(email_service_1.EmailService);
-    const authService = ioc_1.container.resolve(auth_service_1.AuthService);
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
         const mongod = yield mongodb_memory_server_1.MongoMemoryServer.create();
         const uri = mongod.getUri();
@@ -26,9 +24,6 @@ describe('Integration Auth', () => {
     }));
     beforeEach(() => __awaiter(void 0, void 0, void 0, function* () {
         yield db_1.db.drop();
-        emailService.sendConfirmationCode = jest.fn().mockImplementation((email, subject, confirmationCode) => {
-            return true;
-        });
     }));
     afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
         yield db_1.db.stop();
@@ -42,6 +37,14 @@ describe('Integration Auth', () => {
             email: 'alewka24@gmail.com',
             password: 'qwerty1234@'
         };
+        // const emailService = container.resolve(EmailService)
+        const authService = ioc_1.container.get(auth_service_1.AuthService);
+        const mockMailService = jest.spyOn(email_service_1.EmailService.prototype, 'sendConfirmationCode').mockImplementation((email, subject, confirmationCode) => {
+            return true;
+        });
+        // emailService.sendConfirmationCode = jest.fn().mockImplementation((email:string, subject:string, confirmationCode:string)=>{
+        // 	return true
+        // })
         const result = yield authService.registrationUser(data);
         expect(result).toEqual({
             status: resultStatus_type_1.ResultStatus.Success,
@@ -49,7 +52,7 @@ describe('Integration Auth', () => {
         });
         const dbUser = user_entity_1.UsersModel.find({ login: data.login, email: data.email });
         expect(dbUser).toBeDefined();
-        expect(emailService.sendConfirmationCode).toHaveBeenCalled();
-        expect(emailService.sendConfirmationCode).toHaveBeenCalledTimes(1);
+        expect(mockMailService).toHaveBeenCalled();
+        expect(mockMailService).toHaveBeenCalledTimes(1);
     }));
 });

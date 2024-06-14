@@ -9,49 +9,55 @@ import {EmailService} from "../../../src/common/adapters/email.service";
 import {AuthService} from "../../../src/features/auth/service/auth.service";
 
 describe('Integration Auth', () => {
-	const emailService = container.resolve(EmailService)
-	const authService = container.resolve(AuthService)
 
-	beforeAll(async () => {
-		const mongod = await MongoMemoryServer.create()
-		const uri = mongod.getUri()
-		await db.run(uri)
-	})
+    beforeAll(async () => {
+        const mongod = await MongoMemoryServer.create()
+        const uri = mongod.getUri()
+        await db.run(uri)
+    })
 
-	beforeEach(async ()=>{
-		await db.drop()
-		emailService.sendConfirmationCode = jest.fn().mockImplementation((email:string, subject:string, confirmationCode:string)=>{
-			return true
-		})
-	})
+    beforeEach(async () => {
+        await db.drop()
 
-	afterAll(async () => {
-		await db.stop()
-	})
+    })
 
-	afterAll(done => {
-		done()
-	})
+    afterAll(async () => {
+        await db.stop()
+    })
 
-	it('should create tokens', async () => {
-		const data: IUserInputModel = {
-			login: 'qwerty',
-			email: 'alewka24@gmail.com',
-			password: 'qwerty1234@'
-		}
-		const result:ResultType = await authService.registrationUser(data)
+    afterAll(done => {
+        done()
+    })
 
-		expect(result).toEqual({
-			status: ResultStatus.Success,
-			data: null
-		})
+    it('should create tokens', async () => {
+        const data: IUserInputModel = {
+            login: 'qwerty',
+            email: 'alewka24@gmail.com',
+            password: 'qwerty1234@'
+        }
 
-		const dbUser = UsersModel.find({login: data.login, email: data.email})
+        // const emailService = container.resolve(EmailService)
+        const authService = container.get(AuthService)
+        const mockMailService = jest.spyOn(EmailService.prototype, 'sendConfirmationCode').mockImplementation((email: string, subject: string, confirmationCode: string) => {
+            return true
+        })
+        // emailService.sendConfirmationCode = jest.fn().mockImplementation((email:string, subject:string, confirmationCode:string)=>{
+        // 	return true
+        // })
 
-		expect(dbUser).toBeDefined()
+        const result: ResultType = await authService.registrationUser(data)
 
-		expect(emailService.sendConfirmationCode).toHaveBeenCalled()
-		expect(emailService.sendConfirmationCode).toHaveBeenCalledTimes(1)
+        expect(result).toEqual({
+            status: ResultStatus.Success,
+            data: null
+        })
 
-	})
+        const dbUser = UsersModel.find({login: data.login, email: data.email})
+
+        expect(dbUser).toBeDefined()
+
+        expect(mockMailService).toHaveBeenCalled()
+        expect(mockMailService).toHaveBeenCalledTimes(1)
+
+    })
 })

@@ -7,17 +7,13 @@ import {SETTINGS} from "../../../src/common/config/settings";
 import {container} from "../../../src/ioc";
 import {JwtService} from "../../../src/common/adapters/jwtService";
 import {UsersRepository} from "../../../src/features/users/repository/users.repository";
-import {DevicesRepository} from "../../../src/features/securityDevices/repository/devices.repository";
 import {AuthService} from "../../../src/features/auth/service/auth.service";
 import {BcryptService} from "../../../src/common/adapters/bcrypt.service";
 
 describe('Login User', () => {
 
     const jwtService = container.resolve(JwtService);
-    const usersRepository = container.resolve(UsersRepository)
-    const devicesRepository = container.resolve(DevicesRepository)
     const authService = container.resolve(AuthService)
-    const bcryptService = container.resolve(BcryptService)
 
     beforeAll(async () => {
         const mongod = await MongoMemoryServer.create()
@@ -43,7 +39,8 @@ describe('Login User', () => {
     })
 
     it('should login user', async () => {
-        usersRepository.findUserWithPass = jest.fn<typeof usersRepository.findUserWithPass>().mockImplementation(async () => {
+        const findUserWithPassMock = jest.spyOn(UsersRepository.prototype, 'findUserWithPass')
+            .mockImplementation(async () => {
             return {
                 _id: 'id',
                 login: 'login',
@@ -56,16 +53,15 @@ describe('Login User', () => {
             }
         })
 
-        bcryptService.comparePasswordsHash = jest.fn<typeof bcryptService.comparePasswordsHash>()
-            .mockImplementation(async (reqPassPlainText: string, dbPassHash: string) => {
-                return true
-            })
+        jest.spyOn(BcryptService.prototype, 'comparePasswordsHash').mockImplementation(async (reqPassPlainText: string, dbPassHash: string) => {
+            return true
+        })
 
         const result = await authService.loginUser({loginOrEmail: 'login', password: '123'}, 'Chrome', '0.0.0.1')
 
-        expect(usersRepository.findUserWithPass).toHaveBeenCalled()
+        expect(findUserWithPassMock).toHaveBeenCalled()
 
-        expect(usersRepository.findUserWithPass).toHaveBeenCalledTimes(1)
+        expect(findUserWithPassMock).toHaveBeenCalledTimes(1)
 
         expect(result.data).toEqual({
             accessToken: expect.stringMatching(/^([A-Za-z0-9-_]+)\.([A-Za-z0-9-_]+)\.([A-Za-z0-9-_]+)$/),
