@@ -27,6 +27,7 @@ const postMappers_1 = require("../mappers/postMappers");
 const post_entity_1 = require("../domain/post.entity");
 const blogs_repository_1 = require("../../blogs/repository/blogs.repository");
 const inversify_1 = require("inversify");
+const like_type_1 = require("../../likes/models/like.type");
 let PostsRepository = class PostsRepository {
     constructor(blogsRepository) {
         this.blogsRepository = blogsRepository;
@@ -48,10 +49,12 @@ let PostsRepository = class PostsRepository {
                 content: body.content,
                 blogId: body.blogId,
                 blogName: blogName,
-                createdAt: new Date().toISOString()
+                createdAt: new Date().toISOString(),
+                dislikesCount: 0,
+                likesCount: 0
             };
             const result = yield post_entity_1.PostModel.create(newPost);
-            return !!result ? (0, postMappers_1.getPostViewModel)(newPost) : undefined;
+            return !!result ? (0, postMappers_1.getPostViewModel)(newPost, [], like_type_1.LikeStatus.None) : undefined;
         });
     }
     updatePost(id, body) {

@@ -15,7 +15,7 @@ const http_status_codes_1 = require("http-status-codes");
 const mappers_1 = require("../../../common/utils/mappers");
 const getPostsByBlogIDController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const query = (0, mappers_1.getQueryParams)(req.query);
-    const result = yield blogsQuery_repository_1.blogsQueryRepository.getPostsByBlogID(req.params.id, query);
+    const result = yield blogsQuery_repository_1.blogsQueryRepository.getPostsByBlogID(req.params.id, query, req.userId || null);
     result ? res.status(http_status_codes_1.StatusCodes.OK).json(result) : res.status(http_status_codes_1.StatusCodes.NOT_FOUND).json();
 });
 exports.getPostsByBlogIDController = getPostsByBlogIDController;

@@ -5,4 +5,6 @@ export interface IPostDbModel {
     blogId: string
     blogName: string
     createdAt: string
+    likesCount: number
+    dislikesCount: number
 }

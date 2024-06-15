@@ -1,13 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getCommentView = void 0;
-const commentDb_model_1 = require("../models/commentDb.model");
+const like_type_1 = require("../../likes/models/like.type");
 const getCommentView = (comment, userId = 'default') => {
     let currentStatusArray = [];
     if (comment.likes.length > 0 && userId !== 'default') {
         currentStatusArray = comment.likes.filter(i => i.userId === userId);
     }
-    let currentStatus = commentDb_model_1.LikeStatus.None;
+    let currentStatus = like_type_1.LikeStatus.None;
     if (currentStatusArray.length > 0) {
         currentStatus = currentStatusArray[0].status;
     }

@@ -1,13 +1,14 @@
 import mongoose from "mongoose";
-import {ICommentDbModel, ILikeDbModel} from "../models/commentDb.model";
+import {ICommentDbModel} from "../models/commentDb.model";
 import {ICommentatorInfo} from "../models/commentatorInfo.model";
+import {ILikeCommentsDbModel} from "../../likes/models/like.type";
 
 const CommentatorInfo = new mongoose.Schema<ICommentatorInfo>({
     userId: {type: String, required: true},
     userLogin: {type: String, required: true}
 })
 
-const LikesSchema = new mongoose.Schema<ILikeDbModel>({
+const LikesSchema = new mongoose.Schema<ILikeCommentsDbModel>({
     createdAt: {type: Date, required: true},
     status: {type: String, required: true},
     userId: {type: String, required: true},

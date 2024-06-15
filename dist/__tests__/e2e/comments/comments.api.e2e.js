@@ -15,6 +15,7 @@ const commentsManager_test_1 = require("./commentsManager.test");
 const supertest_1 = require("supertest");
 const app_1 = require("../../../src/app");
 const postsManager_test_1 = require("../posts/postsManager.test");
+const query_model_1 = require("../../../src/common/types/query.model");
 const commentsMappers_1 = require("../../../src/features/comments/mappers/commentsMappers");
 const path_1 = require("../../../src/common/config/path");
 const comments_entity_1 = require("../../../src/features/comments/domain/comments.entity");
@@ -52,7 +53,7 @@ describe('comments e2e tests', () => {
         yield commentsManager_test_1.commentsManagerTest.createComments(25, posts[0]._id.toString());
         const query = {
             sortBy: 'content',
-            sortDirection: 'asc',
+            sortDirection: query_model_1.SortDirection.ascending,
             pageNumber: 2,
             pageSize: 4
         };

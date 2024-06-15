@@ -4,7 +4,7 @@ import { agent } from 'supertest'
 import { app } from '../../../src/app'
 import { blogsManagerTest } from './blogsManager.test'
 import { IBlogViewModel } from '../../../src/features/blogs/models/blogView.model'
-import { IQueryModel } from '../../../src/common/types/query.model'
+import { IQueryInputModel } from '../../../src/common/types/query.model'
 import { authManagerTest } from '../auth/authManager.test'
 import { IBlogInputModel } from '../../../src/features/blogs/models/blogInput.model'
 import { StatusCodes } from 'http-status-codes'
@@ -46,7 +46,7 @@ describe('blogs tests', () => {
 	it('should get blogs with custom pagination', async () => {
 		await blogsManagerTest.createBlogs(40)
 
-		const query: IQueryModel = {
+		const query: IQueryInputModel = {
 			searchNameTerm: 'lo',
 			pageNumber: 2,
 			pageSize: 5,

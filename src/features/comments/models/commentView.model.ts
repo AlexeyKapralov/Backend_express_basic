@@ -1,5 +1,6 @@
 import { ICommentatorInfo } from './commentatorInfo.model'
-import {ILikeInfoViewModel} from "./commentDb.model";
+
+import {ILikeInfoViewModel} from "../../likes/models/like.type";
 
 export interface ICommentViewModel {
 	id: string

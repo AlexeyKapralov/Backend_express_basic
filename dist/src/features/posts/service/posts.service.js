@@ -45,11 +45,11 @@ let PostsService = class PostsService {
                     data: null
                 };
             }
-            const result = yield this.postsRepository.createPost(body, foundBlog.name);
-            return result
+            const createdPost = yield this.postsRepository.createPost(body, foundBlog.name);
+            return createdPost
                 ? {
                     status: resultStatus_type_1.ResultStatus.Success,
-                    data: result
+                    data: createdPost
                 }
                 : {
                     status: resultStatus_type_1.ResultStatus.BadRequest,

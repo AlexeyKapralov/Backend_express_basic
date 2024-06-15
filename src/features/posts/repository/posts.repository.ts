@@ -6,6 +6,7 @@ import {getPostViewModel} from "../mappers/postMappers";
 import {PostModel} from "../domain/post.entity";
 import {BlogsRepository} from "../../blogs/repository/blogs.repository";
 import {inject, injectable} from "inversify";
+import {LikeStatus} from "../../likes/models/like.type";
 
 @injectable()
 export class PostsRepository {
@@ -19,7 +20,6 @@ export class PostsRepository {
         return result ? result : undefined
     }
     async createPost(body: IPostInputModel, blogName: string): Promise<IPostViewModel | undefined> {
-
         const newPost: WithId<IPostDbModel> = {
             _id: new ObjectId(),
             title: body.title,
@@ -27,10 +27,12 @@ export class PostsRepository {
             content: body.content,
             blogId: body.blogId,
             blogName: blogName,
-            createdAt: new Date().toISOString()
+            createdAt: new Date().toISOString(),
+            dislikesCount: 0,
+            likesCount: 0
         }
         const result = await PostModel.create(newPost)
-        return !!result ? getPostViewModel(newPost) : undefined
+        return !!result ? getPostViewModel(newPost, [], LikeStatus.None) : undefined
     }
     async updatePost(id: string, body: IPostInputModel): Promise<boolean> {
 

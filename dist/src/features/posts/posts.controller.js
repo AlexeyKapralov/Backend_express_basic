@@ -83,14 +83,14 @@ let PostsController = class PostsController {
     }
     getPostById(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield this.postsQueryRepository.getPostById(req.params.id);
+            const result = yield this.postsQueryRepository.getPostById(req.params.id, req.userId);
             result ? res.status(http_status_codes_1.StatusCodes.OK).json(result) : res.status(http_status_codes_1.StatusCodes.NOT_FOUND).json();
         });
     }
     getPosts(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const query = (0, mappers_1.getQueryParams)(req.query);
-            const result = yield this.postsQueryRepository.getPosts(query);
+            const result = yield this.postsQueryRepository.getPosts(query, req.userId);
             res.status(http_status_codes_1.StatusCodes.OK).json(result);
         });
     }

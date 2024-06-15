@@ -1,5 +1,6 @@
-import {ICommentDbModel, LikeStatus} from "../models/commentDb.model";
+import {ICommentDbModel} from "../models/commentDb.model";
 import {ICommentViewModel} from "../models/commentView.model";
+import {LikeStatus} from "../../likes/models/like.type";
 
 export const getCommentView = (comment :ICommentDbModel, userId: string = 'default'): ICommentViewModel => {
 

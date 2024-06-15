@@ -4,8 +4,8 @@ import {ResultStatus} from '../../../common/types/resultStatus.type'
 import {ICommentInputModel} from '../models/commentInput.model'
 import {UsersRepository} from "../../users/repository/users.repository";
 import {CommentsRepository} from "../repository/comments.repository";
-import {ILikeDbModel, LikeStatus} from "../models/commentDb.model";
 import {inject, injectable} from "inversify";
+import {ILikeCommentsDbModel, LikeStatus} from "../../likes/models/like.type";
 
 @injectable()
 export class CommentsService {
@@ -78,7 +78,7 @@ export class CommentsService {
 			}
 	}
 
-	async updateLikeStatus(commentId: string, likeData: ILikeDbModel) {
+	async updateLikeStatus(commentId: string, likeData: ILikeCommentsDbModel) {
 
 		const comment = await this.commentsRepository.getCommentById(commentId)
 

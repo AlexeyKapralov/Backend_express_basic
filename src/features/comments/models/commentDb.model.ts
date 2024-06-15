@@ -1,4 +1,5 @@
 import {ICommentatorInfo} from './commentatorInfo.model'
+import {ILikeCommentsDbModel} from "../../likes/models/like.type";
 
 export interface ICommentDbModel {
     _id: string
@@ -8,27 +9,6 @@ export interface ICommentDbModel {
     postId: string
     likesCount: number,
     dislikesCount: number,
-    likes: ILikeDbModel[]
+    likes: ILikeCommentsDbModel[]
 }
 
-export enum LikeStatus {
-    None = 'None',
-    Like = 'Like',
-    Dislike = 'Dislike'
-}
-
-export interface ILikeInfoViewModel {
-    likesCount: number,
-    dislikesCount: number,
-    myStatus: LikeStatus
-}
-
-export interface ILikeDbModel {
-    createdAt: Date,
-    status: LikeStatus,
-    userId: string
-}
-
-export interface ILikeInputModel {
-    likeStatus: LikeStatus,
-}

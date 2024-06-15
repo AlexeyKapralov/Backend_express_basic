@@ -25,8 +25,8 @@ exports.CommentsService = void 0;
 const resultStatus_type_1 = require("../../../common/types/resultStatus.type");
 const users_repository_1 = require("../../users/repository/users.repository");
 const comments_repository_1 = require("../repository/comments.repository");
-const commentDb_model_1 = require("../models/commentDb.model");
 const inversify_1 = require("inversify");
+const like_type_1 = require("../../likes/models/like.type");
 let CommentsService = class CommentsService {
     constructor(usersRepository, commentsRepository) {
         this.usersRepository = usersRepository;
@@ -105,7 +105,7 @@ let CommentsService = class CommentsService {
             const status = comment.likes.filter(i => i.userId === likeData.userId);
             let currentStatus;
             if (status.length === 0) {
-                currentStatus = commentDb_model_1.LikeStatus.None;
+                currentStatus = like_type_1.LikeStatus.None;
             }
             else {
                 currentStatus = status[0].status;
@@ -117,27 +117,27 @@ let CommentsService = class CommentsService {
                 likeIterator = 0;
                 dislikeIterator = 0;
             }
-            if (currentStatus === commentDb_model_1.LikeStatus.Like && newStatus === commentDb_model_1.LikeStatus.Dislike) {
+            if (currentStatus === like_type_1.LikeStatus.Like && newStatus === like_type_1.LikeStatus.Dislike) {
                 likeIterator = -1;
                 dislikeIterator = 1;
             }
-            if (currentStatus === commentDb_model_1.LikeStatus.Dislike && newStatus === commentDb_model_1.LikeStatus.Like) {
+            if (currentStatus === like_type_1.LikeStatus.Dislike && newStatus === like_type_1.LikeStatus.Like) {
                 likeIterator = 1;
                 dislikeIterator = -1;
             }
-            if (currentStatus === commentDb_model_1.LikeStatus.None && newStatus === commentDb_model_1.LikeStatus.Like) {
+            if (currentStatus === like_type_1.LikeStatus.None && newStatus === like_type_1.LikeStatus.Like) {
                 likeIterator = 1;
                 dislikeIterator = 0;
             }
-            if (currentStatus === commentDb_model_1.LikeStatus.Like && newStatus === commentDb_model_1.LikeStatus.None) {
+            if (currentStatus === like_type_1.LikeStatus.Like && newStatus === like_type_1.LikeStatus.None) {
                 likeIterator = -1;
                 dislikeIterator = 0;
             }
-            if (currentStatus === commentDb_model_1.LikeStatus.Dislike && newStatus === commentDb_model_1.LikeStatus.None) {
+            if (currentStatus === like_type_1.LikeStatus.Dislike && newStatus === like_type_1.LikeStatus.None) {
                 likeIterator = 0;
                 dislikeIterator = -1;
             }
-            if (currentStatus === commentDb_model_1.LikeStatus.None && newStatus === commentDb_model_1.LikeStatus.Dislike) {
+            if (currentStatus === like_type_1.LikeStatus.None && newStatus === like_type_1.LikeStatus.Dislike) {
                 likeIterator = 0;
                 dislikeIterator = 1;
             }

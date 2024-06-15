@@ -1,14 +1,14 @@
 import {IUserViewModel} from '../models/userView.model'
 import {SortDirection} from 'mongodb'
 import {IPaginator} from '../../../common/types/paginator'
-import {IQueryModel} from '../../../common/types/query.model'
+import {IQueryInputModel, IQueryOutputModel} from '../../../common/types/query.model'
 import {getUserViewModel} from "../mappers/userMappers";
 import {UsersModel} from "../domain/user.entity";
 import {injectable} from "inversify";
 
 @injectable()
 export class UsersQueryRepository {
-	async findUsers(query: IQueryModel): Promise<IPaginator<IUserViewModel>> {
+	async findUsers(query: IQueryOutputModel): Promise<IPaginator<IUserViewModel>> {
 
 		const conditions = []
 		if (query.searchEmailTerm) {

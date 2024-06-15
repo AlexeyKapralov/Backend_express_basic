@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getPostViewModel = void 0;
-const getPostViewModel = (data) => {
+const getPostViewModel = (data, newestlikes, status) => {
     return {
         id: data._id.toString(),
         title: data.title,
@@ -10,6 +10,12 @@ const getPostViewModel = (data) => {
         blogId: data.blogId,
         blogName: data.blogName,
         createdAt: data.createdAt,
+        extendedLikesInfo: {
+            likesCount: data.likesCount,
+            dislikesCount: data.dislikesCount,
+            newestLikes: newestlikes,
+            myStatus: status
+        }
     };
 };
 exports.getPostViewModel = getPostViewModel;

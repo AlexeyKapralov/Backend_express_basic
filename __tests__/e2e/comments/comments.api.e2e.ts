@@ -4,7 +4,7 @@ import {commentsManagerTest} from "./commentsManager.test";
 import {agent} from "supertest";
 import {app} from "../../../src/app";
 import {postsManagerTest} from "../posts/postsManager.test";
-import {IQueryModel} from "../../../src/common/types/query.model";
+import {IQueryInputModel, IQueryOutputModel, SortDirection} from "../../../src/common/types/query.model";
 import {getCommentView} from "../../../src/features/comments/mappers/commentsMappers";
 import {PATH} from "../../../src/common/config/path";
 import {CommentsModel} from "../../../src/features/comments/domain/comments.entity";
@@ -47,9 +47,9 @@ describe('comments e2e tests', () => {
     it('should get comments array with custom pagination', async () => {
         const posts = await PostModel.find().lean()
         await commentsManagerTest.createComments(25, posts[0]._id.toString())
-        const query:IQueryModel = {
+        const query:IQueryOutputModel = {
             sortBy: 'content',
-            sortDirection: 'asc',
+            sortDirection: SortDirection.ascending,
             pageNumber: 2,
             pageSize: 4
         }

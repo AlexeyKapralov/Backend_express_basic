@@ -30,11 +30,11 @@ export class PostsService {
                 data: null
             }
         }
-        const result = await this.postsRepository.createPost(body, foundBlog.name)
-        return result
+        const createdPost = await this.postsRepository.createPost(body, foundBlog.name)
+        return createdPost
             ? {
                 status: ResultStatus.Success,
-                data: result
+                data: createdPost
             }
             : {
                 status: ResultStatus.BadRequest,

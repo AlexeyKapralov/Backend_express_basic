@@ -1,5 +1,4 @@
 import express, {Request, Response} from 'express'
-import {SETTINGS} from './common/config/settings'
 import {usersRouter} from './features/users/users.router'
 import {authRouter} from './features/auth/authRouter'
 import {db} from './db/db'
@@ -25,9 +24,9 @@ app.delete(PATH.TESTING, async (req: Request, res: Response) => {
     res.status(StatusCodes.NO_CONTENT).send()
 })
 
+app.use(PATH.AUTH, authRouter)
 app.use(PATH.USERS, usersRouter)
 app.use(PATH.BLOGS, blogsRouter)
 app.use(PATH.COMMENTS, commentsRouter)
 app.use(PATH.POSTS, postsRouter)
-app.use(PATH.AUTH, authRouter)
 app.use(PATH.SECURITY, securityDevicesRouter)

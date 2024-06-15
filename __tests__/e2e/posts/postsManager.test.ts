@@ -32,7 +32,10 @@ export const postsManagerTest = {
                 blogId: i % 2 === 0 ? `generatedBlogId ${i + 1}` : `generatedBlogId ${i}`,
                 blogName: i % 2 === 0 ? `generatedName ${i + 1}` : `generatedName ${i}`,
                 content: `generated content ${i}`,
-                shortDescription: `generated description ${i}`
+                shortDescription: `generated description ${i}`,
+                // likesCount: Math.floor(Math.random() * 10),
+                likesCount: 0,
+                dislikesCount: 0
             }
 
             await PostModel.create(post)

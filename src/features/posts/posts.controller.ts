@@ -6,7 +6,7 @@ import {ResultStatus} from "../../common/types/resultStatus.type";
 import {StatusCodes} from "http-status-codes";
 import {IPostInputModel} from "./models/postInput.model";
 import {IPostViewModel} from "./models/postView.model";
-import {IQueryModel} from "../../common/types/query.model";
+import {IQueryInputModel} from "../../common/types/query.model";
 import {IPaginator} from "../../common/types/paginator";
 import {getQueryParams} from "../../common/utils/mappers";
 import {JwtService} from "../../common/adapters/jwtService";
@@ -47,7 +47,7 @@ export class PostsController {
         isDeleted ? res.sendStatus(StatusCodes.NO_CONTENT) : res.sendStatus(StatusCodes.NOT_FOUND)
     }
 
-    async getComments (req: Request<{id:string}, {},{},IQueryModel>, res: Response<IPaginator<ICommentViewModel>>) {
+    async getComments (req: Request<{id:string}, {},{},IQueryInputModel>, res: Response<IPaginator<ICommentViewModel>>) {
 
         const query = getQueryParams(req.query)
 
@@ -72,14 +72,14 @@ export class PostsController {
     }
 
     async getPostById (req: Request, res: Response) {
-        const result = await this.postsQueryRepository.getPostById(req.params.id)
+        const result = await this.postsQueryRepository.getPostById(req.params.id, req.userId)
         result ? res.status(StatusCodes.OK).json(result) : res.status(StatusCodes.NOT_FOUND).json()
     }
 
-    async getPosts (req: Request<{},{},{},IQueryModel>, res: Response<IPaginator<IPostViewModel>>) {
+    async getPosts (req: Request<{},{},{},IQueryInputModel>, res: Response<IPaginator<IPostViewModel>>) {
         const query = getQueryParams(req.query)
 
-        const result = await this.postsQueryRepository.getPosts(query)
+        const result = await this.postsQueryRepository.getPosts(query, req.userId)
 
         res.status(StatusCodes.OK).json(result)
     }

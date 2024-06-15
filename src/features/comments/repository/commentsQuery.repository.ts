@@ -1,7 +1,7 @@
 import { IPaginator } from '../../../common/types/paginator'
 import { ICommentViewModel } from '../models/commentView.model'
 import { SortDirection } from 'mongodb'
-import { IQueryModel } from '../../../common/types/query.model'
+import {IQueryInputModel, IQueryOutputModel} from '../../../common/types/query.model'
 import {getCommentView} from "../mappers/commentsMappers";
 import {PostModel} from "../../posts/domain/post.entity";
 import {CommentsModel} from "../domain/comments.entity";
@@ -9,7 +9,7 @@ import {injectable} from "inversify";
 
 @injectable()
 export class CommentsQueryRepository {
-	async getComments(postId: string, query: IQueryModel, userId: string = 'default'): Promise<IPaginator<ICommentViewModel> | undefined> {
+	async getComments(postId: string, query: IQueryOutputModel, userId: string = 'default'): Promise<IPaginator<ICommentViewModel> | undefined> {
 		const post = await PostModel.findOne({_id: postId})
 
 		if (!post) {

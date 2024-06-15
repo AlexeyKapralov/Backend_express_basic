@@ -17,6 +17,10 @@ import {PostsController} from "./posts.controller";
 export const postsRouter = Router({})
 const postsController = container.resolve(PostsController)
 
+// postsRouter.get('/:id/like-status',
+//     postsController.likeStatus.bind(postsController)
+// )
+
 postsRouter.get('/:id/comments',
     pageNumberValidation,
     pageSizeValidation,

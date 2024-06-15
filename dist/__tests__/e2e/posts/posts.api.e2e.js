@@ -14,12 +14,15 @@ const db_1 = require("../../../src/db/db");
 const supertest_1 = require("supertest");
 const app_1 = require("../../../src/app");
 const postsManager_test_1 = require("./postsManager.test");
+const query_model_1 = require("../../../src/common/types/query.model");
 const http_status_codes_1 = require("http-status-codes");
 const authManager_test_1 = require("../auth/authManager.test");
 const blogsManager_test_1 = require("../blogs/blogsManager.test");
 const postMappers_1 = require("../../../src/features/posts/mappers/postMappers");
 const path_1 = require("../../../src/common/config/path");
 const post_entity_1 = require("../../../src/features/posts/domain/post.entity");
+const likesForPosts_entity_1 = require("../../../src/features/likes/domain/likesForPosts.entity");
+const like_type_1 = require("../../../src/features/likes/models/like.type");
 describe('posts tests', () => {
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
         const mongod = yield mongodb_memory_server_1.MongoMemoryServer.create();
@@ -74,7 +77,35 @@ describe('posts tests', () => {
             .skip((1 - 1) * 10)
             .limit(10)
             .lean();
-        expect(posts.map(postMappers_1.getPostViewModel)).toEqual(res.body.items);
+        let userId = null;
+        //todo как-будто бы эту логику можно вынести в отдельный блок, т.к. она много где повторяется
+        let newPosts = [];
+        yield Promise.all(posts.map((post) => __awaiter(void 0, void 0, void 0, function* () {
+            const newestLikes = yield likesForPosts_entity_1.LikesPostsModel
+                .find({ postId: post._id, description: like_type_1.LikeStatus.Like })
+                .sort({ addedAt: query_model_1.SortDirection.descending })
+                .limit(3)
+                .lean();
+            let currentUserLike = null;
+            if (userId) {
+                currentUserLike = yield likesForPosts_entity_1.LikesPostsModel
+                    .findOne({ postId: post._id, userId: userId })
+                    .lean();
+            }
+            const currentUserLikeStatus = currentUserLike ? currentUserLike.description : like_type_1.LikeStatus.None;
+            const newPost = (0, postMappers_1.getPostViewModel)(post, newestLikes, currentUserLikeStatus);
+            newPosts.push(newPost);
+        })));
+        newPosts.sort(function (a, b) {
+            if (a.createdAt < b.createdAt) {
+                return 1;
+            }
+            if (a.createdAt > b.createdAt) {
+                return -1;
+            }
+            return 0;
+        });
+        expect(newPosts).toEqual(res.body.items);
     }));
     it('should get posts with custom pagination', () => __awaiter(void 0, void 0, void 0, function* () {
         yield db_1.db.drop();
@@ -111,7 +142,35 @@ describe('posts tests', () => {
             .skip((3 - 1) * 6)
             .limit(6)
             .lean();
-        expect(posts.map(postMappers_1.getPostViewModel)).toEqual(res.body.items);
+        let userId = null;
+        //todo как-будто бы эту логику можно вынести в отдельный блок, т.к. она много где повторяется
+        let newPosts = [];
+        yield Promise.all(posts.map((post) => __awaiter(void 0, void 0, void 0, function* () {
+            const newestLikes = yield likesForPosts_entity_1.LikesPostsModel
+                .find({ postId: post._id, description: like_type_1.LikeStatus.Like })
+                .sort({ addedAt: query_model_1.SortDirection.descending })
+                .limit(3)
+                .lean();
+            let currentUserLike = null;
+            if (userId) {
+                currentUserLike = yield likesForPosts_entity_1.LikesPostsModel
+                    .findOne({ postId: post._id, userId: userId })
+                    .lean();
+            }
+            const currentUserLikeStatus = currentUserLike ? currentUserLike.description : like_type_1.LikeStatus.None;
+            const newPost = (0, postMappers_1.getPostViewModel)(post, newestLikes, currentUserLikeStatus);
+            newPosts.push(newPost);
+        })));
+        newPosts.sort(function (a, b) {
+            if (a.createdAt < b.createdAt) {
+                return 1;
+            }
+            if (a.createdAt > b.createdAt) {
+                return -1;
+            }
+            return 0;
+        });
+        expect(newPosts).toEqual(res.body.items);
     }));
     it(`shouldn't create post with no auth`, () => __awaiter(void 0, void 0, void 0, function* () {
         yield (0, supertest_1.agent)(app_1.app)

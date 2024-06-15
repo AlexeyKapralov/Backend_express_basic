@@ -1,10 +1,11 @@
-import {ICommentDbModel, ILikeDbModel} from '../models/commentDb.model'
+import {ICommentDbModel} from '../models/commentDb.model'
 import {ICommentInputModel} from '../models/commentInput.model'
 import {ObjectId, WithId} from 'mongodb'
 import {IPostDbModel} from "../../posts/models/postDb.model";
 import {CommentsModel} from "../domain/comments.entity";
 import {IUserDbModel} from "../../users/models/userDb.model";
 import {injectable} from "inversify";
+import {ILikeCommentsDbModel} from "../../likes/models/like.type";
 
 @injectable()
 export class CommentsRepository {
@@ -70,7 +71,7 @@ export class CommentsRepository {
         return isDeleted.deletedCount > 0
     }
 
-    async updateLikeStatus(commentId: string, likeData: ILikeDbModel, likeIterator: number, dislikeIterator: number): Promise<boolean> {
+    async updateLikeStatus(commentId: string, likeData: ILikeCommentsDbModel, likeIterator: number, dislikeIterator: number): Promise<boolean> {
 
         const isExist = await CommentsModel.find(
             {

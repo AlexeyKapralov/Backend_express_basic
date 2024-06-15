@@ -5,7 +5,7 @@ import {IUserViewModel} from "./models/userView.model";
 import {ResultStatus} from "../../common/types/resultStatus.type";
 import {StatusCodes} from "http-status-codes";
 import {UsersService} from "./service/users.service";
-import {IQueryModel} from "../../common/types/query.model";
+import {IQueryInputModel, IQueryOutputModel} from "../../common/types/query.model";
 import {IPaginator} from "../../common/types/paginator";
 import {getQueryParams} from "../../common/utils/mappers";
 import {UsersQueryRepository} from "./repository/usersQuery.repository";
@@ -39,10 +39,10 @@ export class UsersController {
     }
 
     async getUsers (
-        req: Request<{}, {}, {}, IQueryModel>,
+        req: Request<{}, {}, {}, IQueryInputModel>,
         res: Response<IPaginator<IUserViewModel>>
     ) {
-        const query: IQueryModel = getQueryParams(req.query)
+        const query: IQueryOutputModel = getQueryParams(req.query)
         const result = await this.usersQueryRepository.findUsers(query)
         res.status(StatusCodes.OK).send(result)
     }

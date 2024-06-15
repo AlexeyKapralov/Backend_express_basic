@@ -4,20 +4,61 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="26bf12fa-1c19-43fd-bd80-8f598efb16f4" name="Changes" comment="Tests refactored">
+    <list default="true" id="26bf12fa-1c19-43fd-bd80-8f598efb16f4" name="Changes" comment="static and instance methods was created for Blogs">
+      <change afterPath="$PROJECT_DIR$/src/features/likes/domain/likesForPosts.entity.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/features/likes/mappers/likePosts.mapper.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/features/likes/models/like.type.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/__tests__/unit/auth/refreshToken.unit.ts" beforeDir="false" afterPath="$PROJECT_DIR$/__tests__/unit/auth/refreshToken.unit.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/__tests__/unit/blogs/blogs.unit.ts" beforeDir="false" afterPath="$PROJECT_DIR$/__tests__/unit/blogs/blogs.unit.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/__tests__/unit/auth/refreshToken.unit.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/__tests__/unit/auth/refreshToken.unit.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/__tests__/unit/blogs/blogs.unit.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/__tests__/unit/blogs/blogs.unit.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/blogs/domain/blogs.entity.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/blogs/domain/blogs.entity.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/blogs/repository/blogs.repository.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/blogs/repository/blogs.repository.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/features/blogs/sevice/blogs.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/blogs/sevice/blogs.service.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/src/ioc.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/ioc.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/blogs/domain/blogs.entity.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/blogs/domain/blogs.entity.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/blogs/repository/blogs.repository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/blogs/repository/blogs.repository.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/blogs/sevice/blogs.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/blogs/sevice/blogs.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ioc.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ioc.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/__tests__/e2e/blogs/blogs.api.e2e.ts" beforeDir="false" afterPath="$PROJECT_DIR$/__tests__/e2e/blogs/blogs.api.e2e.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/__tests__/e2e/comments/comments.api.e2e.ts" beforeDir="false" afterPath="$PROJECT_DIR$/__tests__/e2e/comments/comments.api.e2e.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/__tests__/e2e/posts/posts.api.e2e.ts" beforeDir="false" afterPath="$PROJECT_DIR$/__tests__/e2e/posts/posts.api.e2e.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/__tests__/e2e/posts/postsManager.test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/__tests__/e2e/posts/postsManager.test.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/__tests__/integration/comments/comments.integration.ts" beforeDir="false" afterPath="$PROJECT_DIR$/__tests__/integration/comments/comments.integration.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/__tests__/e2e/comments/comments.api.e2e.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/__tests__/e2e/comments/comments.api.e2e.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/__tests__/e2e/posts/posts.api.e2e.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/__tests__/e2e/posts/posts.api.e2e.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/__tests__/e2e/posts/postsManager.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/__tests__/e2e/posts/postsManager.test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/common/types/query.model.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/common/types/query.model.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/common/utils/mappers.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/common/utils/mappers.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/common/validation/express-validation.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/common/validation/express-validation.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/features/blogs/controllers/getPostsByBlogId.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/blogs/controllers/getPostsByBlogId.controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/features/blogs/repository/blogsQuery.repository.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/blogs/repository/blogsQuery.repository.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/features/comments/mappers/commentsMappers.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/comments/mappers/commentsMappers.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/features/comments/models/commentDb.model.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/comments/models/commentDb.model.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/features/comments/service/comments.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/comments/service/comments.service.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/features/posts/domain/post.entity.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/posts/domain/post.entity.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/features/posts/mappers/postMappers.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/posts/mappers/postMappers.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/features/posts/posts.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/posts/posts.controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/features/posts/posts.router.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/posts/posts.router.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/features/posts/repository/posts.repository.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/posts/repository/posts.repository.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/features/posts/repository/postsQuery.repository.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/posts/repository/postsQuery.repository.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/features/posts/service/posts.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/posts/service/posts.service.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/types/query.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/types/query.model.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/utils/mappers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/utils/mappers.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/validation/express-validation.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/validation/express-validation.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/blogs/controllers/getBlogs.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/blogs/controllers/getBlogs.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/blogs/controllers/getPostsByBlogId.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/blogs/controllers/getPostsByBlogId.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/blogs/repository/blogsQuery.repository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/blogs/repository/blogsQuery.repository.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/comments/comments.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/comments/comments.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/comments/domain/comments.entity.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/comments/domain/comments.entity.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/comments/mappers/commentsMappers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/comments/mappers/commentsMappers.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/comments/models/commentDb.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/comments/models/commentDb.model.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/comments/models/commentView.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/comments/models/commentView.model.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/comments/repository/comments.repository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/comments/repository/comments.repository.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/comments/repository/commentsQuery.repository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/comments/repository/commentsQuery.repository.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/comments/service/comments.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/comments/service/comments.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/posts/domain/post.entity.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/posts/domain/post.entity.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/posts/mappers/postMappers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/posts/mappers/postMappers.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/posts/models/postDb.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/posts/models/postDb.model.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/posts/models/postView.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/posts/models/postView.model.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/posts/posts.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/posts/posts.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/posts/posts.router.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/posts/posts.router.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/posts/repository/posts.repository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/posts/repository/posts.repository.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/posts/repository/postsQuery.repository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/posts/repository/postsQuery.repository.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/posts/service/posts.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/posts/service/posts.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/users/repository/usersQuery.repository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/users/repository/usersQuery.repository.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/users/users.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/users/users.controller.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -108,6 +149,8 @@
     "Jest.logout user integration test.shouldn't logout user with incorrect token.executor": "Run",
     "Jest.logout user integration test.shouldn't refresh token if token was logout.executor": "Run",
     "Jest.logout user integration test.test.executor": "Debug",
+    "Jest.posts tests.should get posts with default pagination and empty array.executor": "Run",
+    "Jest.posts tests.should get posts with default pagination.executor": "Run",
     "Jest.posts.api.e2e.ts.executor": "Run",
     "Jest.refresh Token e2e test.executor": "Run",
     "Jest.refresh Token integration test.executor": "Run",
@@ -121,7 +164,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "D:/Projects/IT_Incubator_Projects/examples/ed-back-12-lesson",
+    "last_opened_file_path": "D:/Projects/IT_Incubator_Projects/Social_network_backend_express/src/features/likes/domain",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -140,56 +183,58 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Projects\IT_Incubator_Projects\Social_network_backend_express\src\features\posts\domain" />
       <recent name="D:\Projects\IT_Incubator_Projects\Social_network_backend\__tests__\utils" />
       <recent name="D:\Projects\IT_Incubator_Projects\Social_network_backend\src\middlewares" />
       <recent name="D:\Projects\IT_Incubator_Projects\Social_network_backend\__tests__\e2e\auth" />
       <recent name="D:\Projects\IT_Incubator_Projects\Social_network_backend\__tests__\integration\auth" />
-      <recent name="D:\Projects\IT_Incubator_Projects\Social_network_backend" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Projects\IT_Incubator_Projects\Social_network_backend_express\src\features\likes\domain" />
+      <recent name="D:\Projects\IT_Incubator_Projects\Social_network_backend_express\src\features\likes\models" />
       <recent name="D:\Projects\IT_Incubator\Social_network_backend_express\src\features\comments\controllers" />
       <recent name="D:\Projects\IT_Incubator_Projects\Social_network_backend\src\features\rateLimits\models" />
       <recent name="D:\Projects\IT_Incubator_Projects\Social_network_backend\src\features\users\service" />
-      <recent name="D:\Projects\IT_Incubator_Projects\Social_network_backend\src\features\posts\service" />
-      <recent name="D:\Projects\IT_Incubator_Projects\Social_network_backend\src\features\securityDevices\service" />
+    </key>
+    <key name="es6.move.members.recent.items">
+      <recent name="D:\Projects\IT_Incubator_Projects\Social_network_backend_express\src\common\types\like.type.ts" />
     </key>
   </component>
-  <component name="RunManager" selected="Jest.Test for createBlog method in blogsService">
-    <configuration name="Test for createBlog method in blogsService" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
-      <node-interpreter value="project" />
-      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
-      <working-dir value="$PROJECT_DIR$" />
-      <envs />
-      <scope-kind value="SUITE" />
-      <test-file value="$PROJECT_DIR$/__tests__/unit/blogs/blogs.unit.ts" />
-      <test-names>
-        <test-name value="Test for createBlog method in blogsService" />
-      </test-names>
-      <method v="2" />
-    </configuration>
-    <configuration name="Test for createBlog method in blogsService.unit test for create a new blog from blogService" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Jest.posts tests.should get posts with default pagination">
+    <configuration name="posts tests.should get posts with default pagination and empty array" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
       <node-interpreter value="project" />
       <jest-package value="$PROJECT_DIR$/node_modules/jest" />
       <working-dir value="$PROJECT_DIR$" />
       <envs />
       <scope-kind value="TEST" />
-      <test-file value="$PROJECT_DIR$/__tests__/unit/blogs/blogs.unit.ts" />
+      <test-file value="$PROJECT_DIR$/__tests__/e2e/posts/posts.api.e2e.ts" />
       <test-names>
-        <test-name value="Test for createBlog method in blogsService" />
-        <test-name value="unit test for create a new blog from blogService" />
+        <test-name value="posts tests" />
+        <test-name value="should get posts with default pagination and empty array" />
       </test-names>
       <method v="2" />
     </configuration>
-    <configuration name="refresh token test" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+    <configuration name="posts tests.should get posts with default pagination" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
       <node-interpreter value="project" />
       <jest-package value="$PROJECT_DIR$/node_modules/jest" />
       <working-dir value="$PROJECT_DIR$" />
       <envs />
-      <scope-kind value="SUITE" />
-      <test-file value="$PROJECT_DIR$/__tests__/unit/auth/refreshToken.unit.ts" />
+      <scope-kind value="TEST" />
+      <test-file value="$PROJECT_DIR$/__tests__/e2e/posts/posts.api.e2e.ts" />
       <test-names>
-        <test-name value="refresh token test" />
+        <test-name value="posts tests" />
+        <test-name value="should get posts with default pagination" />
       </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
       <method v="2" />
     </configuration>
     <configuration name="test:e2e" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
@@ -214,11 +259,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Jest.Test for createBlog method in blogsService" />
-        <item itemvalue="Jest.refresh token test" />
-        <item itemvalue="Jest.Test for createBlog method in blogsService.unit test for create a new blog from blogService" />
-        <item itemvalue="npm.test:integration" />
         <item itemvalue="npm.test:e2e" />
+        <item itemvalue="Jest.posts tests.should get posts with default pagination" />
+        <item itemvalue="Jest.posts tests.should get posts with default pagination and empty array" />
+        <item itemvalue="npm.test:integration" />
+        <item itemvalue="npm.dev" />
       </list>
     </recent_temporary>
   </component>
@@ -260,7 +305,8 @@
       <workItem from="1718262511830" duration="6322000" />
       <workItem from="1718298332806" duration="30000" />
       <workItem from="1718298384946" duration="10863000" />
-      <workItem from="1718342092388" duration="20193000" />
+      <workItem from="1718342092388" duration="35846000" />
+      <workItem from="1718475740875" duration="5899000" />
     </task>
     <task id="LOCAL-00001" summary="small fixes">
       <option name="closed" value="true" />
@@ -342,7 +388,15 @@
       <option name="project" value="LOCAL" />
       <updated>1718351524366</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="static and instance methods was created for Blogs">
+      <option name="closed" value="true" />
+      <created>1718447685053</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1718447685053</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -374,6 +428,7 @@
     <MESSAGE value="Ioc Container adds" />
     <MESSAGE value="Ioc Container added" />
     <MESSAGE value="Tests refactored" />
-    <option name="LAST_COMMIT_MESSAGE" value="Tests refactored" />
+    <MESSAGE value="static and instance methods was created for Blogs" />
+    <option name="LAST_COMMIT_MESSAGE" value="static and instance methods was created for Blogs" />
   </component>
 </project>

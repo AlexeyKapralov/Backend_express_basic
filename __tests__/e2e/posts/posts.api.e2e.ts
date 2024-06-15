@@ -3,7 +3,7 @@ import { db } from '../../../src/db/db'
 import { agent } from 'supertest'
 import { app } from '../../../src/app'
 import { postsManagerTest } from './postsManager.test'
-import { IQueryModel } from '../../../src/common/types/query.model'
+import {IQueryInputModel, SortDirection} from '../../../src/common/types/query.model'
 import { StatusCodes } from 'http-status-codes'
 import { authManagerTest } from '../auth/authManager.test'
 import { blogsManagerTest } from '../blogs/blogsManager.test'
@@ -12,6 +12,9 @@ import { IBlogViewModel } from '../../../src/features/blogs/models/blogView.mode
 import {getPostViewModel} from "../../../src/features/posts/mappers/postMappers";
 import {PATH} from "../../../src/common/config/path";
 import {PostModel} from "../../../src/features/posts/domain/post.entity";
+import {IPostViewModel} from "../../../src/features/posts/models/postView.model";
+import {LikesPostsModel} from "../../../src/features/likes/domain/likesForPosts.entity";
+import {ILikePostsDbModel, LikeStatus} from "../../../src/features/likes/models/like.type";
 
 describe('posts tests', () => {
 	beforeAll(async () => {
@@ -76,14 +79,51 @@ describe('posts tests', () => {
 			.limit(10)
 			.lean()
 
-		expect(posts.map(getPostViewModel)).toEqual(res.body.items)
+		let userId = null
+		//todo как-будто бы эту логику можно вынести в отдельный блок, т.к. она много где повторяется
+		let newPosts: IPostViewModel[] = []
+		await Promise.all(
+			posts.map(
+				async post => {
+					const newestLikes = await LikesPostsModel
+						.find({postId: post._id, description: LikeStatus.Like})
+						.sort({addedAt: SortDirection.descending})
+						.limit(3)
+						.lean()
+
+					let currentUserLike: ILikePostsDbModel | null = null
+					if (userId) {
+						currentUserLike = await LikesPostsModel
+							.findOne({postId: post._id, userId: userId})
+							.lean()
+					}
+
+					const currentUserLikeStatus: LikeStatus = currentUserLike ? currentUserLike.description as LikeStatus : LikeStatus.None
+
+					const newPost = getPostViewModel(post, newestLikes, currentUserLikeStatus)
+					newPosts.push(newPost)
+				}
+			)
+		)
+
+		newPosts.sort(function (a, b) {
+			if (a.createdAt < b.createdAt) {
+				return 1;
+			}
+			if (a.createdAt > b.createdAt) {
+				return -1;
+			}
+			return 0;
+		});
+
+		expect(newPosts).toEqual(res.body.items)
 	})
 
 	it('should get posts with custom pagination', async () => {
 		await db.drop()
 		await postsManagerTest.createPosts(20)
 
-		const query: IQueryModel = {
+		const query: IQueryInputModel = {
 			pageNumber: 3,
 			pageSize: 6,
 			sortBy: 'title',
@@ -120,7 +160,44 @@ describe('posts tests', () => {
 			.limit(6)
 			.lean()
 
-		expect(posts.map(getPostViewModel)).toEqual(res.body.items)
+		let userId = null
+		//todo как-будто бы эту логику можно вынести в отдельный блок, т.к. она много где повторяется
+		let newPosts: IPostViewModel[] = []
+		await Promise.all(
+			posts.map(
+				async post => {
+					const newestLikes = await LikesPostsModel
+						.find({postId: post._id, description: LikeStatus.Like})
+						.sort({addedAt: SortDirection.descending})
+						.limit(3)
+						.lean()
+
+					let currentUserLike: ILikePostsDbModel | null = null
+					if (userId) {
+						currentUserLike = await LikesPostsModel
+							.findOne({postId: post._id, userId: userId})
+							.lean()
+					}
+
+					const currentUserLikeStatus: LikeStatus = currentUserLike ? currentUserLike.description as LikeStatus : LikeStatus.None
+
+					const newPost = getPostViewModel(post, newestLikes, currentUserLikeStatus)
+					newPosts.push(newPost)
+				}
+			)
+		)
+
+		newPosts.sort(function (a, b) {
+			if (a.createdAt < b.createdAt) {
+				return 1;
+			}
+			if (a.createdAt > b.createdAt) {
+				return -1;
+			}
+			return 0;
+		});
+
+		expect(newPosts).toEqual(res.body.items)
 	})
 
 	it(`shouldn't create post with no auth`, async () => {

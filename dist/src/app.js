@@ -35,9 +35,9 @@ exports.app.delete(path_1.PATH.TESTING, (req, res) => __awaiter(void 0, void 0, 
     yield db_1.db.drop();
     res.status(http_status_codes_1.StatusCodes.NO_CONTENT).send();
 }));
+exports.app.use(path_1.PATH.AUTH, authRouter_1.authRouter);
 exports.app.use(path_1.PATH.USERS, users_router_1.usersRouter);
 exports.app.use(path_1.PATH.BLOGS, blogs_router_1.blogsRouter);
 exports.app.use(path_1.PATH.COMMENTS, comments_router_1.commentsRouter);
 exports.app.use(path_1.PATH.POSTS, posts_router_1.postsRouter);
-exports.app.use(path_1.PATH.AUTH, authRouter_1.authRouter);
 exports.app.use(path_1.PATH.SECURITY, securityDevices_router_1.securityDevicesRouter);

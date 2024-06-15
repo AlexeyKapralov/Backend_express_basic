@@ -9,10 +9,10 @@ import {ResultStatus} from "../../../src/common/types/resultStatus.type";
 import {ICommentViewModel} from "../../../src/features/comments/models/commentView.model";
 import {ICommentatorInfo} from "../../../src/features/comments/models/commentatorInfo.model";
 import {CommentsModel} from "../../../src/features/comments/domain/comments.entity";
-import {ILikeInfoViewModel} from "../../../src/features/comments/models/commentDb.model";
 import {container} from "../../../src/ioc";
 import {PostsService} from "../../../src/features/posts/service/posts.service";
 import {CommentsService} from "../../../src/features/comments/service/comments.service";
+import {ILikeInfoViewModel} from "../../../src/features/likes/models/like.type";
 
 describe('comments integration tests', () => {
     let tokens

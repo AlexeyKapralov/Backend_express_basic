@@ -13,7 +13,7 @@ exports.likesStatusValidation = exports.codeValidation = exports.contentCommentV
 const express_validator_1 = require("express-validator");
 const user_entity_1 = require("../../features/users/domain/user.entity");
 const blogs_entity_1 = require("../../features/blogs/domain/blogs.entity");
-const commentDb_model_1 = require("../../features/comments/models/commentDb.model");
+const like_type_1 = require("../../features/likes/models/like.type");
 exports.loginValidation = (0, express_validator_1.body)(['login'])
     .trim()
     .isLength({ min: 3, max: 10 })
@@ -136,4 +136,4 @@ exports.codeValidation = (0, express_validator_1.body)('code')
 }));
 exports.likesStatusValidation = (0, express_validator_1.body)('likeStatus')
     .trim()
-    .isIn(Object.values(commentDb_model_1.LikeStatus));
+    .isIn(Object.values(like_type_1.LikeStatus));

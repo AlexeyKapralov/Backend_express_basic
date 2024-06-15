@@ -2,7 +2,7 @@ import {body, param, query} from 'express-validator'
 import {UsersModel} from "../../features/users/domain/user.entity";
 import {BlogModel} from "../../features/blogs/domain/blogs.entity";
 import {IUserDbModel} from "../../features/users/models/userDb.model";
-import {LikeStatus} from "../../features/comments/models/commentDb.model";
+import {LikeStatus} from "../../features/likes/models/like.type";
 
 export const loginValidation = body(['login'])
 	.trim()

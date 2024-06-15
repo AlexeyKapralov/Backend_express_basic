@@ -8,7 +8,7 @@ import {ICommentViewModel} from "./models/commentView.model";
 import {JwtService} from "../../common/adapters/jwtService";
 import {UsersQueryRepository} from "../users/repository/usersQuery.repository";
 import {CommentsQueryRepository} from "./repository/commentsQuery.repository";
-import {ILikeDbModel, ILikeInputModel} from "./models/commentDb.model";
+import {ILikeCommentsDbModel, ILikeInputModel} from "../likes/models/like.type";
 
 @injectable()
 export class CommentsController {
@@ -87,7 +87,7 @@ export class CommentsController {
             return
         }
 
-        const likeData: ILikeDbModel = {
+        const likeData: ILikeCommentsDbModel = {
             status: req.body.likeStatus,
             userId: req.userId!,
             createdAt: new Date()
