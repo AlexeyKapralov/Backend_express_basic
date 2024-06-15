@@ -19,10 +19,11 @@ exports.BlogsRepository = void 0;
 const blogs_entity_1 = require("../domain/blogs.entity");
 const inversify_1 = require("inversify");
 let BlogsRepository = class BlogsRepository {
+    // constructor(@inject(BlogModel) protected blogModel: ) {
+    // }
     createBlog(body) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield blogs_entity_1.BlogModel.create(body);
-            return !!result;
+            return yield blogs_entity_1.BlogModel.initUser(body);
         });
     }
     updateBlogByID(id, body) {

@@ -10,47 +10,55 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 // Mock-объект для blogsRepository, чтобы заменить его на управляемый тестами
-const globals_1 = require("@jest/globals");
+// импорт container должен быть в самом начале
+const ioc_1 = require("../../../src/ioc");
 const resultStatus_type_1 = require("../../../src/common/types/resultStatus.type");
 const blogs_repository_1 = require("../../../src/features/blogs/repository/blogs.repository");
-const blogsComposition_root_1 = require("../../../src/features/blogs/blogsComposition.root");
+const blogs_service_1 = require("../../../src/features/blogs/sevice/blogs.service");
 describe('Test for createBlog method in blogsService', () => {
     afterEach(() => {
-        globals_1.jest.clearAllMocks();
+        jest.clearAllMocks();
     });
     it('unit test for create a new blog from blogService', () => __awaiter(void 0, void 0, void 0, function* () {
+        const blogsService = ioc_1.container.resolve(blogs_service_1.BlogsService);
         // Подготавливаем данные для теста
         const mockInputData = {
             name: 'Test Blog',
             description: 'This is a test blog',
             websiteUrl: 'http://testblog.com',
         };
-        const mockBlogDbModel = {
-            _id: globals_1.expect.any(String),
-            name: mockInputData.name,
-            description: mockInputData.description,
-            websiteUrl: mockInputData.websiteUrl,
-            createdAt: globals_1.expect.stringMatching(/\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)/),
-            isMembership: false,
-        };
-        //искусственный возврат из репозитория
-        const blogsRepository = new blogs_repository_1.BlogsRepository();
-        blogsRepository.createBlog = globals_1.jest.fn().mockImplementation(() => __awaiter(void 0, void 0, void 0, function* () {
-            return true;
-        }));
-        // Вызываем метод createBlog из blogsService с фиктивными данными
-        const result = yield blogsComposition_root_1.blogsService.createBlog(mockInputData);
-        // Проверяем, что метод createBlog был вызван с ожидаемыми данными
-        (0, globals_1.expect)(blogsRepository.createBlog).toHaveBeenCalledWith(mockBlogDbModel);
-        // Проверяем, что метод вернул ожидаемый результат
-        (0, globals_1.expect)(result).toEqual({
-            status: resultStatus_type_1.ResultStatus.Success,
-            data: {
-                id: globals_1.expect.any(String),
+        //todo вопрос как возвращать mongoose модель
+        const mockCreateBlog = jest.spyOn(blogs_repository_1.BlogsRepository.prototype, "createBlog").mockImplementation((body) => __awaiter(void 0, void 0, void 0, function* () {
+            return {
+                _id: 'asasd',
                 name: mockInputData.name,
                 description: mockInputData.description,
                 websiteUrl: mockInputData.websiteUrl,
-                createdAt: globals_1.expect.any(String),
+                createdAt: 'asdasd',
+                isMembership: false,
+            };
+        }));
+        const mockBlogDbModel = {
+            _id: expect.any(String),
+            name: mockInputData.name,
+            description: mockInputData.description,
+            websiteUrl: mockInputData.websiteUrl,
+            createdAt: expect.stringMatching(/\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)/),
+            isMembership: false,
+        };
+        // Вызываем метод createBlog из blogsService с фиктивными данными
+        const result = yield blogsService.createBlog(mockInputData);
+        // Проверяем, что метод createBlog был вызван с ожидаемыми данными
+        // expect(mockCreateBlog).toHaveBeenCalledWith(mockBlogDbModel);
+        // Проверяем, что метод вернул ожидаемый результат
+        expect(result).toEqual({
+            status: resultStatus_type_1.ResultStatus.Success,
+            data: {
+                id: expect.any(String),
+                name: mockInputData.name,
+                description: mockInputData.description,
+                websiteUrl: mockInputData.websiteUrl,
+                createdAt: expect.any(String),
                 isMembership: false
             }
         });

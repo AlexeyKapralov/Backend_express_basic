@@ -1,4 +1,16 @@
 "use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -10,28 +22,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BlogsService = void 0;
-const mongodb_1 = require("mongodb");
 const resultStatus_type_1 = require("../../../common/types/resultStatus.type");
 const blogsMappers_1 = require("../mappers/blogsMappers");
-class BlogsService {
+const blogs_repository_1 = require("../repository/blogs.repository");
+const posts_repository_1 = require("../../posts/repository/posts.repository");
+const inversify_1 = require("inversify");
+let BlogsService = class BlogsService {
     constructor(blogsRepository, postsRepository) {
         this.blogsRepository = blogsRepository;
         this.postsRepository = postsRepository;
     }
     createBlog(body) {
         return __awaiter(this, void 0, void 0, function* () {
-            const blog = {
-                _id: new mongodb_1.ObjectId().toString(),
-                name: body.name,
-                description: body.description,
-                websiteUrl: body.websiteUrl,
-                createdAt: new Date().toISOString(),
-                isMembership: false
-            };
-            const result = yield this.blogsRepository.createBlog(blog);
-            return result ? {
+            const createdBlog = yield this.blogsRepository.createBlog(body);
+            return createdBlog ? {
                 status: resultStatus_type_1.ResultStatus.Success,
-                data: (0, blogsMappers_1.getBlogViewModel)(blog)
+                data: (0, blogsMappers_1.getBlogViewModel)(createdBlog)
             } : {
                 status: resultStatus_type_1.ResultStatus.NotFound,
                 errorMessage: 'blog did not found',
@@ -93,5 +99,12 @@ class BlogsService {
                 };
         });
     }
-}
+};
 exports.BlogsService = BlogsService;
+exports.BlogsService = BlogsService = __decorate([
+    (0, inversify_1.injectable)(),
+    __param(0, (0, inversify_1.inject)(blogs_repository_1.BlogsRepository)),
+    __param(1, (0, inversify_1.inject)(posts_repository_1.PostsRepository)),
+    __metadata("design:paramtypes", [blogs_repository_1.BlogsRepository,
+        posts_repository_1.PostsRepository])
+], BlogsService);

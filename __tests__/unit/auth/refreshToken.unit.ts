@@ -1,6 +1,6 @@
+import {container} from "../../../src/ioc";
 import {JwtService} from "../../../src/common/adapters/jwtService";
 import {IDeviceDbModel} from "../../../src/features/securityDevices/models/deviceDb.model";
-import {container} from "../../../src/ioc";
 
 describe( 'refresh token test', () => {
     const jwtService = container.resolve(JwtService)

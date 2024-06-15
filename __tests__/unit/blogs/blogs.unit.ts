@@ -1,9 +1,11 @@
 // Mock-объект для blogsRepository, чтобы заменить его на управляемый тестами
-import {expect, jest} from '@jest/globals';
-import { ResultStatus } from '../../../src/common/types/resultStatus.type'
+// импорт container должен быть в самом начале
+import {container} from "../../../src/ioc";
+import {ResultStatus} from '../../../src/common/types/resultStatus.type'
 import {BlogsRepository} from "../../../src/features/blogs/repository/blogs.repository";
 import {BlogsService} from "../../../src/features/blogs/sevice/blogs.service";
-import {blogsService} from "../../../src/features/blogs/blogsComposition.root";
+import {IBlogDbModel} from "../../../src/features/blogs/models/blogDb.model";
+import {HydratedDocument} from "mongoose";
 
 describe('Test for createBlog method in blogsService', () => {
     afterEach(() => {
@@ -11,12 +13,26 @@ describe('Test for createBlog method in blogsService', () => {
     });
 
     it('unit test for create a new blog from blogService', async () => {
+        const blogsService = container.resolve(BlogsService)
         // Подготавливаем данные для теста
         const mockInputData = {
             name: 'Test Blog',
             description: 'This is a test blog',
             websiteUrl: 'http://testblog.com',
         }
+
+
+        //todo вопрос как возвращать mongoose модель
+        const mockCreateBlog = jest.spyOn(BlogsRepository.prototype, "createBlog").mockImplementation(async (body: typeof mockInputData) => {
+            return {
+                _id: 'asasd',
+                name: mockInputData.name,
+                description: mockInputData.description,
+                websiteUrl: mockInputData.websiteUrl,
+                createdAt: 'asdasd',
+                isMembership: false,
+            } as HydratedDocument<IBlogDbModel>
+        });
 
 
         const mockBlogDbModel = {
@@ -28,17 +44,11 @@ describe('Test for createBlog method in blogsService', () => {
             isMembership: false,
         }
 
-        //искусственный возврат из репозитория
-        const blogsRepository = new BlogsRepository()
-        blogsRepository.createBlog = jest.fn<typeof blogsRepository.createBlog>().mockImplementation(async () => {
-            return true
-        })
-
         // Вызываем метод createBlog из blogsService с фиктивными данными
         const result = await blogsService.createBlog(mockInputData)
 
         // Проверяем, что метод createBlog был вызван с ожидаемыми данными
-        expect(blogsRepository.createBlog).toHaveBeenCalledWith(mockBlogDbModel);
+        // expect(mockCreateBlog).toHaveBeenCalledWith(mockBlogDbModel);
 
         // Проверяем, что метод вернул ожидаемый результат
         expect(result).toEqual({

@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const jwtService_1 = require("../../../src/common/adapters/jwtService");
 const ioc_1 = require("../../../src/ioc");
+const jwtService_1 = require("../../../src/common/adapters/jwtService");
 describe('refresh token test', () => {
     const jwtService = ioc_1.container.resolve(jwtService_1.JwtService);
     it.skip('should refresh token', () => {

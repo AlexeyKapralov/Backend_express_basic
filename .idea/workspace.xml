@@ -6,12 +6,18 @@
   <component name="ChangeListManager">
     <list default="true" id="26bf12fa-1c19-43fd-bd80-8f598efb16f4" name="Changes" comment="Tests refactored">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/__tests__/integration/auth/loginUser.integration.ts" beforeDir="false" afterPath="$PROJECT_DIR$/__tests__/integration/auth/loginUser.integration.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/__tests__/integration/auth/registerUser.integration.ts" beforeDir="false" afterPath="$PROJECT_DIR$/__tests__/integration/auth/registerUser.integration.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/__tests__/integration/devices/deleteDevice.integration.ts" beforeDir="false" afterPath="$PROJECT_DIR$/__tests__/integration/devices/deleteDevice.integration.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/__tests__/integration/auth/loginUser.integration.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/__tests__/integration/auth/loginUser.integration.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/__tests__/integration/auth/registerUser.integration.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/__tests__/integration/auth/registerUser.integration.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/__tests__/integration/devices/deleteDevice.integration.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/__tests__/integration/devices/deleteDevice.integration.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/__tests__/unit/auth/refreshToken.unit.ts" beforeDir="false" afterPath="$PROJECT_DIR$/__tests__/unit/auth/refreshToken.unit.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/__tests__/unit/blogs/blogs.unit.ts" beforeDir="false" afterPath="$PROJECT_DIR$/__tests__/unit/blogs/blogs.unit.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/__tests__/unit/auth/refreshToken.unit.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/__tests__/unit/auth/refreshToken.unit.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/__tests__/unit/blogs/blogs.unit.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/__tests__/unit/blogs/blogs.unit.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/features/blogs/domain/blogs.entity.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/blogs/domain/blogs.entity.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/features/blogs/repository/blogs.repository.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/blogs/repository/blogs.repository.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/features/blogs/sevice/blogs.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/features/blogs/sevice/blogs.service.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/src/ioc.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/src/ioc.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/blogs/domain/blogs.entity.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/blogs/domain/blogs.entity.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/blogs/repository/blogs.repository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/blogs/repository/blogs.repository.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/blogs/sevice/blogs.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/blogs/sevice/blogs.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ioc.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ioc.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,6 +72,8 @@
     "Jest.Login User.should login user.executor": "Run",
     "Jest.Login User.should update refresh token.executor": "Run",
     "Jest.Login User.shouldn't update refresh token after expired time.executor": "Run",
+    "Jest.Test for createBlog method in blogsService.executor": "Run",
+    "Jest.Test for createBlog method in blogsService.unit test for create a new blog from blogService.executor": "Run",
     "Jest.auth test (1).executor": "Run",
     "Jest.auth test.executor": "Run",
     "Jest.auth test.should auth.executor": "Debug",
@@ -104,6 +112,7 @@
     "Jest.refresh Token e2e test.executor": "Run",
     "Jest.refresh Token integration test.executor": "Run",
     "Jest.refresh Token integration test.should refresh token.executor": "Debug",
+    "Jest.refresh token test.executor": "Run",
     "Jest.refresh token test.should refresh token.executor": "Run",
     "Jest.show-delayed-banner.executor": "Run",
     "Jest.user tests.executor": "Run",
@@ -145,42 +154,41 @@
       <recent name="D:\Projects\IT_Incubator_Projects\Social_network_backend\src\features\securityDevices\service" />
     </key>
   </component>
-  <component name="RunManager" selected="Jest.integration test delete device">
-    <configuration name="Integration Auth.should create tokens" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
-      <node-interpreter value="project" />
-      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
-      <working-dir value="$PROJECT_DIR$" />
-      <envs />
-      <scope-kind value="TEST" />
-      <test-file value="$PROJECT_DIR$/__tests__/integration/auth/registerUser.integration.ts" />
-      <test-names>
-        <test-name value="Integration Auth" />
-        <test-name value="should create tokens" />
-      </test-names>
-      <method v="2" />
-    </configuration>
-    <configuration name="Login User.should login user" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
-      <node-interpreter value="project" />
-      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
-      <working-dir value="$PROJECT_DIR$" />
-      <envs />
-      <scope-kind value="TEST" />
-      <test-file value="$PROJECT_DIR$/__tests__/integration/auth/loginUser.integration.ts" />
-      <test-names>
-        <test-name value="Login User" />
-        <test-name value="should login user" />
-      </test-names>
-      <method v="2" />
-    </configuration>
-    <configuration name="integration test delete device" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Jest.Test for createBlog method in blogsService">
+    <configuration name="Test for createBlog method in blogsService" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
       <node-interpreter value="project" />
       <jest-package value="$PROJECT_DIR$/node_modules/jest" />
       <working-dir value="$PROJECT_DIR$" />
       <envs />
       <scope-kind value="SUITE" />
-      <test-file value="$PROJECT_DIR$/__tests__/integration/devices/deleteDevice.integration.ts" />
+      <test-file value="$PROJECT_DIR$/__tests__/unit/blogs/blogs.unit.ts" />
       <test-names>
-        <test-name value="integration test delete device" />
+        <test-name value="Test for createBlog method in blogsService" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="Test for createBlog method in blogsService.unit test for create a new blog from blogService" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="TEST" />
+      <test-file value="$PROJECT_DIR$/__tests__/unit/blogs/blogs.unit.ts" />
+      <test-names>
+        <test-name value="Test for createBlog method in blogsService" />
+        <test-name value="unit test for create a new blog from blogService" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="refresh token test" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="SUITE" />
+      <test-file value="$PROJECT_DIR$/__tests__/unit/auth/refreshToken.unit.ts" />
+      <test-names>
+        <test-name value="refresh token test" />
       </test-names>
       <method v="2" />
     </configuration>
@@ -206,11 +214,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Jest.Test for createBlog method in blogsService" />
+        <item itemvalue="Jest.refresh token test" />
+        <item itemvalue="Jest.Test for createBlog method in blogsService.unit test for create a new blog from blogService" />
         <item itemvalue="npm.test:integration" />
         <item itemvalue="npm.test:e2e" />
-        <item itemvalue="Jest.integration test delete device" />
-        <item itemvalue="Jest.Login User.should login user" />
-        <item itemvalue="Jest.Integration Auth.should create tokens" />
       </list>
     </recent_temporary>
   </component>
@@ -252,7 +260,7 @@
       <workItem from="1718262511830" duration="6322000" />
       <workItem from="1718298332806" duration="30000" />
       <workItem from="1718298384946" duration="10863000" />
-      <workItem from="1718342092388" duration="9114000" />
+      <workItem from="1718342092388" duration="20193000" />
     </task>
     <task id="LOCAL-00001" summary="small fixes">
       <option name="closed" value="true" />
@@ -326,7 +334,15 @@
       <option name="project" value="LOCAL" />
       <updated>1718310043096</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Tests refactored">
+      <option name="closed" value="true" />
+      <created>1718351524366</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1718351524366</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

@@ -1,4 +1,3 @@
-import {IBlogDbModel} from "../models/blogDb.model";
 import {IBlogInputModel} from "../models/blogInput.model";
 import {BlogModel} from "../domain/blogs.entity";
 import {injectable} from "inversify";
@@ -6,9 +5,11 @@ import {injectable} from "inversify";
 @injectable()
 export class BlogsRepository {
 
-    async createBlog(body: IBlogDbModel) {
-        const result = await BlogModel.create(body)
-        return !!result
+    // constructor(@inject(BlogModel) protected blogModel: ) {
+    // }
+
+    async createBlog(body: IBlogInputModel) {
+        return await BlogModel.initUser(body)
     }
     async updateBlogByID(id: string, body: IBlogInputModel): Promise<boolean> {
         const result = await BlogModel.updateOne({

@@ -18,6 +18,7 @@ import {PostsService} from "./features/posts/service/posts.service";
 import {BlogsRepository} from "./features/blogs/repository/blogs.repository";
 import {PostsRepository} from "./features/posts/repository/posts.repository";
 import {PostsQueryRepository} from "./features/posts/repository/postsQuery.repository";
+import {BlogsService} from "./features/blogs/sevice/blogs.service";
 
 export const container = new Container()
 
@@ -25,6 +26,7 @@ container.bind(CommentsService).to(CommentsService)
 container.bind(UsersService).to(UsersService)
 container.bind(AuthService).to(AuthService)
 container.bind(DevicesService).to(DevicesService)
+container.bind(BlogsService).to(BlogsService)
 
 container.bind(JwtService).to(JwtService)
 container.bind(BcryptService).to(BcryptService)

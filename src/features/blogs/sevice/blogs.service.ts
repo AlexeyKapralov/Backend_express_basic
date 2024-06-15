@@ -1,35 +1,28 @@
-import { IBlogInputModel, IBlogPostInputModel } from '../models/blogInput.model'
-import { IBlogDbModel } from '../models/blogDb.model'
-import { ObjectId } from 'mongodb'
-import { ResultType } from '../../../common/types/result.type'
-import { IBlogViewModel } from '../models/blogView.model'
-import { ResultStatus } from '../../../common/types/resultStatus.type'
-import { IPostViewModel } from '../../posts/models/postView.model'
+import {IBlogInputModel, IBlogPostInputModel} from '../models/blogInput.model'
+import {ResultType} from '../../../common/types/result.type'
+import {IBlogViewModel} from '../models/blogView.model'
+import {ResultStatus} from '../../../common/types/resultStatus.type'
+import {IPostViewModel} from '../../posts/models/postView.model'
 import {getBlogViewModel} from "../mappers/blogsMappers";
 import {BlogsRepository} from "../repository/blogs.repository";
 import {PostsRepository} from "../../posts/repository/posts.repository";
+import {inject, injectable} from "inversify";
 
+@injectable()
 export class BlogsService {
 
 	constructor(
-		protected blogsRepository: BlogsRepository,
-		protected postsRepository: PostsRepository
+		@inject(BlogsRepository) protected blogsRepository: BlogsRepository,
+		@inject(PostsRepository) protected postsRepository: PostsRepository
 	) {}
 
 	async createBlog(body: IBlogInputModel): Promise<ResultType<IBlogViewModel | null>> {
-		const blog: IBlogDbModel = {
-			_id: new ObjectId().toString(),
-			name: body.name,
-			description: body.description,
-			websiteUrl: body.websiteUrl,
-			createdAt: new Date().toISOString(),
-			isMembership: false
-		}
-		const result = await this.blogsRepository.createBlog(blog)
 
-		return result ? {
+		const createdBlog = await this.blogsRepository.createBlog(body)
+
+		return createdBlog ? {
 			status: ResultStatus.Success,
-			data: getBlogViewModel(blog)
+			data: getBlogViewModel(createdBlog)
 		} : {
 			status: ResultStatus.NotFound,
 			errorMessage: 'blog did not found',
