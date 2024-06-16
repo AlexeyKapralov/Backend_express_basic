@@ -14,6 +14,7 @@ import {PostsService} from "./service/posts.service";
 import {UsersQueryRepository} from "../users/repository/usersQuery.repository";
 import {CommentsQueryRepository} from "../comments/repository/commentsQuery.repository";
 import {PostsQueryRepository} from "./repository/postsQuery.repository";
+import {ILikeInputModel} from "../likes/models/like.type";
 
 @injectable()
 export class PostsController {
@@ -81,11 +82,22 @@ export class PostsController {
 
         const result = await this.postsQueryRepository.getPosts(query, req.userId)
 
-        res.status(StatusCodes.OK).json(result)
+        res.status(StatusCodes.OK).send(result)
     }
 
     async updatePostById (req: Request<{ id: string }, {}, IPostInputModel>, res: Response) {
         const result = await this.postsService.updatePost(req.params.id, req.body)
         result ? res.status(StatusCodes.NO_CONTENT).json() : res.status(StatusCodes.NOT_FOUND).json()
+    }
+
+    async likePost(req: Request<{postId: string}, {}, ILikeInputModel>, res: Response) {
+        const likePostResult = await this.postsService.likePost(req.params.postId, req.userId || '', req.body.likeStatus)
+
+        if (likePostResult.status === ResultStatus.Success) {
+            res.status(StatusCodes.NO_CONTENT).send()
+        }
+        if (likePostResult.status === ResultStatus.NotFound) {
+            res.status(StatusCodes.NOT_FOUND).send()
+        }
     }
 }

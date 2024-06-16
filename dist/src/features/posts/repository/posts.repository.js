@@ -28,6 +28,8 @@ const post_entity_1 = require("../domain/post.entity");
 const blogs_repository_1 = require("../../blogs/repository/blogs.repository");
 const inversify_1 = require("inversify");
 const like_type_1 = require("../../likes/models/like.type");
+const likesForPosts_entity_1 = require("../../likes/domain/likesForPosts.entity");
+const user_entity_1 = require("../../users/domain/user.entity");
 let PostsRepository = class PostsRepository {
     constructor(blogsRepository) {
         this.blogsRepository = blogsRepository;
@@ -82,6 +84,73 @@ let PostsRepository = class PostsRepository {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield post_entity_1.PostModel.deleteOne({ _id: id });
             return result.deletedCount > 0;
+        });
+    }
+    likePost(postId, userId, likeStatus) {
+        return __awaiter(this, void 0, void 0, function* () {
+            //найти юзера
+            //найти пост
+            let user = null;
+            let post = null;
+            try {
+                user = yield user_entity_1.UsersModel.findOne({ _id: userId });
+                post = yield post_entity_1.PostModel.findOne({ _id: postId });
+            }
+            catch (_a) {
+                return false;
+            }
+            //проверка есть ли он
+            if (!post || !user) {
+                return false;
+            }
+            //есть ли у юзера лайк/дизлайк
+            //нет - создать, да изменить статус
+            let like = yield likesForPosts_entity_1.LikesPostsModel.findOne({ postId: postId, userId: userId });
+            let isNewLike = false;
+            if (!like) {
+                like = yield likesForPosts_entity_1.LikesPostsModel.initLikePost(like_type_1.LikeStatus.None, userId, postId, user.login);
+                isNewLike = true;
+            }
+            //todo возможно стоит убрать в likePostsEntity
+            //изменить в постах колво лойков дизлайков
+            if (likeStatus === like.description) {
+                return true;
+            }
+            switch (true) {
+                case (likeStatus === like_type_1.LikeStatus.Like && like.description === like_type_1.LikeStatus.Dislike):
+                    yield like.setDescription(likeStatus);
+                    yield post.addCountLikes(1);
+                    yield post.addCountDislikes(-1);
+                    break;
+                case (likeStatus === like_type_1.LikeStatus.Like && like.description === like_type_1.LikeStatus.None):
+                    yield like.setDescription(likeStatus);
+                    yield post.addCountLikes(1);
+                    // post.addCountDislikes(0)
+                    break;
+                case (likeStatus === like_type_1.LikeStatus.Dislike && like.description === like_type_1.LikeStatus.Like):
+                    yield like.setDescription(likeStatus);
+                    yield post.addCountLikes(-1);
+                    yield post.addCountDislikes(1);
+                    break;
+                case (likeStatus === like_type_1.LikeStatus.Dislike && like.description === like_type_1.LikeStatus.None):
+                    yield like.setDescription(likeStatus);
+                    // post.addCountLikes(0)
+                    yield post.addCountDislikes(1);
+                    break;
+                case (likeStatus === like_type_1.LikeStatus.None && like.description === like_type_1.LikeStatus.Like):
+                    yield like.setDescription(likeStatus);
+                    yield post.addCountLikes(-1);
+                    // post.addCountDislikes(0)
+                    break;
+                case (likeStatus === like_type_1.LikeStatus.None && like.description === like_type_1.LikeStatus.Dislike):
+                    yield like.setDescription(likeStatus);
+                    // post.addCountLikes(0)
+                    yield post.addCountDislikes(-1);
+                    break;
+                default:
+                    break;
+            }
+            return true;
         });
     }
 };

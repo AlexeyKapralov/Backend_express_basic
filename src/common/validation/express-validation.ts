@@ -3,6 +3,7 @@ import {UsersModel} from "../../features/users/domain/user.entity";
 import {BlogModel} from "../../features/blogs/domain/blogs.entity";
 import {IUserDbModel} from "../../features/users/models/userDb.model";
 import {LikeStatus} from "../../features/likes/models/like.type";
+import {PostModel} from "../../features/posts/domain/post.entity";
 
 export const loginValidation = body(['login'])
 	.trim()
@@ -96,8 +97,16 @@ export const websiteUrlValidation = body('websiteUrl').trim().isLength({ min: 1,
 export const titleValidation = body('title').trim().isLength({ min: 1, max: 30 })
 export const shortDescriptionValidation = body('shortDescription').trim().isLength({ min: 1, max: 100 })
 export const contentValidation = body('content').trim().isLength({ min: 1, max: 1000 })
+export const likeStatusValidation = body('likeStatus').trim().isLength({ min: 1 }).isIn(Object.values(LikeStatus))
 
 // так не делается, но для задачи нужно и по другому никак
+export const postIdParamValidation = param('postId').trim().custom(async value => {
+	const post = await PostModel.findOne({ _id: value })
+	if (!post) {
+		throw new Error('post not found')
+	}
+})
+
 export const blogIdParamValidation = param('id').trim().custom(async value => {
 	const blog = await BlogModel.findOne({ _id: value })
 	if (!blog) {

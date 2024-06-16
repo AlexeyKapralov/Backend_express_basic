@@ -10,6 +10,7 @@ import {PostsRepository} from "../repository/posts.repository";
 import {UsersRepository} from "../../users/repository/users.repository";
 import {CommentsRepository} from "../../comments/repository/comments.repository";
 import {inject, injectable} from "inversify";
+import {LikeStatus} from "../../likes/models/like.type";
 
 @injectable()
 export class PostsService {
@@ -88,5 +89,18 @@ export class PostsService {
                 data: null
             }
         }
+    }
+
+    async likePost(postId: string, userId: string, likeStatus: LikeStatus): Promise<ResultType> {
+        const isLiked = await this.postsRepository.likePost(postId, userId, likeStatus)
+        return isLiked
+            ? {
+                status: ResultStatus.Success,
+                data: null
+            }
+            : {
+                status: ResultStatus.NotFound,
+                data: null
+            }
     }
 }

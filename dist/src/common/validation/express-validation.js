@@ -9,11 +9,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.likesStatusValidation = exports.codeValidation = exports.contentCommentValidation = exports.postIdValidation = exports.blogIdInBodyValidation = exports.blogIdParamValidation = exports.contentValidation = exports.shortDescriptionValidation = exports.titleValidation = exports.websiteUrlValidation = exports.descriptionValidation = exports.nameValidation = exports.searchNameTermValidation = exports.searchEmailTermValidation = exports.searchLoginTermValidation = exports.pageSizeValidation = exports.pageNumberValidation = exports.sortDirectionValidation = exports.sortByValidation = exports.recoveryCodeValidation = exports.emailValidationForResend = exports.emailValidationForRegistration = exports.emailValidationForRecovery = exports.newPasswordValidation = exports.passwordValidation = exports.loginOrEmailValidation = exports.loginValidation = void 0;
+exports.likesStatusValidation = exports.codeValidation = exports.contentCommentValidation = exports.postIdValidation = exports.blogIdInBodyValidation = exports.blogIdParamValidation = exports.postIdParamValidation = exports.likeStatusValidation = exports.contentValidation = exports.shortDescriptionValidation = exports.titleValidation = exports.websiteUrlValidation = exports.descriptionValidation = exports.nameValidation = exports.searchNameTermValidation = exports.searchEmailTermValidation = exports.searchLoginTermValidation = exports.pageSizeValidation = exports.pageNumberValidation = exports.sortDirectionValidation = exports.sortByValidation = exports.recoveryCodeValidation = exports.emailValidationForResend = exports.emailValidationForRegistration = exports.emailValidationForRecovery = exports.newPasswordValidation = exports.passwordValidation = exports.loginOrEmailValidation = exports.loginValidation = void 0;
 const express_validator_1 = require("express-validator");
 const user_entity_1 = require("../../features/users/domain/user.entity");
 const blogs_entity_1 = require("../../features/blogs/domain/blogs.entity");
 const like_type_1 = require("../../features/likes/models/like.type");
+const post_entity_1 = require("../../features/posts/domain/post.entity");
 exports.loginValidation = (0, express_validator_1.body)(['login'])
     .trim()
     .isLength({ min: 3, max: 10 })
@@ -99,7 +100,14 @@ exports.websiteUrlValidation = (0, express_validator_1.body)('websiteUrl').trim(
 exports.titleValidation = (0, express_validator_1.body)('title').trim().isLength({ min: 1, max: 30 });
 exports.shortDescriptionValidation = (0, express_validator_1.body)('shortDescription').trim().isLength({ min: 1, max: 100 });
 exports.contentValidation = (0, express_validator_1.body)('content').trim().isLength({ min: 1, max: 1000 });
+exports.likeStatusValidation = (0, express_validator_1.body)('likeStatus').trim().isLength({ min: 1 }).isIn(Object.values(like_type_1.LikeStatus));
 // так не делается, но для задачи нужно и по другому никак
+exports.postIdParamValidation = (0, express_validator_1.param)('postId').trim().custom((value) => __awaiter(void 0, void 0, void 0, function* () {
+    const post = yield post_entity_1.PostModel.findOne({ _id: value });
+    if (!post) {
+        throw new Error('post not found');
+    }
+}));
 exports.blogIdParamValidation = (0, express_validator_1.param)('id').trim().custom((value) => __awaiter(void 0, void 0, void 0, function* () {
     const blog = yield blogs_entity_1.BlogModel.findOne({ _id: value });
     if (!blog) {

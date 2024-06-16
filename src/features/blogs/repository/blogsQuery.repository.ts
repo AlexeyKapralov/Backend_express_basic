@@ -8,6 +8,7 @@ import {BlogModel} from "../domain/blogs.entity";
 import {PostModel} from "../../posts/domain/post.entity";
 import {LikesPostsModel} from "../../likes/domain/likesForPosts.entity";
 import {ILikePostsDbModel, LikeStatus} from "../../likes/models/like.type";
+import {likePostsMapper} from "../../likes/mappers/likePosts.mapper";
 
 export const blogsQueryRepository = {
     async getBlogs(query: IQueryOutputModel): Promise<IPaginator<IBlogViewModel>> {
@@ -63,16 +64,18 @@ export const blogsQueryRepository = {
                         .limit(3)
                         .lean()
 
+                    const newestLikesMapped = newestLikes.map(likePostsMapper)
+
                     let currentUserLike: ILikePostsDbModel | null = null
                     if (userId) {
                         currentUserLike = await LikesPostsModel
-                            .findOne({postId: post._id, userId: userId})
+                            .findOne({postId: post._id.toString(), userId: userId})
                             .lean()
                     }
 
                     const currentUserLikeStatus: LikeStatus = currentUserLike ? currentUserLike.description as LikeStatus : LikeStatus.None
 
-                    const newPost = getPostViewModel(post, newestLikes, currentUserLikeStatus)
+                    const newPost = getPostViewModel(post, newestLikesMapped, currentUserLikeStatus)
                     newPosts.push(newPost)
                 }
             )

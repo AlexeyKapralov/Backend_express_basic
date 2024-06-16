@@ -9,8 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.authMiddleware = void 0;
-const http_status_codes_1 = require("http-status-codes");
+exports.getUserIdFromTokenMiddleware = void 0;
 const settings_1 = require("../common/config/settings");
 const ioc_1 = require("../ioc");
 const jwtService_1 = require("../common/adapters/jwtService");
@@ -18,13 +17,14 @@ const usersQuery_repository_1 = require("../features/users/repository/usersQuery
 //todo 13.06.2024 нет понимания аритектурно правильно ли так делать
 const jwtService = ioc_1.container.resolve(jwtService_1.JwtService);
 const usersQueryRepository = ioc_1.container.resolve(usersQuery_repository_1.UsersQueryRepository);
-const authMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const auth = req.headers.authorization;
-    if (!auth) {
-        res.status(http_status_codes_1.StatusCodes.UNAUTHORIZED).send({});
-        return;
+const getUserIdFromTokenMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    let typeAuth;
+    try {
+        typeAuth = req.headers.authorization.split(' ')[0];
     }
-    const typeAuth = req.headers.authorization.split(' ')[0];
+    catch (_a) {
+        typeAuth = null;
+    }
     if (typeAuth === 'Bearer') {
         const token = req.headers.authorization.split(' ')[1];
         const userId = jwtService.getUserIdByToken(token);
@@ -37,7 +37,7 @@ const authMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
             next();
             return;
         }
-        res.status(http_status_codes_1.StatusCodes.UNAUTHORIZED).json({});
+        // res.status(StatusCodes.UNAUTHORIZED).json({})
         return;
     }
     if (typeAuth === 'Basic') {
@@ -45,10 +45,11 @@ const authMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
         const buff = Buffer.from(auth.slice(5), 'base64');
         const decodedAuth = buff.toString('utf-8');
         if (decodedAuth !== settings_1.SETTINGS.ADMIN_AUTH || auth.slice(0, 5) !== 'Basic') {
-            res.status(http_status_codes_1.StatusCodes.UNAUTHORIZED).json({});
+            // res.status(StatusCodes.UNAUTHORIZED).json({})
             return;
         }
         next();
     }
+    next();
 });
-exports.authMiddleware = authMiddleware;
+exports.getUserIdFromTokenMiddleware = getUserIdFromTokenMiddleware;

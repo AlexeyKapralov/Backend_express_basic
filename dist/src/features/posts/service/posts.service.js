@@ -107,6 +107,20 @@ let PostsService = class PostsService {
             }
         });
     }
+    likePost(postId, userId, likeStatus) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const isLiked = yield this.postsRepository.likePost(postId, userId, likeStatus);
+            return isLiked
+                ? {
+                    status: resultStatus_type_1.ResultStatus.Success,
+                    data: null
+                }
+                : {
+                    status: resultStatus_type_1.ResultStatus.NotFound,
+                    data: null
+                };
+        });
+    }
 };
 exports.PostsService = PostsService;
 exports.PostsService = PostsService = __decorate([

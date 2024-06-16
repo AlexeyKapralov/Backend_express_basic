@@ -45,4 +45,4 @@ BlogSchema.static('initUser', async function initUser(body: IBlogInputModel) {
     return await this.create(blog)
 })
 
-export const BlogModel = mongoose.model<IBlogDbModel, IBlogModel, BlogsMethods>('blogs', BlogSchema)
+export const BlogModel = mongoose.model<IBlogDbModel, IBlogModel>('blogs', BlogSchema)

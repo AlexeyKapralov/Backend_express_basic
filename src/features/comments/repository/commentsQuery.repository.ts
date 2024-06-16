@@ -1,7 +1,6 @@
 import { IPaginator } from '../../../common/types/paginator'
 import { ICommentViewModel } from '../models/commentView.model'
-import { SortDirection } from 'mongodb'
-import {IQueryInputModel, IQueryOutputModel} from '../../../common/types/query.model'
+import {IQueryOutputModel, SortDirection} from '../../../common/types/query.model'
 import {getCommentView} from "../mappers/commentsMappers";
 import {PostModel} from "../../posts/domain/post.entity";
 import {CommentsModel} from "../domain/comments.entity";

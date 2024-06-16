@@ -17,6 +17,7 @@ const blogs_entity_1 = require("../domain/blogs.entity");
 const post_entity_1 = require("../../posts/domain/post.entity");
 const likesForPosts_entity_1 = require("../../likes/domain/likesForPosts.entity");
 const like_type_1 = require("../../likes/models/like.type");
+const likePosts_mapper_1 = require("../../likes/mappers/likePosts.mapper");
 exports.blogsQueryRepository = {
     getBlogs(query) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -65,14 +66,15 @@ exports.blogsQueryRepository = {
                     .sort({ addedAt: query_model_1.SortDirection.descending })
                     .limit(3)
                     .lean();
+                const newestLikesMapped = newestLikes.map(likePosts_mapper_1.likePostsMapper);
                 let currentUserLike = null;
                 if (userId) {
                     currentUserLike = yield likesForPosts_entity_1.LikesPostsModel
-                        .findOne({ postId: post._id, userId: userId })
+                        .findOne({ postId: post._id.toString(), userId: userId })
                         .lean();
                 }
                 const currentUserLikeStatus = currentUserLike ? currentUserLike.description : like_type_1.LikeStatus.None;
-                const newPost = (0, postMappers_1.getPostViewModel)(post, newestLikes, currentUserLikeStatus);
+                const newPost = (0, postMappers_1.getPostViewModel)(post, newestLikesMapped, currentUserLikeStatus);
                 newPosts.push(newPost);
             })));
             newPosts.sort(function (a, b) {

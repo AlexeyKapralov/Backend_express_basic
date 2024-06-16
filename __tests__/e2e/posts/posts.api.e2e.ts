@@ -15,6 +15,7 @@ import {PostModel} from "../../../src/features/posts/domain/post.entity";
 import {IPostViewModel} from "../../../src/features/posts/models/postView.model";
 import {LikesPostsModel} from "../../../src/features/likes/domain/likesForPosts.entity";
 import {ILikePostsDbModel, LikeStatus} from "../../../src/features/likes/models/like.type";
+import {likePostsMapper} from "../../../src/features/likes/mappers/likePosts.mapper";
 
 describe('posts tests', () => {
 	beforeAll(async () => {
@@ -91,6 +92,8 @@ describe('posts tests', () => {
 						.limit(3)
 						.lean()
 
+					const newestLikesMapped = newestLikes.map(likePostsMapper)
+
 					let currentUserLike: ILikePostsDbModel | null = null
 					if (userId) {
 						currentUserLike = await LikesPostsModel
@@ -100,7 +103,7 @@ describe('posts tests', () => {
 
 					const currentUserLikeStatus: LikeStatus = currentUserLike ? currentUserLike.description as LikeStatus : LikeStatus.None
 
-					const newPost = getPostViewModel(post, newestLikes, currentUserLikeStatus)
+					const newPost = getPostViewModel(post, newestLikesMapped, currentUserLikeStatus)
 					newPosts.push(newPost)
 				}
 			)
@@ -172,6 +175,8 @@ describe('posts tests', () => {
 						.limit(3)
 						.lean()
 
+					const newestLikesMapped = newestLikes.map(likePostsMapper)
+
 					let currentUserLike: ILikePostsDbModel | null = null
 					if (userId) {
 						currentUserLike = await LikesPostsModel
@@ -181,7 +186,7 @@ describe('posts tests', () => {
 
 					const currentUserLikeStatus: LikeStatus = currentUserLike ? currentUserLike.description as LikeStatus : LikeStatus.None
 
-					const newPost = getPostViewModel(post, newestLikes, currentUserLikeStatus)
+					const newPost = getPostViewModel(post, newestLikesMapped, currentUserLikeStatus)
 					newPosts.push(newPost)
 				}
 			)

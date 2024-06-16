@@ -12,12 +12,11 @@ const updateBlogById_controller_1 = require("./controllers/updateBlogById.contro
 const deleteBlogById_controller_1 = require("./controllers/deleteBlogById.controller");
 const getPostsByBlogId_controller_1 = require("./controllers/getPostsByBlogId.controller");
 const createPostByBlogId_controller_1 = require("./controllers/createPostByBlogId.controller");
+const getUserIdFromToken_middleware_1 = require("../../middlewares/getUserIdFromToken.middleware");
 exports.blogsRouter = (0, express_1.Router)({});
 exports.blogsRouter.get('/', express_validation_1.searchNameTermValidation, express_validation_1.sortByValidation, express_validation_1.sortDirectionValidation, express_validation_1.pageNumberValidation, express_validation_1.pageSizeValidation, inputValidation_middleware_1.inputValidationMiddleware, getBlogs_controller_1.getBlogsController);
 exports.blogsRouter.get('/:id', getBlogById_controller_1.getBlogByIdController);
-exports.blogsRouter.get('/:id/posts', express_validation_1.sortByValidation, 
-// blogIdParamValidation,
-express_validation_1.sortDirectionValidation, express_validation_1.pageNumberValidation, express_validation_1.pageSizeValidation, inputValidation_middleware_1.inputValidationMiddleware, getPostsByBlogId_controller_1.getPostsByBlogIDController);
+exports.blogsRouter.get('/:id/posts', express_validation_1.sortByValidation, getUserIdFromToken_middleware_1.getUserIdFromTokenMiddleware, express_validation_1.sortDirectionValidation, express_validation_1.pageNumberValidation, express_validation_1.pageSizeValidation, inputValidation_middleware_1.inputValidationMiddleware, getPostsByBlogId_controller_1.getPostsByBlogIDController);
 exports.blogsRouter.post('/', auth_middleware_1.authMiddleware, express_validation_1.nameValidation, express_validation_1.descriptionValidation, express_validation_1.websiteUrlValidation, inputValidation_middleware_1.inputValidationMiddleware, createBlog_controller_1.createBlogsController);
 exports.blogsRouter.post('/:id/posts', auth_middleware_1.authMiddleware, 
 // blogIdParamValidation,

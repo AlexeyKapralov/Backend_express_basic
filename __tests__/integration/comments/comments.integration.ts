@@ -135,6 +135,7 @@ describe('comments integration tests', () => {
         const result = await postsService.createComment(
             userId!, post!.id, body
         )
+
         if (result.data !== null) {
             await commentsService.deleteComment(userId!, result.data.id)
         }

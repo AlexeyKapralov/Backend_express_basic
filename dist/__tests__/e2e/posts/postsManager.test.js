@@ -76,7 +76,13 @@ exports.postsManagerTest = {
                     'content': expect.any(String),
                     'blogId': createdBlog !== 'default' ? createdBlog.id : '',
                     'blogName': createdBlog !== 'default' ? createdBlog.name : '',
-                    'createdAt': expect.stringMatching(/\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)/)
+                    'createdAt': expect.stringMatching(/\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)/),
+                    'extendedLikesInfo': {
+                        'likesCount': 0,
+                        'dislikesCount': 0,
+                        'myStatus': 'None',
+                        'newestLikes': []
+                    }
                 });
                 return res.body;
             }
@@ -95,6 +101,12 @@ exports.postsManagerTest = {
                     'blogId': expect.any(String),
                     'blogName': expect.any(String),
                     'createdAt': expect.stringMatching(/\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)/),
+                    'extendedLikesInfo': {
+                        'likesCount': 0,
+                        'dislikesCount': 0,
+                        'myStatus': 'None',
+                        'newestLikes': []
+                    }
                 });
                 return result.body;
             }

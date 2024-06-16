@@ -8,6 +8,7 @@ import {IPostDbModel} from "../models/postDb.model";
 import {injectable} from "inversify";
 import {LikesPostsModel} from "../../likes/domain/likesForPosts.entity";
 import {ILikePostsDbModel, LikeStatus} from "../../likes/models/like.type";
+import {likePostsMapper} from "../../likes/mappers/likePosts.mapper";
 
 @injectable()
 export class PostsQueryRepository {
@@ -46,20 +47,22 @@ export class PostsQueryRepository {
                         .limit(3)
                         .lean()
 
+                    const newestLikesMapped = newestLikes.map(likePostsMapper)
+
                     let currentUserLike: ILikePostsDbModel | null = null
                     if (userId) {
                         currentUserLike = await LikesPostsModel
-                            .findOne({postId: post._id, userId: userId})
+                            .findOne({postId: post._id.toString(), userId: userId})
                             .lean()
                     }
 
                     const currentUserLikeStatus: LikeStatus = currentUserLike ? currentUserLike.description as LikeStatus : LikeStatus.None
-
-                    const newPost = getPostViewModel(post, newestLikes, currentUserLikeStatus)
+                    const newPost = getPostViewModel(post, newestLikesMapped, currentUserLikeStatus)
                     newPosts.push(newPost)
                 }
             )
         )
+        //descending sort
         newPosts.sort(function (a, b) {
             if (a.createdAt < b.createdAt) {
                 return 1;
@@ -93,14 +96,16 @@ export class PostsQueryRepository {
         }
 
         const newestLikes = await LikesPostsModel
-            .find({_id: postId, description: LikeStatus.Like})
+            .find({postId: postId, description: LikeStatus.Like})
             .sort({addedAt: SortDirection.descending})
             .limit(3)
             .lean()
 
+        const newestLikesMapped = newestLikes.map(likePostsMapper)
+
         const result: WithId<IPostDbModel> | null = await PostModel.findOne({
             _id: postId
         })
-        return result ? getPostViewModel(result, newestLikes, userPostLikeStatus) : undefined
+        return result ? getPostViewModel(result, newestLikesMapped, userPostLikeStatus) : undefined
     }
 }

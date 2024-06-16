@@ -23,6 +23,7 @@ const path_1 = require("../../../src/common/config/path");
 const post_entity_1 = require("../../../src/features/posts/domain/post.entity");
 const likesForPosts_entity_1 = require("../../../src/features/likes/domain/likesForPosts.entity");
 const like_type_1 = require("../../../src/features/likes/models/like.type");
+const likePosts_mapper_1 = require("../../../src/features/likes/mappers/likePosts.mapper");
 describe('posts tests', () => {
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
         const mongod = yield mongodb_memory_server_1.MongoMemoryServer.create();
@@ -86,6 +87,7 @@ describe('posts tests', () => {
                 .sort({ addedAt: query_model_1.SortDirection.descending })
                 .limit(3)
                 .lean();
+            const newestLikesMapped = newestLikes.map(likePosts_mapper_1.likePostsMapper);
             let currentUserLike = null;
             if (userId) {
                 currentUserLike = yield likesForPosts_entity_1.LikesPostsModel
@@ -93,7 +95,7 @@ describe('posts tests', () => {
                     .lean();
             }
             const currentUserLikeStatus = currentUserLike ? currentUserLike.description : like_type_1.LikeStatus.None;
-            const newPost = (0, postMappers_1.getPostViewModel)(post, newestLikes, currentUserLikeStatus);
+            const newPost = (0, postMappers_1.getPostViewModel)(post, newestLikesMapped, currentUserLikeStatus);
             newPosts.push(newPost);
         })));
         newPosts.sort(function (a, b) {
@@ -151,6 +153,7 @@ describe('posts tests', () => {
                 .sort({ addedAt: query_model_1.SortDirection.descending })
                 .limit(3)
                 .lean();
+            const newestLikesMapped = newestLikes.map(likePosts_mapper_1.likePostsMapper);
             let currentUserLike = null;
             if (userId) {
                 currentUserLike = yield likesForPosts_entity_1.LikesPostsModel
@@ -158,7 +161,7 @@ describe('posts tests', () => {
                     .lean();
             }
             const currentUserLikeStatus = currentUserLike ? currentUserLike.description : like_type_1.LikeStatus.None;
-            const newPost = (0, postMappers_1.getPostViewModel)(post, newestLikes, currentUserLikeStatus);
+            const newPost = (0, postMappers_1.getPostViewModel)(post, newestLikesMapped, currentUserLikeStatus);
             newPosts.push(newPost);
         })));
         newPosts.sort(function (a, b) {

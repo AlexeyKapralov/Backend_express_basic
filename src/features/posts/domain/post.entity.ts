@@ -1,9 +1,19 @@
-import mongoose from "mongoose";
-import {ObjectId, WithId} from "mongodb";
+import mongoose, {Model} from "mongoose";
+import {WithId} from "mongodb";
 import {IPostDbModel} from "../models/postDb.model";
 
 
-const PostSchema = new mongoose.Schema<WithId<IPostDbModel>>({
+interface IPostsMethods {
+    addCountLikes(count: number): Promise<void>,
+    addCountDislikes(count: number): Promise<void>
+}
+
+interface IPostModel extends Model<IPostDbModel, {}, IPostsMethods> {
+    // initPost(body: IPostInputModel): Promise<HydratedDocument<IPostDbModel, IPostsMethods>>
+    // getPostByID(id: string): HydratedDocument<IPostDbModel>
+}
+
+const PostSchema = new mongoose.Schema<WithId<IPostDbModel>, IPostModel, IPostsMethods>({
     title: {type: String, required: true},
     shortDescription: { type: String, required: true },
     content: {type: String, required: true},
@@ -13,4 +23,19 @@ const PostSchema = new mongoose.Schema<WithId<IPostDbModel>>({
     dislikesCount: {type: Number, required: true},
     likesCount: {type: Number, required: true}
 })
-export const PostModel = mongoose.model<WithId<IPostDbModel>>('posts', PostSchema)
+
+// BlogSchema.static('getBlogByID', function getBlogByID(id: string) {
+//     return this.findOne({
+//         _id: id
+//     });
+// })
+PostSchema.method('addCountLikes', async function addCountLikes(count: number) {
+    this.likesCount = this.likesCount + count
+    await this.save()
+})
+PostSchema.method('addCountDislikes', async function addCountDislikes(count: number) {
+    this.dislikesCount = this.dislikesCount + count
+    await this.save()
+})
+
+export const PostModel = mongoose.model<WithId<IPostDbModel>, IPostModel>('posts', PostSchema)

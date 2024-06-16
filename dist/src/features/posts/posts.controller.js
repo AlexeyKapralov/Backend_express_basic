@@ -91,13 +91,24 @@ let PostsController = class PostsController {
         return __awaiter(this, void 0, void 0, function* () {
             const query = (0, mappers_1.getQueryParams)(req.query);
             const result = yield this.postsQueryRepository.getPosts(query, req.userId);
-            res.status(http_status_codes_1.StatusCodes.OK).json(result);
+            res.status(http_status_codes_1.StatusCodes.OK).send(result);
         });
     }
     updatePostById(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield this.postsService.updatePost(req.params.id, req.body);
             result ? res.status(http_status_codes_1.StatusCodes.NO_CONTENT).json() : res.status(http_status_codes_1.StatusCodes.NOT_FOUND).json();
+        });
+    }
+    likePost(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const likePostResult = yield this.postsService.likePost(req.params.postId, req.userId || '', req.body.likeStatus);
+            if (likePostResult.status === resultStatus_type_1.ResultStatus.Success) {
+                res.status(http_status_codes_1.StatusCodes.NO_CONTENT).send();
+            }
+            if (likePostResult.status === resultStatus_type_1.ResultStatus.NotFound) {
+                res.status(http_status_codes_1.StatusCodes.NOT_FOUND).send();
+            }
         });
     }
 };

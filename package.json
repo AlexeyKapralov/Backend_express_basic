@@ -10,6 +10,7 @@
 		"dev": "yarn nodemon --inspect dist/src/index.js",
 		"test:e2e": "yarn jest --config jest.e2e.config.js --runInBand --detectOpenHandles --forceExit",
 		"test:integration": "yarn jest --config jest.integration.config.js --runInBand --detectOpenHandles --forceExit",
+		"test:unit": "yarn jest --config jest.unit.config.js --runInBand --detectOpenHandles --forceExit",
 		"test coverage": "yarn jest --config jest.coverage.config.js --coverage "
 	},
 	"dependencies": {

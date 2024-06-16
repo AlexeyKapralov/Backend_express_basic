@@ -1,9 +1,9 @@
 import {Router} from "express";
 import {
     blogIdInBodyValidation, contentCommentValidation,
-    contentValidation,
+    contentValidation, likeStatusValidation,
     pageNumberValidation,
-    pageSizeValidation, postIdValidation,
+    pageSizeValidation, postIdParamValidation, postIdValidation,
     shortDescriptionValidation,
     sortByValidation,
     sortDirectionValidation,
@@ -13,13 +13,17 @@ import {authMiddleware} from "../../middlewares/auth.middleware";
 import {inputValidationMiddleware} from "../../middlewares/inputValidation.middleware";
 import {container} from "../../ioc";
 import {PostsController} from "./posts.controller";
+import {getUserIdFromTokenMiddleware} from "../../middlewares/getUserIdFromToken.middleware";
 
 export const postsRouter = Router({})
 const postsController = container.resolve(PostsController)
 
-// postsRouter.get('/:id/like-status',
-//     postsController.likeStatus.bind(postsController)
-// )
+postsRouter.put('/:postId/like-status',
+    authMiddleware,
+    likeStatusValidation,
+    inputValidationMiddleware,
+    postsController.likePost.bind(postsController)
+)
 
 postsRouter.get('/:id/comments',
     pageNumberValidation,
@@ -37,6 +41,7 @@ postsRouter.post('/:postId/comments',
 )
 
 postsRouter.get('/',
+    getUserIdFromTokenMiddleware,
     pageNumberValidation,
     pageSizeValidation,
     sortByValidation,
@@ -55,6 +60,7 @@ postsRouter.post('/',
 )
 
 postsRouter.get('/:id',
+    getUserIdFromTokenMiddleware,
     postIdValidation,
     inputValidationMiddleware,
     postsController.getPostById.bind(postsController)

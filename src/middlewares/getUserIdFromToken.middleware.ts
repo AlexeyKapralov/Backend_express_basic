@@ -9,18 +9,17 @@ import {UsersQueryRepository} from "../features/users/repository/usersQuery.repo
 const jwtService = container.resolve(JwtService)
 const usersQueryRepository = container.resolve(UsersQueryRepository)
 
-export const authMiddleware = async (
+export const getUserIdFromTokenMiddleware = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
 ) => {
-	const auth: string | undefined = req.headers.authorization
-	if (!auth) {
-		res.status(StatusCodes.UNAUTHORIZED).send({})
-		return
+	let typeAuth
+	try{
+		typeAuth = req.headers.authorization!.split(' ')[0]
+	} catch {
+		typeAuth = null
 	}
-
-	const typeAuth = req.headers.authorization!.split(' ')[0]
 
 	if (typeAuth === 'Bearer') {
 		const token = req.headers.authorization!.split(' ')[1]
@@ -36,7 +35,7 @@ export const authMiddleware = async (
 			next()
 			return
 		}
-		res.status(StatusCodes.UNAUTHORIZED).json({})
+		// res.status(StatusCodes.UNAUTHORIZED).json({})
 		return
 	}
 	if (typeAuth === 'Basic') {
@@ -45,10 +44,11 @@ export const authMiddleware = async (
 		const decodedAuth = buff.toString('utf-8')
 
 		if (decodedAuth !== SETTINGS.ADMIN_AUTH || auth.slice(0, 5) !== 'Basic') {
-			res.status(StatusCodes.UNAUTHORIZED).json({})
+			// res.status(StatusCodes.UNAUTHORIZED).json({})
 			return
 		}
 		next()
 	}
+	next()
 
 }

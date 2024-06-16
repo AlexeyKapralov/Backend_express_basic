@@ -21,6 +21,7 @@ import {updateBlogByIdController} from "./controllers/updateBlogById.controller"
 import {deleteBlogByIdController} from "./controllers/deleteBlogById.controller";
 import {getPostsByBlogIDController} from "./controllers/getPostsByBlogId.controller";
 import {createPostByBlogIdController} from "./controllers/createPostByBlogId.controller";
+import {getUserIdFromTokenMiddleware} from "../../middlewares/getUserIdFromToken.middleware";
 
 export const blogsRouter = Router({})
 
@@ -40,7 +41,7 @@ blogsRouter.get('/:id', getBlogByIdController)
 
 blogsRouter.get('/:id/posts',
     sortByValidation,
-    // blogIdParamValidation,
+    getUserIdFromTokenMiddleware,
     sortDirectionValidation,
     pageNumberValidation,
     pageSizeValidation,

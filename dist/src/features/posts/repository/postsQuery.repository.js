@@ -22,6 +22,7 @@ const post_entity_1 = require("../domain/post.entity");
 const inversify_1 = require("inversify");
 const likesForPosts_entity_1 = require("../../likes/domain/likesForPosts.entity");
 const like_type_1 = require("../../likes/models/like.type");
+const likePosts_mapper_1 = require("../../likes/mappers/likePosts.mapper");
 let PostsQueryRepository = class PostsQueryRepository {
     //todo глянуть это еще раз свежим взглядом
     getPosts(query, userId) {
@@ -53,16 +54,18 @@ let PostsQueryRepository = class PostsQueryRepository {
                     .sort({ addedAt: query_model_1.SortDirection.descending })
                     .limit(3)
                     .lean();
+                const newestLikesMapped = newestLikes.map(likePosts_mapper_1.likePostsMapper);
                 let currentUserLike = null;
                 if (userId) {
                     currentUserLike = yield likesForPosts_entity_1.LikesPostsModel
-                        .findOne({ postId: post._id, userId: userId })
+                        .findOne({ postId: post._id.toString(), userId: userId })
                         .lean();
                 }
                 const currentUserLikeStatus = currentUserLike ? currentUserLike.description : like_type_1.LikeStatus.None;
-                const newPost = (0, postMappers_1.getPostViewModel)(post, newestLikes, currentUserLikeStatus);
+                const newPost = (0, postMappers_1.getPostViewModel)(post, newestLikesMapped, currentUserLikeStatus);
                 newPosts.push(newPost);
             })));
+            //descending sort
             newPosts.sort(function (a, b) {
                 if (a.createdAt < b.createdAt) {
                     return 1;
@@ -92,14 +95,15 @@ let PostsQueryRepository = class PostsQueryRepository {
                 }
             }
             const newestLikes = yield likesForPosts_entity_1.LikesPostsModel
-                .find({ _id: postId, description: like_type_1.LikeStatus.Like })
+                .find({ postId: postId, description: like_type_1.LikeStatus.Like })
                 .sort({ addedAt: query_model_1.SortDirection.descending })
                 .limit(3)
                 .lean();
+            const newestLikesMapped = newestLikes.map(likePosts_mapper_1.likePostsMapper);
             const result = yield post_entity_1.PostModel.findOne({
                 _id: postId
             });
-            return result ? (0, postMappers_1.getPostViewModel)(result, newestLikes, userPostLikeStatus) : undefined;
+            return result ? (0, postMappers_1.getPostViewModel)(result, newestLikesMapped, userPostLikeStatus) : undefined;
         });
     }
 };
